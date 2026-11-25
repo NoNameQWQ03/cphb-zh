@@ -1,21 +1,18 @@
-\chapter{Strong connectivity}
+\chapter{强连通性}
 
-\index{strongly connected graph}
+\index{强连通图}
 
-In a directed graph,
-the edges can be traversed in one direction only,
-so even if the graph is connected,
-this does not guarantee that there would be
-a path from a node to another node.
-For this reason, it is meaningful to define a new concept
-that requires more than connectivity.
+在有向图中，
+边只能沿一个方向遍历，
+因此即使图是连通的，
+这也不能保证从一个节点可以到达另一个节点。
+出于这个原因，定义一个比连通性要求更高的新概念是有意义的。
 
-A graph is \key{strongly connected}
-if there is a path from any node to all
-other nodes in the graph.
-For example, in the following picture,
-the left graph is strongly connected
-while the right graph is not.
+如果一个图是\key{强连通的}，
+则图中存在从任意节点到所有其他节点的路径。
+例如，在下图中，
+左图是强连通的，
+而右图不是。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -41,21 +38,19 @@ while the right graph is not.
 \end{tikzpicture}
 \end{center}
 
-The right graph is not strongly connected
-because, for example, there is no path
-from node 2 to node 1.
+右图不是强连通的，
+因为例如不存在
+从节点2到节点1的路径。
 
-\index{strongly connected component}
-\index{component graph}
+\index{强连通分量}
+\index{分量图}
 
-The \key{strongly connected components}
-of a graph divide the graph into strongly connected
-parts that are as large as possible.
-The strongly connected components form an
-acyclic \key{component graph} that represents
-the deep structure of the original graph.
+图的\key{强连通分量}将图划分为
+尽可能大的强连通部分。
+强连通分量构成一个无环的\key{分量图}，
+表示原图的深层结构。
 
-For example, for the graph
+例如，对于图
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
 \node[draw, circle] (1) at (-1,1) {$7$};
@@ -78,7 +73,7 @@ For example, for the graph
 \path[draw,thick,->] (6) -- (7);
 \end{tikzpicture}
 \end{center}
-the strongly connected components are as follows:
+其强连通分量如下：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (-1,1) {$7$};
@@ -106,7 +101,7 @@ the strongly connected components are as follows:
 \draw [red,thick,dashed,line width=2pt] (-6.5,0.5) rectangle (-7.5,-0.5);
 \end{tikzpicture}
 \end{center}
-The corresponding component graph is as follows:
+对应的分量图如下：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (-3,1) {$B$};
@@ -121,44 +116,36 @@ The corresponding component graph is as follows:
 \path[draw,thick,->] (3) -- (4);
 \end{tikzpicture}
 \end{center}
-The components are $A=\{1,2\}$,
-$B=\{3,6,7\}$, $C=\{4\}$ and $D=\{5\}$.
+各分量为 $A=\{1,2\}$,
+$B=\{3,6,7\}$，$C=\{4\}$ 和 $D=\{5\}$。
 
-A component graph is an acyclic, directed graph,
-so it is easier to process than the original graph.
-Since the graph does not contain cycles,
-we can always construct a topological sort and
-use dynamic programming techniques like those
-presented in Chapter 16.
+分量图是一个无环有向图，
+因此它比原图更容易处理。
+由于图中不包含环，
+我们总是可以构造一个拓扑排序，
+并使用第16章中介绍的动态规划技术。
 
-\section{Kosaraju's algorithm}
+\section{Kosaraju算法}
 
-\index{Kosaraju's algorithm}
+\index{Kosaraju算法}
 
-\key{Kosaraju's algorithm}\footnote{According to \cite{aho83},
-S. R. Kosaraju invented this algorithm in 1978
-but did not publish it. In 1981, the same algorithm was rediscovered
-and published by M. Sharir \cite{sha81}.} is an efficient
-method for finding the strongly connected components
-of a directed graph.
-The algorithm performs two depth-first searches:
-the first search constructs a list of nodes
-according to the structure of the graph,
-and the second search forms the strongly connected components.
+\key{Kosaraju算法}\footnote{根据 \cite{aho83}，
+S. R. Kosaraju 于1978年发明了这个算法
+但未发表。1981年，同样的算法被 M. Sharir \cite{sha81} 重新发现并发表。}
+是一种寻找有向图强连通分量的高效方法。
+该算法执行两次深度优先搜索：
+第一次搜索根据图的结构构造节点列表，
+第二次搜索形成强连通分量。
 
-\subsubsection{Search 1}
+\subsubsection{搜索1}
 
-The first phase of Kosaraju's algorithm constructs
-a list of nodes in the order in which a
-depth-first search processes them.
-The algorithm goes through the nodes,
-and begins a depth-first search at each 
-unprocessed node.
-Each node will be added to the list
-after it has been processed.
+Kosaraju算法的第一阶段构造一个节点列表，
+列表顺序为深度优先搜索处理节点的顺序。
+算法遍历所有节点，
+并在每个未处理的节点处开始一次深度优先搜索。
+每个节点在被处理完后会被添加到列表中。
 
-In the example graph, the nodes are processed
-in the following order:
+在示例图中，节点按以下顺序被处理：
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
 \node[draw, circle] (1) at (-1,1) {$7$};
@@ -190,14 +177,14 @@ in the following order:
 \end{tikzpicture}
 \end{center}
 
-The notation $x/y$ means that
-processing the node started
-at time $x$ and finished at time $y$.
-Thus, the corresponding list is as follows:
+记号 $x/y$ 表示
+节点的处理在时间 $x$ 开始，
+在时间 $y$ 结束。
+因此，对应的列表如下：
 
 \begin{tabular}{ll}
 \\
-node & processing time \\
+节点 & 处理时间 \\
 \hline
 4 & 5 \\
 5 & 6 \\
@@ -213,19 +200,17 @@ node & processing time \\
 % the nodes will be processed
 % in reverse order: $[3,7,6,1,2,5,4]$.
 
-\subsubsection{Search 2}
+\subsubsection{搜索2}
 
-The second phase of the algorithm
-forms the strongly connected components
-of the graph.
-First, the algorithm reverses every
-edge in the graph.
-This guarantees that during the second search,
-we will always find strongly connected
-components that do not have extra nodes.
+算法的第二阶段
+形成图的强连通分量。
+首先，算法反转图中的每条边。
+这保证了在第二次搜索中，
+我们总能找到不包含多余节点的
+强连通分量。
 
-After reversing the edges,
-the example graph is as follows:
+反转边后，
+示例图如下：
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
 \node[draw, circle] (1) at (-1,1) {$7$};
@@ -249,17 +234,16 @@ the example graph is as follows:
 \end{tikzpicture}
 \end{center}
 
-After this, the algorithm goes through
-the list of nodes created by the first search,
-in \emph{reverse} order.
-If a node does not belong to a component,
-the algorithm creates a new component
-and starts a depth-first search
-that adds all new nodes found during the search
-to the new component.
+之后，算法按第一次搜索创建的节点列表
+以\emph{逆序}遍历。
+如果一个节点不属于任何分量，
+算法会创建一个新分量，
+并开始一次深度优先搜索，
+将搜索过程中发现的所有新节点
+添加到新分量中。
 
-In the example graph, the first component
-begins at node 3:
+在示例图中，第一个分量
+从节点3开始：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -286,13 +270,13 @@ begins at node 3:
 \end{tikzpicture}
 \end{center}
 
-Note that since all edges are reversed,
-the component does not ''leak'' to other parts in the graph.
+注意，由于所有边都被反转，
+该分量不会“泄漏”到图中的其他部分。
 
 \begin{samepage}
-The next nodes in the list are nodes 7 and 6,
-but they already belong to a component,
-so the next new component begins at node 1:
+列表中的下一个节点是节点7和6，
+但它们已经属于一个分量，
+因此下一个新分量从节点1开始：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -324,8 +308,8 @@ so the next new component begins at node 1:
 \end{samepage}
 
 \begin{samepage}
-Finally, the algorithm processes nodes 5 and 4
-that create the remaining strongly connected components:
+最后，算法处理节点5和4，
+它们构成剩余的强连通分量：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -356,34 +340,31 @@ that create the remaining strongly connected components:
 \end{center}
 \end{samepage}
 
-The time complexity of the algorithm is $O(n+m)$,
-because the algorithm
-performs two depth-first searches.
+该算法的时间复杂度为 $O(n+m)$，
+因为算法执行两次深度优先搜索。
 
-\section{2SAT problem}
+\section{2SAT问题}
 
-\index{2SAT problem}
+\index{2SAT问题}
 
-Strong connectivity is also linked with the
-\key{2SAT problem}\footnote{The algorithm presented here was
-introduced in \cite{asp79}.
-There is also another well-known linear-time algorithm \cite{eve75}
-that is based on backtracking.}.
-In this problem, we are given a logical formula
+强连通性也与
+\key{2SAT问题}\footnote{这里介绍的算法是在 \cite{asp79} 中提出的。
+还有另一种著名的线性时间算法 \cite{eve75}，
+它基于回溯。}有关。
+在这个问题中，给定一个逻辑公式
 \[
 (a_1 \lor b_1) \land (a_2 \lor b_2) \land \cdots \land (a_m \lor b_m),
 \]
-where each $a_i$ and $b_i$ is either a logical variable
+其中每个 $a_i$ 和 $b_i$ 是一个逻辑变量
 ($x_1,x_2,\ldots,x_n$)
-or a negation of a logical variable
-($\lnot x_1, \lnot x_2, \ldots, \lnot x_n$).
-The symbols ''$\land$'' and ''$\lor$'' denote
-logical operators ''and'' and ''or''.
-Our task is to assign each variable a value
-so that the formula is true, or state
-that this is not possible.
+或一个逻辑变量的否定
+($\lnot x_1, \lnot x_2, \ldots, \lnot x_n$)。
+符号“$\land$”和“$\lor$”分别表示
+逻辑运算符“与”和“或”。
+我们的任务是为每个变量赋值，
+使公式为真，或者说明这不可能。
 
-For example, the formula
+例如，公式
 \[
 L_1 = (x_2 \lor \lnot x_1) \land
       (\lnot x_1 \lor \lnot x_2) \land
@@ -391,7 +372,7 @@ L_1 = (x_2 \lor \lnot x_1) \land
       (\lnot x_2 \lor \lnot x_3) \land
       (x_1 \lor x_4)
 \]
-is true when the variables are assigned as follows:
+在变量如下赋值时为真：
 
 \[
 \begin{cases}
@@ -402,34 +383,32 @@ x_4 = \textrm{true} \\
 \end{cases}
 \]
 
-However, the formula
+然而，公式
 \[
 L_2 = (x_1 \lor x_2) \land
       (x_1 \lor \lnot x_2) \land
       (\lnot x_1 \lor x_3) \land
       (\lnot x_1 \lor \lnot x_3)
 \]
-is always false, regardless of how we
-assign the values.
-The reason for this is that we cannot
-choose a value for $x_1$
-without creating a contradiction.
-If $x_1$ is false, both $x_2$ and $\lnot x_2$
-should be true which is impossible,
-and if $x_1$ is true, both $x_3$ and $\lnot x_3$
-should be true which is also impossible.
+总是为假的，无论我们如何赋值。
+原因是我们不能
+为 $x_1$ 选择一个值
+而不产生矛盾。
+如果 $x_1$ 为假，则 $x_2$ 和 $\lnot x_2$
+都应为真，这是不可能的；
+如果 $x_1$ 为真，则 $x_3$ 和 $\lnot x_3$
+都应为真，这也是不可能的。
 
-The 2SAT problem can be represented as a graph
-whose nodes correspond to
-variables $x_i$ and negations $\lnot x_i$,
-and edges determine the connections
-between the variables.
-Each pair $(a_i \lor b_i)$ generates two edges:
-$\lnot a_i \to b_i$ and $\lnot b_i \to a_i$.
-This means that if $a_i$ does not hold,
-$b_i$ must hold, and vice versa.
+2SAT问题可以表示为一个图，
+其节点对应于
+变量 $x_i$ 和否定 $\lnot x_i$，
+边确定了变量之间的连接。
+每个对 $(a_i \lor b_i)$ 生成两条边：
+$\lnot a_i \to b_i$ 和 $\lnot b_i \to a_i$。
+这意味着如果 $a_i$ 不成立，
+则 $b_i$ 必须成立，反之亦然。
 
-The graph for the formula $L_1$ is:
+公式 $L_1$ 的图为：
 \\
 \begin{center}
 \begin{tikzpicture}[scale=1.0,minimum size=2pt]
@@ -454,7 +433,7 @@ The graph for the formula $L_1$ is:
 \path[draw,thick,->] (7) -- (5);
 \end{tikzpicture}
 \end{center}
-And the graph for the formula $L_2$ is:
+公式 $L_2$ 的图为：
 \\
 \begin{center}
 \begin{tikzpicture}[scale=1.0,minimum size=2pt]
@@ -476,47 +455,39 @@ And the graph for the formula $L_2$ is:
 \end{tikzpicture}
 \end{center}
 
-The structure of the graph tells us whether
-it is possible to assign the values
-of the variables so
-that the formula is true.
-It turns out that this can be done
-exactly when there are no nodes
-$x_i$ and $\lnot x_i$ such that
-both nodes belong to the
-same strongly connected component.
-If there are such nodes,
-the graph contains
-a path from $x_i$ to $\lnot x_i$
-and also a path from $\lnot x_i$ to $x_i$,
-so both $x_i$ and $\lnot x_i$ should be true
-which is not possible.
+图的结构告诉我们
+是否可以为变量赋值
+使公式为真。
+结果表明，当且仅当不存在
+节点 $x_i$ 和 $\lnot x_i$ 同时属于
+同一个强连通分量时，这是可以做到的。
+如果存在这样的节点，
+则图中包含
+从 $x_i$ 到 $\lnot x_i$ 的路径，
+也包含从 $\lnot x_i$ 到 $x_i$ 的路径，
+因此 $x_i$ 和 $\lnot x_i$ 都应为真，
+这是不可能的。
 
-In the graph of the formula $L_1$
-there are no nodes $x_i$ and $\lnot x_i$
-such that both nodes 
-belong to the same strongly connected component,
-so a solution exists.
-In the graph of the formula $L_2$
-all nodes belong to the same strongly connected component,
-so a solution does not exist.
+在公式 $L_1$ 的图中
+不存在节点 $x_i$ 和 $\lnot x_i$
+同时属于同一个强连通分量，
+因此存在解。
+在公式 $L_2$ 的图中
+所有节点属于同一个强连通分量，
+因此不存在解。
 
-If a solution exists, the values for the variables
-can be found by going through the nodes of the
-component graph in a reverse topological sort order.
-At each step, we process a component 
-that does not contain edges that lead to an
-unprocessed component.
-If the variables in the component
-have not been assigned values,
-their values will be determined
-according to the values in the component,
-and if they already have values,
-they remain unchanged.
-The process continues until each variable
-has been assigned a value.
+如果存在解，可以通过以逆拓扑排序顺序遍历
+分量图的节点来找到变量的值。
+在每一步中，我们处理一个
+不包含指向未处理分量的边的分量。
+如果分量中的变量
+尚未被赋值，
+则其值将根据分量中的值来确定；
+如果已经有值，则保持不变。
+该过程持续进行，直到每个变量
+都被赋值。
 
-The component graph for the formula $L_1$ is as follows:
+公式 $L_1$ 的分量图如下：
 \begin{center}
 \begin{tikzpicture}[scale=1.0]
 \node[draw, circle] (1) at (0,0) {$A$};
@@ -530,34 +501,33 @@ The component graph for the formula $L_1$ is as follows:
 \end{tikzpicture}
 \end{center}
 
-The components are
-$A = \{\lnot x_4\}$,
-$B = \{x_1, x_2, \lnot x_3\}$,
-$C = \{\lnot x_1, \lnot x_2, x_3\}$ and
-$D = \{x_4\}$.
-When constructing the solution,
-we first process the component $D$
-where $x_4$ becomes true.
-After this, we process the component $C$
-where $x_1$ and $x_2$ become false
-and $x_3$ becomes true.
-All variables have been assigned values,
-so the remaining components $A$ and $B$
-do not change the variables.
+各分量为
+$A = \{\lnot x_4\}$，
+$B = \{x_1, x_2, \lnot x_3\}$，
+$C = \{\lnot x_1, \lnot x_2, x_3\}$ 和
+$D = \{x_4\}$。
+构造解时，
+我们首先处理分量 $D$，
+其中 $x_4$ 变为真。
+之后，我们处理分量 $C$，
+其中 $x_1$ 和 $x_2$ 变为假，
+$x_3$ 变为真。
+所有变量都已被赋值，
+因此剩余的分量 $A$ 和 $B$
+不会改变变量。
 
-Note that this method works, because the
-graph has a special structure:
-if there are paths from node $x_i$ to node $x_j$
-and from node $x_j$ to node $\lnot x_j$,
-then node $x_i$ never becomes true.
-The reason for this is that there is also
-a path from node $\lnot x_j$ to node $\lnot x_i$,
-and both $x_i$ and $x_j$ become false.
+注意这种方法有效，因为
+图具有特殊的结构：
+如果存在从节点 $x_i$ 到节点 $x_j$ 的路径
+以及从节点 $x_j$ 到节点 $\lnot x_j$ 的路径，
+则节点 $x_i$ 永远不会变为真。
+原因是还存在
+从节点 $\lnot x_j$ 到节点 $\lnot x_i$ 的路径，
+并且 $x_i$ 和 $x_j$ 都变为假。
 
-\index{3SAT problem}
+\index{3SAT问题}
 
-A more difficult problem is the \key{3SAT problem},
-where each part of the formula is of the form
-$(a_i \lor b_i \lor c_i)$.
-This problem is NP-hard, so no efficient algorithm
-for solving the problem is known.
+更难的问题是\key{3SAT问题}，
+其中公式的每个部分形式为
+$(a_i \lor b_i \lor c_i)$。
+这个问题是NP难的，因此没有已知的高效算法来求解。

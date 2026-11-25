@@ -1,38 +1,33 @@
-\chapter{Graph traversal}
+\chapter{图的遍历}
 
-This chapter discusses two fundamental
-graph algorithms:
-depth-first search and breadth-first search.
-Both algorithms are given a starting
-node in the graph,
-and they visit all nodes that can be reached
-from the starting node.
-The difference in the algorithms is the order
-in which they visit the nodes.
+本章讨论两种基本的图算法：
+深度优先搜索和广度优先搜索。
+这两种算法都从图中的一个起始节点出发，
+访问所有可以从起始节点到达的节点。
+它们之间的区别在于访问节点的顺序。
 
-\section{Depth-first search}
+\section{深度优先搜索}
 
-\index{depth-first search}
+\index{深度优先搜索}
 
-\key{Depth-first search} (DFS)
-is a straightforward graph traversal technique.
-The algorithm begins at a starting node,
-and proceeds to all other nodes that are
-reachable from the starting node using
-the edges of the graph.
+\key{深度优先搜索}（DFS）
+是一种直观的图遍历技术。
+该算法从一个起始节点出发，
+沿着图的边前进，到达所有可以从
+起始节点到达的其他节点。
 
-Depth-first search always follows a single
-path in the graph as long as it finds
-new nodes.
-After this, it returns to previous
-nodes and begins to explore other parts of the graph.
-The algorithm keeps track of visited nodes,
-so that it processes each node only once.
+深度优先搜索始终沿着图中的
+一条路径不断前进，只要能找到
+新的节点就继续下去。
+之后，它返回之前的节点，
+开始探索图的其他部分。
+算法会记录已访问的节点，
+因此每个节点只会被处理一次。
 
-\subsubsection*{Example}
+\subsubsection*{示例}
 
-Let us consider how depth-first search processes
-the following graph:
+让我们来看看深度优先搜索如何处理
+以下图：
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -48,10 +43,10 @@ the following graph:
 \path[draw,thick,-] (2) -- (5);
 \end{tikzpicture}
 \end{center}
-We may begin the search at any node of the graph;
-now we will begin the search at node 1.
+我们可以从图中的任意节点开始搜索；
+现在我们从节点 1 开始搜索。
 
-The search first proceeds to node 2:
+搜索首先前进到节点 2：
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -69,7 +64,7 @@ The search first proceeds to node 2:
 \path[draw=red,thick,->,line width=2pt] (1) -- (2);
 \end{tikzpicture}
 \end{center}
-After this, nodes 3 and 5 will be visited:
+此后，节点 3 和 5 将被访问：
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -89,12 +84,11 @@ After this, nodes 3 and 5 will be visited:
 \path[draw=red,thick,->,line width=2pt] (3) -- (5);
 \end{tikzpicture}
 \end{center}
-The neighbors of node 5 are 2 and 3,
-but the search has already visited both of them,
-so it is time to return to the previous nodes.
-Also the neighbors of nodes 3 and 2
-have been visited, so we next move
-from node 1 to node 4:
+节点 5 的邻居是 2 和 3，
+但搜索已经访问过这两个节点了，
+所以是时候返回之前的节点了。
+节点 3 和 2 的邻居也都已经被访问过了，
+所以接下来我们从节点 1 移动到节点 4：
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -112,70 +106,66 @@ from node 1 to node 4:
 \path[draw=red,thick,->,line width=2pt] (1) -- (4);
 \end{tikzpicture}
 \end{center}
-After this, the search terminates because it has visited
-all nodes.
+此后，搜索结束，因为所有节点
+都已被访问。
 
-The time complexity of depth-first search is $O(n+m)$
-where $n$ is the number of nodes and $m$ is the
-number of edges,
-because the algorithm processes each node and edge once.
+深度优先搜索的时间复杂度为 $O(n+m)$，
+其中 $n$ 是节点数，$m$ 是边数，
+因为算法对每个节点和每条边都只处理一次。
 
-\subsubsection*{Implementation}
+\subsubsection*{实现}
 
-Depth-first search can be conveniently
-implemented using recursion.
-The following function \texttt{dfs} begins
-a depth-first search at a given node.
-The function assumes that the graph is
-stored as adjacency lists in an array
+深度优先搜索可以方便地
+使用递归来实现。
+以下函数 \texttt{dfs} 从给定节点
+开始进行深度优先搜索。
+该函数假设图以邻接表的形式
+存储在一个数组中：
 \begin{lstlisting}
 vector<int> adj[N];
 \end{lstlisting}
-and also maintains an array
+并且还维护一个数组
 \begin{lstlisting}
 bool visited[N];
 \end{lstlisting}
-that keeps track of the visited nodes.
-Initially, each array value is \texttt{false},
-and when the search arrives at node $s$,
-the value of \texttt{visited}[$s$] becomes \texttt{true}.
-The function can be implemented as follows:
+用于记录已访问的节点。
+初始时，每个数组值为 \texttt{false}，
+当搜索到达节点 $s$ 时，
+\texttt{visited}[$s$] 的值变为 \texttt{true}。
+该函数可以实现如下：
 \begin{lstlisting}
 void dfs(int s) {
     if (visited[s]) return;
     visited[s] = true;
-    // process node s
+    // 处理节点 s
     for (auto u: adj[s]) {
         dfs(u);
     }
 }
 \end{lstlisting}
 
-\section{Breadth-first search}
+\section{广度优先搜索}
 
-\index{breadth-first search}
+\index{广度优先搜索}
 
-\key{Breadth-first search} (BFS) visits the nodes
-in increasing order of their distance
-from the starting node.
-Thus, we can calculate the distance
-from the starting node to all other
-nodes using breadth-first search.
-However, breadth-first search is more difficult
-to implement than depth-first search.
+\key{广度优先搜索}（BFS）按照节点到
+起始节点的距离递增的顺序访问节点。
+因此，我们可以使用广度优先搜索
+计算从起始节点到所有其他
+节点的距离。
+然而，广度优先搜索的实现
+比深度优先搜索更复杂。
 
-Breadth-first search goes through the nodes
-one level after another.
-First the search explores the nodes whose
-distance from the starting node is 1,
-then the nodes whose distance is 2, and so on.
-This process continues until all nodes
-have been visited.
+广度优先搜索逐层遍历节点。
+首先搜索探索距离起始节点为 1 的节点，
+然后是距离为 2 的节点，依此类推。
+这个过程持续到所有节点
+都被访问为止。
 
-\subsubsection*{Example}
+\subsubsection*{示例}
 
-Let us consider how breadth-first search processes
-the following graph:
+让我们来看看广度优先搜索如何处理
+以下图：
 
 \begin{center}
 \begin{tikzpicture}
@@ -194,9 +184,9 @@ the following graph:
 \path[draw,thick,-] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-Suppose that the search begins at node 1.
-First, we process all nodes that can be reached
-from node 1 using a single edge:
+假设搜索从节点 1 开始。
+首先，我们处理所有可以从节点 1 
+通过一条边到达的节点：
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -222,7 +212,7 @@ from node 1 using a single edge:
 \path[draw=red,thick,->,line width=2pt] (1) -- (4);
 \end{tikzpicture}
 \end{center}
-After this, we proceed to nodes 3 and 5:
+此后，我们前进到节点 3 和 5：
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -248,7 +238,7 @@ After this, we proceed to nodes 3 and 5:
 \path[draw=red,thick,->,line width=2pt] (2) -- (5);
 \end{tikzpicture}
 \end{center}
-Finally, we visit node 6:
+最后，我们访问节点 6：
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -274,13 +264,13 @@ Finally, we visit node 6:
 \path[draw=red,thick,->,line width=2pt] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-Now we have calculated the distances
-from the starting node to all nodes of the graph.
-The distances are as follows:
+现在我们已经计算出了
+从起始节点到图中所有节点的距离。
+距离如下：
 
 \begin{tabular}{ll}
 \\
-node & distance \\
+节点 & 距离 \\
 \hline
 1 & 0 \\
 2 & 1 \\
@@ -291,51 +281,46 @@ node & distance \\
 \\
 \end{tabular}
 
-Like in depth-first search,
-the time complexity of breadth-first search
-is $O(n+m)$, where $n$ is the number of nodes
-and $m$ is the number of edges.
+与深度优先搜索一样，
+广度优先搜索的时间复杂度
+也是 $O(n+m)$，其中 $n$ 是节点数，
+$m$ 是边数。
 
-\subsubsection*{Implementation}
+\subsubsection*{实现}
 
-Breadth-first search is more difficult
-to implement than depth-first search,
-because the algorithm visits nodes
-in different parts of the graph.
-A typical implementation is based on
-a queue that contains nodes.
-At each step, the next node in the queue
-will be processed.
+广度优先搜索比深度优先搜索更难实现，
+因为算法会访问图中不同部分的节点。
+一种典型的实现是基于一个包含节点的队列。
+在每一步中，队列中的下一个节点
+将被处理。
 
-The following code assumes that the graph is stored
-as adjacency lists and maintains the following
-data structures:
+以下代码假设图以邻接表的形式存储，
+并维护以下数据结构：
 \begin{lstlisting}
 queue<int> q;
 bool visited[N];
 int distance[N];
 \end{lstlisting}
 
-The queue \texttt{q}
-contains nodes to be processed
-in increasing order of their distance.
-New nodes are always added to the end
-of the queue, and the node at the beginning
-of the queue is the next node to be processed.
-The array \texttt{visited} indicates
-which nodes the search has already visited,
-and the array \texttt{distance} will contain the
-distances from the starting node to all nodes of the graph.
+队列 \texttt{q}
+包含待处理的节点，
+按其距离递增的顺序排列。
+新节点总是被添加到队列的末尾，
+而队列开头的节点是下一个要处理的节点。
+数组 \texttt{visited} 表示
+搜索已经访问过哪些节点，
+数组 \texttt{distance} 将包含
+从起始节点到图中所有节点的距离。
 
-The search can be implemented as follows,
-starting at node $x$:
+搜索可以实现如下，
+从节点 $x$ 开始：
 \begin{lstlisting}
 visited[x] = true;
 distance[x] = 0;
 q.push(x);
 while (!q.empty()) {
     int s = q.front(); q.pop();
-    // process node s
+    // 处理节点 s
     for (auto u : adj[s]) {
         if (visited[u]) continue;
         visited[u] = true;
@@ -345,29 +330,26 @@ while (!q.empty()) {
 }
 \end{lstlisting}
 
-\section{Applications}
+\section{应用}
 
-Using the graph traversal algorithms,
-we can check many properties of graphs.
-Usually, both depth-first search and
-breadth-first search may be used,
-but in practice, depth-first search
-is a better choice, because it is
-easier to implement.
-In the following applications we will
-assume that the graph is undirected.
+利用图的遍历算法，
+我们可以检查图的许多性质。
+通常，深度优先搜索和广度优先搜索都可以使用，
+但在实践中，深度优先搜索
+是更好的选择，因为它更容易实现。
+在以下应用中，我们假设图是无向图。
 
-\subsubsection{Connectivity check}
+\subsubsection{连通性检查}
 
-\index{connected graph}
+\index{连通图}
 
-A graph is connected if there is a path
-between any two nodes of the graph.
-Thus, we can check if a graph is connected
-by starting at an arbitrary node and
-finding out if we can reach all other nodes.
+如果一个图中任意两个节点之间都存在路径，
+则该图是连通的。
+因此，我们可以通过从任意节点出发，
+检查是否能到达所有其他节点，
+来判断一个图是否是连通的。
 
-For example, in the graph
+例如，在图
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (2) at (7,5) {$2$};
@@ -382,8 +364,8 @@ For example, in the graph
 \path[draw,thick,-] (2) -- (5);
 \end{tikzpicture}
 \end{center}
-a depth-first search from node $1$ visits
-the following nodes:
+中，从节点 $1$ 出发的深度优先搜索访问了
+以下节点：
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (2) at (7,5) {$2$};
@@ -403,22 +385,18 @@ the following nodes:
 \end{tikzpicture}
 \end{center}
 
-Since the search did not visit all the nodes,
-we can conclude that the graph is not connected.
-In a similar way, we can also find all connected components
-of a graph by iterating through the nodes and always
-starting a new depth-first search if the current node
-does not belong to any component yet.
+由于搜索没有访问所有节点，
+我们可以得出结论：该图不是连通的。
+类似地，我们还可以找出图的所有连通分量，
+方法是遍历所有节点，如果当前节点
+还不属于任何分量，就启动一次新的深度优先搜索。
 
-\subsubsection{Finding cycles}
+\subsubsection{寻找环}
 
-\index{cycle}
+\index{环}
 
-A graph contains a cycle if during a graph traversal,
-we find a node whose neighbor (other than the
-previous node in the current path) has already been
-visited.
-For example, the graph
+如果在图的遍历过程中，我们发现某个节点的邻居（除了当前路径上的前一个节点之外）已经被访问过，则该图包含一个环。
+例如，图
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (2) at (7,5) {$2$};
@@ -435,8 +413,8 @@ For example, the graph
 \path[draw,thick,-] (3) -- (5);
 \end{tikzpicture}
 \end{center}
-contains two cycles and we can find one
-of them as follows:
+包含两个环，我们可以按如下方式找到
+其中一个：
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (2) at (7,5) {$2$};
@@ -458,39 +436,37 @@ of them as follows:
 
 \end{tikzpicture}
 \end{center}
-After moving from node 2 to node 5 we notice that
-the neighbor 3 of node 5 has already been visited.
-Thus, the graph contains a cycle that goes through node 3,
-for example, $3 \rightarrow 2 \rightarrow 5 \rightarrow 3$.
+从节点 2 移动到节点 5 后，我们注意到
+节点 5 的邻居 3 已经被访问过了。
+因此，该图包含一个经过节点 3 的环，
+例如，$3 \rightarrow 2 \rightarrow 5 \rightarrow 3$。
 
-Another way to find out whether a graph contains a cycle
-is to simply calculate the number of nodes and edges
-in every component.
-If a component contains $c$ nodes and no cycle,
-it must contain exactly $c-1$ edges
-(so it has to be a tree).
-If there are $c$ or more edges, the component
-surely contains a cycle.
+判断一个图是否包含环的另一种方法是
+简单地计算每个连通分量中的节点数和边数。
+如果一个连通分量包含 $c$ 个节点且没有环，
+则它必须恰好包含 $c-1$ 条边
+（即它必须是一棵树）。
+如果有 $c$ 条或更多的边，则该连通分量
+一定包含一个环。
 
-\subsubsection{Bipartiteness check}
+\subsubsection{二分图检查}
 
-\index{bipartite graph}
+\index{二分图}
 
-A graph is bipartite if its nodes can be colored
-using two colors so that there are no adjacent
-nodes with the same color.
-It is surprisingly easy to check if a graph
-is bipartite using graph traversal algorithms.
+如果一个图的节点可以用两种颜色着色，
+使得没有相邻的节点具有相同的颜色，
+则该图是二分图。
+使用图的遍历算法可以非常容易地
+检查一个图是否是二分图。
 
-The idea is to color the starting node blue,
-all its neighbors red, all their neighbors blue, and so on.
-If at some point of the search we notice that
-two adjacent nodes have the same color,
-this means that the graph is not bipartite.
-Otherwise the graph is bipartite and one coloring
-has been found.
+基本思路是将起始节点着为蓝色，
+其所有邻居着为红色，邻居的邻居着为蓝色，依此类推。
+如果在搜索过程中的某个时刻，我们发现
+两个相邻的节点具有相同的颜色，
+这意味着该图不是二分图。
+否则，该图是二分图，并且已经找到了一种着色方案。
 
-For example, the graph
+例如，图
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (2) at (5,5) {$2$};
@@ -507,8 +483,8 @@ For example, the graph
 \path[draw,thick,-] (5) -- (3);
 \end{tikzpicture}
 \end{center}
-is not bipartite, because a search from node 1
-proceeds as follows:
+不是二分图，因为从节点 1 开始的搜索
+进行如下：
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=red!40] (2) at (5,5) {$2$};
@@ -530,20 +506,19 @@ proceeds as follows:
 \path[draw=red,thick,->,line width=2pt] (5) -- (2);
 \end{tikzpicture}
 \end{center}
-We notice that the color of both nodes 2 and 5
-is red, while they are adjacent nodes in the graph.
-Thus, the graph is not bipartite.
+我们注意到节点 2 和 5 的颜色
+都是红色，而它们在图中是相邻的节点。
+因此，该图不是二分图。
 
-This algorithm always works, because when there
-are only two colors available,
-the color of the starting node in a component
-determines the colors of all other nodes in the component.
-It does not make any difference whether the
-starting node is red or blue.
+这个算法总是有效的，因为当只有
+两种颜色可用时，一个连通分量中起始节点的颜色
+决定了该分量中所有其他节点的颜色。
+起始节点是红色还是蓝色
+并没有任何区别。
 
-Note that in the general case,
-it is difficult to find out if the nodes
-in a graph can be colored using $k$ colors
-so that no adjacent nodes have the same color.
-Even when $k=3$, no efficient algorithm is known
-but the problem is NP-hard.
+注意，在一般情况下，
+要判断一个图中的节点是否能用 $k$ 种颜色着色
+使得没有相邻的节点具有相同的颜色
+是很困难的。
+即使当 $k=3$ 时，也没有已知的高效算法，
+该问题是 NP 困难的。

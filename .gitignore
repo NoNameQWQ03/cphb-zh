@@ -1,0 +1,16 @@
+# LaTeX 编译产生的临时文件
+*.aux
+*.log
+*.out
+*.toc
+*.idx
+*.ilg
+*.ind
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb

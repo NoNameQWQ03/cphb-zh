@@ -1,46 +1,41 @@
-\chapter{Amortized analysis}
+\chapter{平摊分析}
 
-\index{amortized analysis}
+\index{平摊分析}
 
-The time complexity of an algorithm
-is often easy to analyze
-just by examining the structure
-of the algorithm:
-what loops does the algorithm contain
-and how many times the loops are performed.
-However, sometimes a straightforward analysis
-does not give a true picture of the efficiency of the algorithm.
+算法的时间复杂度
+通常很容易分析，
+只需检查算法的结构：
+算法包含哪些循环，
+以及循环执行了多少次。
+然而，有时简单的分析
+并不能真实反映算法的效率。
 
-\key{Amortized analysis} can be used to analyze
-algorithms that contain operations whose
-time complexity varies.
-The idea is to estimate the total time used to
-all such operations during the
-execution of the algorithm, instead of focusing
-on individual operations.
+\key{平摊分析}可以用来分析
+包含时间复杂度变化的操作的算法。
+其思想是估算算法执行期间
+所有此类操作所使用的总时间，
+而不是关注单个操作。
 
-\section{Two pointers method}
+\section{双指针方法}
 
-\index{two pointers method}
+\index{双指针方法}
 
-In the \key{two pointers method},
-two pointers are used to
-iterate through the array values.
-Both pointers can move to one direction only,
-which ensures that the algorithm works efficiently.
-Next we discuss two problems that can be solved
-using the two pointers method.
+在\key{双指针方法}中，
+使用两个指针来遍历数组的值。
+两个指针都只能向一个方向移动，
+这确保了算法的高效性。
+接下来我们讨论两个可以使用
+双指针方法解决的问题。
 
-\subsubsection{Subarray sum}
+\subsubsection{子数组和}
 
-As the first example,
-consider a problem where we are
-given an array of $n$ positive integers
-and a target sum $x$,
-and we want to find a subarray whose sum is $x$
-or report that there is no such subarray.
+作为第一个例子，
+考虑这样一个问题：给定一个包含$n$个正整数的数组
+和一个目标和$x$，
+我们要找到一个和为$x$的子数组，
+或者报告不存在这样的子数组。
 
-For example, the array
+例如，数组
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -55,7 +50,7 @@ For example, the array
 \node at (7.5,0.5) {$3$};
 \end{tikzpicture}
 \end{center}
-contains a subarray whose sum is 8:
+包含一个和为8的子数组：
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (5,1);
@@ -72,18 +67,18 @@ contains a subarray whose sum is 8:
 \end{tikzpicture}
 \end{center}
 
-This problem can be solved in
-$O(n)$ time by using the two pointers method.
-The idea is to maintain pointers that point to the
-first and last value of a subarray.
-On each turn, the left pointer moves one step
-to the right, and the right pointer moves to the right
-as long as the resulting subarray sum is at most $x$.
-If the sum becomes exactly $x$,
-a solution has been found.
+这个问题可以使用双指针方法
+在$O(n)$时间内解决。
+其思想是维护指向子数组
+第一个和最后一个值的指针。
+在每一轮中，左指针向右移动一步，
+右指针则向右移动，
+只要结果子数组的和不超过$x$。
+如果和恰好等于$x$，
+就找到了一个解。
 
-As an example, consider the following array
-and a target sum $x=8$:
+作为例子，考虑以下数组
+和目标和$x=8$：
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -99,8 +94,8 @@ and a target sum $x=8$:
 \end{tikzpicture}
 \end{center}
 
-The initial subarray contains the values
-1, 3 and 2 whose sum is 6:
+初始子数组包含值
+1、3和2，其和为6：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -121,9 +116,9 @@ The initial subarray contains the values
 \end{tikzpicture}
 \end{center}
 
-Then, the left pointer moves one step to the right.
-The right pointer does not move, because otherwise
-the subarray sum would exceed $x$.
+然后，左指针向右移动一步。
+右指针不动，因为否则
+子数组的和将超过$x$。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -144,11 +139,10 @@ the subarray sum would exceed $x$.
 \end{tikzpicture}
 \end{center}
 
-Again, the left pointer moves one step to the right,
-and this time the right pointer moves three
-steps to the right.
-The subarray sum is $2+5+1=8$, so a subarray
-whose sum is $x$ has been found.
+再一次，左指针向右移动一步，
+这次右指针向右移动了三步。
+子数组的和为$2+5+1=8$，因此找到了
+一个和为$x$的子数组。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -169,44 +163,43 @@ whose sum is $x$ has been found.
 \end{tikzpicture}
 \end{center}
 
-The running time of the algorithm depends on
-the number of steps the right pointer moves.
-While there is no useful upper bound on how many steps the
-pointer can move on a \emph{single} turn.
-we know that the pointer moves \emph{a total of}
-$O(n)$ steps during the algorithm,
-because it only moves to the right.
+算法的运行时间取决于
+右指针移动的步数。
+虽然在\emph{单次}操作中
+指针移动的步数没有有用的上界，
+但我们知道在算法执行期间指针总共移动了
+\emph{总共}$O(n)$步，
+因为它只向右移动。
 
-Since both the left and right pointer
-move $O(n)$ steps during the algorithm,
-the algorithm works in $O(n)$ time.
+由于左指针和右指针
+在算法执行期间都移动$O(n)$步，
+因此算法的运行时间为$O(n)$。
 
-\subsubsection{2SUM problem}
+\subsubsection{2SUM问题}
 
-\index{2SUM problem}
+\index{2SUM问题}
 
-Another problem that can be solved using
-the two pointers method is the following problem,
-also known as the \key{2SUM problem}:
-given an array of $n$ numbers and
-a target sum $x$, find
-two array values such that their sum is $x$,
-or report that no such values exist.
+另一个可以使用
+双指针方法解决的问题是
+以下问题，也称为\key{2SUM问题}：
+给定一个包含$n$个数的数组
+和一个目标和$x$，找出
+两个数组值使其和为$x$，
+或者报告不存在这样的值。
 
-To solve the problem, we first
-sort the array values in increasing order.
-After that, we iterate through the array using
-two pointers.
-The left pointer starts at the first value
-and moves one step to the right on each turn.
-The right pointer begins at the last value
-and always moves to the left until the sum of the
-left and right value is at most $x$.
-If the sum is exactly $x$,
-a solution has been found.
+为了解决这个问题，我们首先
+将数组值按递增顺序排序。
+然后，我们使用两个指针遍历数组。
+左指针从第一个值开始，
+每轮向右移动一步。
+右指针从最后一个值开始，
+始终向左移动，直到左右
+值之和不超过$x$。
+如果和恰好等于$x$，
+就找到了一个解。
 
-For example, consider the following array
-and a target sum $x=12$:
+例如，考虑以下数组
+和目标和$x=12$：
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -222,10 +215,10 @@ and a target sum $x=12$:
 \end{tikzpicture}
 \end{center}
 
-The initial positions of the pointers
-are as follows.
-The sum of the values is $1+10=11$
-that is smaller than $x$.
+指针的初始位置
+如下所示。
+值之和为$1+10=11$，
+小于$x$。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -247,9 +240,9 @@ that is smaller than $x$.
 \end{tikzpicture}
 \end{center}
 
-Then the left pointer moves one step to the right.
-The right pointer moves three steps to the left,
-and the sum becomes $4+7=11$.
+然后左指针向右移动一步。
+右指针向左移动三步，
+和变为$4+7=11$。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -271,9 +264,9 @@ and the sum becomes $4+7=11$.
 \end{tikzpicture}
 \end{center}
 
-After this, the left pointer moves one step to the right again.
-The right pointer does not move, and a solution
-$5+7=12$ has been found.
+之后，左指针再次向右移动一步。
+右指针不动，找到了一个解
+$5+7=12$。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -295,66 +288,66 @@ $5+7=12$ has been found.
 \end{tikzpicture}
 \end{center}
 
-The running time of the algorithm is
-$O(n \log n)$, because it first sorts
-the array in $O(n \log n)$ time,
-and then both pointers move $O(n)$ steps.
+算法的运行时间为
+$O(n \log n)$，因为它首先
+在$O(n \log n)$时间内对数组排序，
+然后两个指针各移动$O(n)$步。
 
-Note that it is possible to solve the problem
-in another way in $O(n \log n)$ time using binary search.
-In such a solution, we iterate through the array
-and for each array value, we try to find another
-value that yields the sum $x$.
-This can be done by performing $n$ binary searches,
-each of which takes $O(\log n)$ time.
+注意，也可以使用二分搜索
+以另一种方式在$O(n \log n)$时间内
+解决这个问题。
+在这种解法中，我们遍历数组，
+对于每个数组值，尝试找到另一个
+值使其与该值之和为$x$。
+这可以通过执行$n$次二分搜索来完成，
+每次二分搜索耗时$O(\log n)$。
 
-\index{3SUM problem}
-A more difficult problem is 
-the \key{3SUM problem} that asks to
-find \emph{three} array values
-whose sum is $x$.
-Using the idea of the above algorithm,
-this problem can be solved in $O(n^2)$ time\footnote{For a long time,
-it was thought that solving
-the 3SUM problem more efficiently than in $O(n^2)$ time
-would not be possible.
-However, in 2014, it turned out \cite{gro14}
-that this is not the case.}.
-Can you see how?
+\index{3SUM问题}
+一个更难的问题是
+\key{3SUM问题}，要求找到
+\emph{三个}数组值
+使其和为$x$。
+利用上述算法的思想，
+这个问题可以在$O(n^2)$时间内解决\footnote{长期以来，
+人们认为比$O(n^2)$时间
+更高效地解决
+3SUM问题是不可能的。
+然而，2014年的研究 \cite{gro14}
+表明事实并非如此。}。
+你能想到怎么做吗？
 
-\section{Nearest smaller elements}
+\section{最近较小元素}
 
-\index{nearest smaller elements}
+\index{最近较小元素}
 
-Amortized analysis is often used to
-estimate the number of operations
-performed on a data structure.
-The operations may be distributed unevenly so
-that most operations occur during a
-certain phase of the algorithm, but the total
-number of the operations is limited.
+平摊分析常用于估算
+在数据结构上执行的操作次数。
+这些操作可能分布不均匀，
+即大部分操作发生在算法的某个
+特定阶段，但操作的总数
+是有限的。
 
-As an example, consider the problem
-of finding for each array element
-the \key{nearest smaller element}, i.e.,
-the first smaller element that precedes the element
-in the array.
-It is possible that no such element exists,
-in which case the algorithm should report this.
-Next we will see how the problem can be
-efficiently solved using a stack structure.
+作为例子，考虑如下问题：
+为每个数组元素找到
+\key{最近较小元素}，即
+在数组中位于该元素之前的第一个
+更小的元素。
+可能不存在这样的元素，
+此时算法应报告这一情况。
+接下来我们将看到如何使用栈结构
+高效地解决这个问题。
 
-We go through the array from left to right
-and maintain a stack of array elements.
-At each array position, we remove elements from the stack
-until the top element is smaller than the
-current element, or the stack is empty.
-Then, we report that the top element is
-the nearest smaller element of the current element,
-or if the stack is empty, there is no such element.
-Finally, we add the current element to the stack.
+我们从左到右遍历数组，
+并维护一个由数组元素组成的栈。
+在每个数组位置，我们从栈中移除元素，
+直到栈顶元素小于当前元素，
+或者栈为空。
+然后，我们报告栈顶元素为
+当前元素的最近较小元素，
+如果栈为空，则不存在这样的元素。
+最后，我们将当前元素添加到栈中。
 
-As an example, consider the following array:
+作为例子，考虑以下数组：
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -370,10 +363,10 @@ As an example, consider the following array:
 \end{tikzpicture}
 \end{center}
 
-First, the elements 1, 3 and 4 are added to the stack,
-because each element is larger than the previous element.
-Thus, the nearest smaller element of 4 is 3,
-and the nearest smaller element of 3 is 1.
+首先，元素1、3和4被添加到栈中，
+因为每个元素都比前一个元素大。
+因此，4的最近较小元素是3，
+3的最近较小元素是1。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (3,1);
@@ -401,11 +394,11 @@ and the nearest smaller element of 3 is 1.
 \end{tikzpicture}
 \end{center}
 
-The next element 2 is smaller than the two top
-elements in the stack.
-Thus, the elements 3 and 4 are removed from the stack,
-and then the element 2 is added to the stack.
-Its nearest smaller element is 1:
+下一个元素2比栈顶的
+两个元素小。
+因此，元素3和4从栈中移除，
+然后元素2被添加到栈中。
+它的最近较小元素是1：
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (3,0) rectangle (4,1);
@@ -430,9 +423,9 @@ Its nearest smaller element is 1:
 \end{tikzpicture}
 \end{center}
 
-Then, the element 5 is larger than the element 2,
-so it will be added to the stack, and
-its nearest smaller element is 2:
+然后，元素5比元素2大，
+所以它被添加到栈中，
+其最近较小元素是2：
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (4,0) rectangle (5,1);
@@ -460,8 +453,8 @@ its nearest smaller element is 2:
 \end{tikzpicture}
 \end{center}
 
-After this, the element 5 is removed from the stack
-and the elements 3 and 4 are added to the stack:
+之后，元素5从栈中移除，
+元素3和4被添加到栈中：
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (6,0) rectangle (7,1);
@@ -492,9 +485,9 @@ and the elements 3 and 4 are added to the stack:
 \end{tikzpicture}
 \end{center}
 
-Finally, all elements except 1 are removed
-from the stack and the last element 2
-is added to the stack:
+最后，除1之外的所有元素
+都从栈中移除，最后一个元素2
+被添加到栈中：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -520,52 +513,51 @@ is added to the stack:
 \end{tikzpicture}
 \end{center}
 
-The efficiency of the algorithm depends on
-the total number of stack operations.
-If the current element is larger than
-the top element in the stack, it is directly
-added to the stack, which is efficient.
-However, sometimes the stack can contain several
-larger elements and it takes time to remove them.
-Still, each element is added \emph{exactly once} to the stack
-and removed \emph{at most once} from the stack.
-Thus, each element causes $O(1)$ stack operations,
-and the algorithm works in $O(n)$ time.
+算法的效率取决于
+栈操作的总次数。
+如果当前元素大于
+栈顶元素，它直接被
+添加到栈中，这是高效的。
+然而，有时栈中可能包含多个
+更大的元素，移除它们需要时间。
+尽管如此，每个元素\emph{恰好一次}被添加到栈中，
+并且\emph{至多一次}从栈中移除。
+因此，每个元素引起$O(1)$次栈操作，
+算法的运行时间为$O(n)$。
 
-\section{Sliding window minimum}
+\section{滑动窗口最小值}
 
-\index{sliding window}
-\index{sliding window minimum}
+\index{滑动窗口}
+\index{滑动窗口最小值}
 
-A \key{sliding window} is a constant-size subarray
-that moves from left to right through the array.
-At each window position,
-we want to calculate some information
-about the elements inside the window.
-In this section, we focus on the problem
-of maintaining the \key{sliding window minimum},
-which means that
-we should report the smallest value inside each window.
+\key{滑动窗口}是一个固定大小的子数组，
+它从左到右穿过数组。
+在每个窗口位置，
+我们想计算关于
+窗口内元素的一些信息。
+在本节中，我们关注
+维护\key{滑动窗口最小值}的问题，
+也就是说
+我们应该报告每个窗口内的最小值。
 
-The sliding window minimum can be calculated
-using a similar idea that we used to calculate
-the nearest smaller elements.
-We maintain a queue
-where each element is larger than
-the previous element,
-and the first element
-always corresponds to the minimum element inside the window.
-After each window move,
-we remove elements from the end of the queue
-until the last queue element
-is smaller than the new window element,
-or the queue becomes empty.
-We also remove the first queue element
-if it is not inside the window anymore.
-Finally, we add the new window element
-to the end of the queue.
+滑动窗口最小值可以使用
+与我们计算最近较小元素时类似的思想来计算。
+我们维护一个队列，
+其中每个元素都大于
+前一个元素，
+而第一个元素
+始终对应窗口内的最小元素。
+在每次窗口移动后，
+我们从队列末尾移除元素，
+直到最后一个队列元素
+小于新的窗口元素，
+或者队列变空。
+如果队列中的第一个元素
+不再位于窗口内，我们也将其移除。
+最后，我们将新的窗口元素
+添加到队列末尾。
 
-As an example, consider the following array:
+作为例子，考虑以下数组：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -582,8 +574,8 @@ As an example, consider the following array:
 \end{tikzpicture}
 \end{center}
 
-Suppose that the size of the sliding window is 4.
-At the first window position, the smallest value is 1:
+假设滑动窗口的大小为4。
+在第一个窗口位置，最小值为1：
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (0,0) rectangle (4,1);
@@ -611,12 +603,12 @@ At the first window position, the smallest value is 1:
 \end{tikzpicture}
 \end{center}
 
-Then the window moves one step right.
-The new element 3 is smaller than the elements
-4 and 5 in the queue, so the elements 4 and 5
-are removed from the queue
-and the element 3 is added to the queue.
-The smallest value is still 1.
+然后窗口向右移动一步。
+新元素3比队列中的
+元素4和5小，因此元素4和5
+从队列中移除，
+元素3被添加到队列中。
+最小值仍为1。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (1,0) rectangle (5,1);
@@ -641,12 +633,12 @@ The smallest value is still 1.
 \end{tikzpicture}
 \end{center}
 
-After this, the window moves again,
-and the smallest element 1
-does not belong to the window anymore.
-Thus, it is removed from the queue and the smallest
-value is now 3. Also the new element 4
-is added to the queue.
+之后，窗口再次移动，
+最小元素1
+不再属于窗口。
+因此，它从队列中移除，
+最小值现在是3。同时新元素4
+被添加到队列中。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (6,1);
@@ -671,10 +663,10 @@ is added to the queue.
 \end{tikzpicture}
 \end{center}
 
-The next new element 1 is smaller than all elements
-in the queue.
-Thus, all elements are removed from the queue
-and it will only contain the element 1:
+下一个新元素1比队列中的
+所有元素都小。
+因此，所有元素都从队列中移除，
+队列中将只包含元素1：
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (3,0) rectangle (7,1);
@@ -695,10 +687,10 @@ and it will only contain the element 1:
 \end{tikzpicture}
 \end{center}
 
-Finally the window reaches its last position.
-The element 2 is added to the queue,
-but the smallest value inside the window
-is still 1.
+最后窗口到达其最后一个位置。
+元素2被添加到队列中，
+但窗口内的最小值
+仍为1。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (4,0) rectangle (8,1);
@@ -723,10 +715,10 @@ is still 1.
 \end{tikzpicture}
 \end{center}
 
-Since each array element
-is added to the queue exactly once and
-removed from the queue at most once,
-the algorithm works in $O(n)$ time.
+由于每个数组元素
+恰好一次被添加到队列中，
+并且至多一次从队列中移除，
+因此算法的运行时间为$O(n)$。
 
 
 

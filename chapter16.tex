@@ -1,29 +1,27 @@
-\chapter{Directed graphs}
+\chapter{有向图}
 
-In this chapter, we focus on two classes of directed graphs:
+在本章中，我们重点关注两类有向图：
 \begin{itemize}
-\item \key{Acyclic graphs}:
-There are no cycles in the graph,
-so there is no path from any node to itself\footnote{Directed acyclic
-graphs are sometimes called DAGs.}.
-\item \key{Successor graphs}:
-The outdegree of each node is 1,
-so each node has a unique successor.
+\item \key{无环图}：
+图中没有环，
+因此没有任何节点到自身的路径\footnote{有向无环图有时被称为DAG。}。
+\item \key{后继图}：
+每个节点的出度为1，
+因此每个节点有唯一的后继。
 \end{itemize}
-It turns out that in both cases,
-we can design efficient algorithms that are based
-on the special properties of the graphs.
+事实证明，在这两种情况下，
+我们都可以基于图的特殊性质
+设计高效的算法。
 
-\section{Topological sorting}
+\section{拓扑排序}
 
-\index{topological sorting}
-\index{cycle}
+\index{拓扑排序}
+\index{环}
 
-A \key{topological sort} is an ordering
-of the nodes of a directed graph
-such that if there is a path from node $a$ to node $b$,
-then node $a$ appears before node $b$ in the ordering.
-For example, for the graph
+\key{拓扑排序}是图中节点的一种排列方式，
+使得如果存在从节点 $a$ 到节点 $b$ 的路径，
+则在排列中节点 $a$ 出现在节点 $b$ 之前。
+例如，对于以下图
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -42,8 +40,8 @@ For example, for the graph
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-one topological sort is
-$[4,1,5,2,3,6]$:
+一个拓扑排序是
+$[4,1,5,2,3,6]$：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (-6,0) {$1$};
@@ -63,48 +61,44 @@ $[4,1,5,2,3,6]$:
 \end{tikzpicture}
 \end{center}
 
-An acyclic graph always has a topological sort.
-However, if the graph contains a cycle,
-it is not possible to form a topological sort,
-because no node of the cycle can appear
-before the other nodes of the cycle in the ordering.
-It turns out that depth-first search can be used
-to both check if a directed graph contains a cycle
-and, if it does not contain a cycle, to construct a topological sort.
+无环图总是存在拓扑排序。
+然而，如果图中包含环，
+则无法形成拓扑排序，
+因为环中的任何节点都无法在排列中
+出现在环中其他节点之前。
+事实证明，深度优先搜索既可以用来检查有向图是否包含环，
+也可以在不含环的情况下构造拓扑排序。
 
-\subsubsection{Algorithm}
+\subsubsection{算法}
 
-The idea is to go through the nodes of the graph
-and always begin a depth-first search at the current node
-if it has not been processed yet.
-During the searches, the nodes have three possible states:
+基本思想是遍历图中的节点，
+如果当前节点尚未被处理，
+则从该节点开始深度优先搜索。
+在搜索过程中，节点有三种可能的状态：
 
 \begin{itemize}
-\item state 0: the node has not been processed (white)
-\item state 1: the node is under processing (light gray)
-\item state 2: the node has been processed (dark gray)
+\item 状态0：节点尚未被处理（白色）
+\item 状态1：节点正在处理中（浅灰色）
+\item 状态2：节点已被处理（深灰色）
 \end{itemize}
 
-Initially, the state of each node is 0.
-When a search reaches a node for the first time,
-its state becomes 1.
-Finally, after all successors of the node have
-been processed, its state becomes 2.
+初始时，每个节点的状态为0。
+当搜索首次到达某个节点时，
+其状态变为1。
+最后，当该节点的所有后继
+都已被处理后，其状态变为2。
 
-If the graph contains a cycle, we will find this out
-during the search, because sooner or later
-we will arrive at a node whose state is 1.
-In this case, it is not possible to construct a topological sort.
+如果图中包含环，我们将在搜索过程中发现这一点，
+因为迟早会遇到状态为1的节点。
+在这种情况下，无法构造拓扑排序。
 
-If the graph does not contain a cycle, we can construct
-a topological sort by 
-adding each node to a list when the state of the node becomes 2.
-This list in reverse order is a topological sort.
+如果图不包含环，我们可以构造拓扑排序，方法是将每个节点在其状态变为2时添加到一个列表中。
+该列表的逆序即为拓扑排序。
 
-\subsubsection{Example 1}
+\subsubsection{示例1}
 
-In the example graph, the search first proceeds
-from node 1 to node 6:
+在示例图中，搜索首先从
+节点1进行到节点6：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -127,8 +121,8 @@ from node 1 to node 6:
 \end{tikzpicture}
 \end{center}
 
-Now node 6 has been processed, so it is added to the list.
-After this, also nodes 3, 2 and 1 are added to the list:
+现在节点6已被处理，因此将其添加到列表中。
+此后，节点3、2和1也被添加到列表中：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -149,8 +143,8 @@ After this, also nodes 3, 2 and 1 are added to the list:
 \end{tikzpicture}
 \end{center}
 
-At this point, the list is $[6,3,2,1]$.
-The next search begins at node 4:
+此时，列表为 $[6,3,2,1]$。
+下一次搜索从节点4开始：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -173,11 +167,10 @@ The next search begins at node 4:
 \end{tikzpicture}
 \end{center}
 
-Thus, the final list is $[6,3,2,1,5,4]$.
-We have processed all nodes, so a topological sort has
-been found.
-The topological sort is the reverse list
-$[4,5,1,2,3,6]$:
+因此，最终列表为 $[6,3,2,1,5,4]$。
+我们已处理所有节点，因此找到了拓扑排序。
+拓扑排序是逆序列表
+$[4,5,1,2,3,6]$：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -198,14 +191,13 @@ $[4,5,1,2,3,6]$:
 \end{tikzpicture}
 \end{center}
 
-Note that a topological sort is not unique,
-and there can be several topological sorts for a graph.
+注意，拓扑排序不是唯一的，
+一个图可能有多种拓扑排序。
 
-\subsubsection{Example 2}
+\subsubsection{示例2}
 
-Let us now consider a graph for which we
-cannot construct a topological sort,
-because the graph contains a cycle:
+现在考虑一个无法构造拓扑排序的图，
+因为该图包含环：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -225,7 +217,7 @@ because the graph contains a cycle:
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-The search proceeds as follows:
+搜索过程如下：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle,fill=gray!20] (1) at (1,5) {$1$};
@@ -245,30 +237,27 @@ The search proceeds as follows:
 \path[draw=red,thick,->,line width=2pt] (5) -- (2);
 \end{tikzpicture}
 \end{center}
-The search reaches node 2 whose state is 1,
-which means that the graph contains a cycle.
-In this example, there is a cycle
-$2 \rightarrow 3 \rightarrow 5 \rightarrow 2$.
+搜索到达节点2，其状态为1，
+这意味着图中包含环。
+在本例中，存在一个环 $2 \rightarrow 3 \rightarrow 5 \rightarrow 2$。
 
-\section{Dynamic programming}
+\section{动态规划}
 
-If a directed graph is acyclic,
-dynamic programming can be applied to it.
-For example, we can efficiently solve the following
-problems concerning paths from a starting node
-to an ending node:
+如果有向图是无环的，
+则可以对其应用动态规划。
+例如，我们可以高效地解决以下关于从起始节点到终止节点路径的问题：
 
 \begin{itemize}
-\item how many different paths are there?
-\item what is the shortest/longest path?
-\item what is the minimum/maximum number of edges in a path?
-\item which nodes certainly appear in any path?
+\item 有多少条不同的路径？
+\item 最短/最长路径是什么？
+\item 路径中边的最小/最大数量是多少？
+\item 哪些节点一定出现在任何路径中？
 \end{itemize}
 
-\subsubsection{Counting the number of paths}
+\subsubsection{计算路径数量}
 
-As an example, let us calculate the number of paths
-from node 1 to node 6 in the following graph:
+举例来说，让我们计算以下图中从
+节点1到节点6的路径数量：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -288,24 +277,22 @@ from node 1 to node 6 in the following graph:
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-There are a total of three such paths:
+这样的路径共有三条：
 \begin{itemize}
 \item $1 \rightarrow 2 \rightarrow 3 \rightarrow 6$
 \item $1 \rightarrow 4 \rightarrow 5 \rightarrow 2 \rightarrow 3 \rightarrow 6$
 \item $1 \rightarrow 4 \rightarrow 5 \rightarrow 3 \rightarrow 6$
 \end{itemize}
 
-Let $\texttt{paths}(x)$ denote the number of paths from
-node 1 to node $x$.
-As a base case, $\texttt{paths}(1)=1$.
-Then, to calculate other values of $\texttt{paths}(x)$,
-we may use the recursion
+令 $\texttt{paths}(x)$ 表示从节点1到节点 $x$ 的路径数量。
+作为基础情形，$\texttt{paths}(1)=1$。
+然后，要计算 $\texttt{paths}(x)$ 的其他值，
+我们可以使用递推公式
 \[\texttt{paths}(x) = \texttt{paths}(a_1)+\texttt{paths}(a_2)+\cdots+\texttt{paths}(a_k)\]
-where $a_1,a_2,\ldots,a_k$ are the nodes from which there
-is an edge to $x$.
-Since the graph is acyclic, the values of $\texttt{paths}(x)$
-can be calculated in the order of a topological sort.
-A topological sort for the above graph is as follows:
+其中 $a_1,a_2,\ldots,a_k$ 是有边指向 $x$ 的节点。
+由于图是无环的，$\texttt{paths}(x)$ 的值
+可以按拓扑排序的顺序计算。
+上图的一个拓扑排序如下：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -324,7 +311,7 @@ A topological sort for the above graph is as follows:
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-Hence, the numbers of paths are as follows:
+因此，路径数量如下：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -351,22 +338,19 @@ Hence, the numbers of paths are as follows:
 \end{tikzpicture}
 \end{center}
 
-For example, to calculate the value of $\texttt{paths}(3)$,
-we can use the formula $\texttt{paths}(2)+\texttt{paths}(5)$,
-because there are edges from nodes 2 and 5
-to node 3.
-Since $\texttt{paths}(2)=2$ and $\texttt{paths}(5)=1$, we conclude that $\texttt{paths}(3)=3$.
+例如，要计算 $\texttt{paths}(3)$ 的值，
+我们可以使用公式 $\texttt{paths}(2)+\texttt{paths}(5)$，
+因为节点2和5有边指向节点3。
+由于 $\texttt{paths}(2)=2$ 且 $\texttt{paths}(5)=1$，我们得出 $\texttt{paths}(3)=3$。
 
-\subsubsection{Extending Dijkstra's algorithm}
+\subsubsection{扩展Dijkstra算法}
 
-\index{Dijkstra's algorithm}
+\index{Dijkstra算法}
 
-A by-product of Dijkstra's algorithm is a directed, acyclic
-graph that indicates for each node of the original graph
-the possible ways to reach the node using a shortest path
-from the starting node.
-Dynamic programming can be applied to that graph.
-For example, in the graph
+Dijkstra算法的一个副产品是一个有向无环图，
+它指示了原图中每个节点从起始节点出发的最短路径的可能到达方式。
+可以对该图应用动态规划。
+例如，在以下图中
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -384,7 +368,7 @@ For example, in the graph
 \path[draw,thick,-] (2) -- node[font=\small,label=above:2] {} (3);
 \end{tikzpicture}
 \end{center}
-the shortest paths from node 1 may use the following edges:
+从节点1出发的最短路径可能使用以下边：
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -402,9 +386,7 @@ the shortest paths from node 1 may use the following edges:
 \end{tikzpicture}
 \end{center}
 
-Now we can, for example, calculate the number of
-shortest paths from node 1 to node 5
-using dynamic programming:
+现在，我们可以使用动态规划计算从节点1到节点5的最短路径数量：
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -428,22 +410,19 @@ using dynamic programming:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Representing problems as graphs}
+\subsubsection{将问题表示为图}
 
-Actually, any dynamic programming problem
-can be represented as a directed, acyclic graph.
-In such a graph, each node corresponds to a dynamic programming state
-and the edges indicate how the states depend on each other.
+实际上，任何动态规划问题都可以表示为有向无环图。
+在这样的图中，每个节点对应一个动态规划状态，
+边指示状态之间的依赖关系。
 
-As an example, consider the problem
-of forming a sum of money $n$
-using coins
-$\{c_1,c_2,\ldots,c_k\}$.
-In this problem, we can construct a graph where
-each node corresponds to a sum of money,
-and the edges show how the coins can be chosen.
-For example, for coins $\{1,3,4\}$ and $n=6$,
-the graph is as follows:
+例如，考虑使用硬币
+$\{c_1,c_2,\ldots,c_k\}$
+凑成金额 $n$ 的问题。
+在这个问题中，我们可以构造一个图，其中每个节点对应一个金额，
+边表示硬币的选择方式。
+例如，对于硬币 $\{1,3,4\}$ 和 $n=6$，
+图如下：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (0) at (0,0) {$0$};
@@ -472,35 +451,27 @@ the graph is as follows:
 \end{tikzpicture}
 \end{center}
 
-Using this representation,
-the shortest path from node 0 to node $n$
-corresponds to a solution with the minimum number of coins,
-and the total number of paths from node 0 to node $n$
-equals the total number of solutions.
+使用这种表示，
+从节点0到节点 $n$ 的最短路径对应于使用最少硬币数的解，
+而从节点0到节点 $n$ 的路径总数等于解的总数。
 
-\section{Successor paths}
+\section{后继路径}
 
-\index{successor graph}
-\index{functional graph}
+\index{后继图}
+\index{函数图}
 
-For the rest of the chapter,
-we will focus on \key{successor graphs}.
-In those graphs,
-the outdegree of each node is 1, i.e.,
-exactly one edge starts at each node.
-A successor graph consists of one or more
-components, each of which contains
-one cycle and some paths that lead to it.
+在本章余下部分，
+我们将关注\key{后继图}。
+在这些图中，每个节点的出度为1，即每个节点恰好有一条边出发。
+后继图由一个或多个连通分量组成，每个连通分量包含一个环和一些通向该环的路径。
 
-Successor graphs are sometimes called
-\key{functional graphs}.
-The reason for this is that any successor graph
-corresponds to a function that defines
-the edges of the graph.
-The parameter for the function is a node of the graph,
-and the function gives the successor of that node.
+后继图有时被称为
+\key{函数图}。
+这是因为任何后继图都对应一个定义图边的函数。
+函数的参数是图中的一个节点，
+函数返回该节点的后继。
 
-For example, the function
+例如，以下函数
 \begin{center}
 \begin{tabular}{r|rrrrrrrrr}
 $x$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
@@ -508,7 +479,7 @@ $x$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
 $\texttt{succ}(x)$ & 3 & 5 & 7 & 6 & 2 & 2 & 1 & 6 & 3 \\
 \end{tabular}
 \end{center}
-defines the following graph:
+定义了以下图：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -533,12 +504,10 @@ defines the following graph:
 \end{tikzpicture}
 \end{center}
 
-Since each node of a successor graph has a
-unique successor, we can also define a function $\texttt{succ}(x,k)$
-that gives the node that we will reach if
-we begin at node $x$ and walk $k$ steps forward.
-For example, in the above graph $\texttt{succ}(4,6)=2$,
-because we will reach node 2 by walking 6 steps from node 4:
+由于后继图的每个节点都有唯一后继，我们还可以定义函数 $\texttt{succ}(x,k)$，
+它返回从节点 $x$ 出发向前走 $k$ 步后到达的节点。
+例如，在上图中 $\texttt{succ}(4,6)=2$，
+因为从节点4出发走6步将到达节点2：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -559,16 +528,11 @@ because we will reach node 2 by walking 6 steps from node 4:
 \end{tikzpicture}
 \end{center}
 
-A straightforward way to calculate a value of $\texttt{succ}(x,k)$
-is to start at node $x$ and walk $k$ steps forward, which takes $O(k)$ time.
-However, using preprocessing, any value of $\texttt{succ}(x,k)$
-can be calculated in only $O(\log k)$ time.
+计算 $\texttt{succ}(x,k)$ 值的一种直接方法是从节点 $x$ 出发走 $k$ 步，这需要 $O(k)$ 时间。
+然而，通过预处理，任何 $\texttt{succ}(x,k)$ 的值可以在仅 $O(\log k)$ 时间内计算出来。
 
-The idea is to precalculate all values of $\texttt{succ}(x,k)$ where
-$k$ is a power of two and at most $u$, where $u$ is
-the maximum number of steps we will ever walk.
-This can be efficiently done, because
-we can use the following recursion:
+基本思想是预先计算所有 $k$ 为2的幂且不超过 $u$ 的 $\texttt{succ}(x,k)$ 值，其中 $u$ 是我们可能走的最大步数。
+这可以高效完成，因为我们可以使用以下递推：
 
 \begin{equation*}
     \texttt{succ}(x,k) = \begin{cases}
@@ -577,9 +541,9 @@ we can use the following recursion:
            \end{cases}
 \end{equation*}
 
-Precalculating the values takes $O(n \log u)$ time,
-because $O(\log u)$ values are calculated for each node.
-In the above graph, the first values are as follows:
+预处理这些值需要 $O(n \log u)$ 时间，
+因为每个节点需要计算 $O(\log u)$ 个值。
+在上图中，前几个值如下：
 
 \begin{center}
 \begin{tabular}{r|rrrrrrrrr}
@@ -593,32 +557,26 @@ $\cdots$ \\
 \end{tabular}
 \end{center}
 
-After this, any value of $\texttt{succ}(x,k)$ can be calculated
-by presenting the number of steps $k$ as a sum of powers of two.
-For example, if we want to calculate the value of $\texttt{succ}(x,11)$,
-we first form the representation $11=8+2+1$.
-Using that,
+此后，任何 $\texttt{succ}(x,k)$ 的值都可以通过将步数 $k$ 表示为2的幂之和来计算。
+例如，如果我们想计算 $\texttt{succ}(x,11)$ 的值，
+首先将 $11$ 表示为 $11=8+2+1$。
+利用这个表示，
 \[\texttt{succ}(x,11)=\texttt{succ}(\texttt{succ}(\texttt{succ}(x,8),2),1).\]
-For example, in the previous graph
+例如，在上一个图中
 \[\texttt{succ}(4,11)=\texttt{succ}(\texttt{succ}(\texttt{succ}(4,8),2),1)=5.\]
 
-Such a representation always consists of
-$O(\log k)$ parts, so calculating a value of $\texttt{succ}(x,k)$
-takes $O(\log k)$ time.
+这样的表示总是由 $O(\log k)$ 部分组成，因此计算 $\texttt{succ}(x,k)$ 的值需要 $O(\log k)$ 时间。
 
-\section{Cycle detection}
+\section{环检测}
 
-\index{cycle}
-\index{cycle detection}
+\index{环}
+\index{环检测}
 
-Consider a successor graph that only contains
-a path that ends in a cycle.
-We may ask the following questions:
-if we begin our walk at the starting node,
-what is the first node in the cycle
-and how many nodes does the cycle contain?
+考虑一个只包含一条以环结尾的路径的后继图。
+我们可以提出以下问题：如果我们从起始节点开始行走，
+环中的第一个节点是什么，环包含多少个节点？
 
-For example, in the graph
+例如，在以下图中
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -637,40 +595,26 @@ For example, in the graph
 \path[draw,thick,->] (6) -- (4);
 \end{tikzpicture}
 \end{center}
-we begin our walk at node 1,
-the first node that belongs to the cycle is node 4, and the cycle consists
-of three nodes (4, 5 and 6).
+我们从节点1开始行走，
+环中的第一个节点是节点4，环由三个节点组成（4、5和6）。
 
-A simple way to detect the cycle is to walk in the
-graph and keep track of
-all nodes that have been visited. Once a node is visited
-for the second time, we can conclude
-that the node is the first node in the cycle.
-This method works in $O(n)$ time and also uses
-$O(n)$ memory.
+检测环的一种简单方法是在图中行走并记录所有已访问的节点。一旦某个节点被第二次访问，
+我们就可以得出结论该节点是环中的第一个节点。
+这种方法的时间复杂度为 $O(n)$，空间复杂度也为 $O(n)$。
 
-However, there are better algorithms for cycle detection.
-The time complexity of such algorithms is still $O(n)$,
-but they only use $O(1)$ memory.
-This is an important improvement if $n$ is large.
-Next we will discuss Floyd's algorithm that
-achieves these properties.
+然而，还有更好的环检测算法。
+这些算法的时间复杂度仍然是 $O(n)$，但仅使用 $O(1)$ 的空间。
+当 $n$ 较大时，这是一个重要的改进。
+接下来我们将讨论Floyd算法，该算法具有这些性质。
 
-\subsubsection{Floyd's algorithm}
+\subsubsection{Floyd算法}
 
-\index{Floyd's algorithm}
+\index{Floyd算法}
 
-\key{Floyd's algorithm}\footnote{The idea of the algorithm is mentioned in \cite{knu982}
-and attributed to R. W. Floyd; however, it is not known if Floyd actually
-discovered the algorithm.} walks forward 
-in the graph using two pointers $a$ and $b$.
-Both pointers begin at a node $x$ that
-is the starting node of the graph.
-Then, on each turn, the pointer $a$ walks
-one step forward and the pointer $b$
-walks two steps forward.
-The process continues until
-the pointers meet each other:
+\key{Floyd算法}\footnote{该算法的思想在 \cite{knu982} 中被提及，并归功于R. W. Floyd；然而，目前尚不清楚Floyd是否真的发现了该算法。} 使用两个指针 $a$ 和 $b$ 在图中向前行走。
+两个指针都从图中的起始节点 $x$ 开始。
+然后，每一轮中，指针 $a$ 向前走一步，指针 $b$ 向前走两步。
+这个过程持续进行直到两个指针相遇：
 \begin{lstlisting}
 a = succ(x);
 b = succ(succ(x));
@@ -680,13 +624,11 @@ while (a != b) {
 }
 \end{lstlisting}
 
-At this point, the pointer $a$ has walked $k$ steps
-and the pointer $b$ has walked $2k$ steps,
-so the length of the cycle divides $k$.
-Thus, the first node that belongs to the cycle
-can be found by moving the pointer $a$ to node $x$
-and advancing the pointers
-step by step until they meet again.
+此时，指针 $a$ 走了 $k$ 步，
+指针 $b$ 走了 $2k$ 步，
+因此环的长度是 $k$ 的因子。
+因此，要找到环中的第一个节点，可以将指针 $a$ 移回节点 $x$，
+然后逐步推进两个指针直到它们再次相遇。
 \begin{lstlisting}
 a = x;
 while (a != b) {
@@ -696,8 +638,7 @@ while (a != b) {
 first = a;
 \end{lstlisting}
 
-After this, the length of the cycle
-can be calculated as follows:
+此后，环的长度可以如下计算：
 \begin{lstlisting}
 b = succ(a);
 length = 1;

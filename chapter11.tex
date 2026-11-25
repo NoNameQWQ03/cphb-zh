@@ -1,35 +1,32 @@
-\chapter{Basics of graphs}
+\chapter{图的基础}
 
-Many programming problems can be solved by
-modeling the problem as a graph problem
-and using an appropriate graph algorithm.
-A typical example of a graph is a network
-of roads and cities in a country.
-Sometimes, though, the graph is hidden
-in the problem and it may be difficult to detect it.
+许多编程问题可以通过将问题建模为图问题
+并使用适当的图算法来解决。
+图的一个典型例子是一个国家中
+的道路和城市网络。
+但有时候，图隐藏在问题之中，
+可能很难被发现。
 
-This part of the book discusses graph algorithms,
-especially focusing on topics that
-are important in competitive programming.
-In this chapter, we go through concepts
-related to graphs,
-and study different ways to represent graphs in algorithms.
+本书的这一部分讨论图算法，
+特别关注在竞赛编程中
+重要的主题。
+在本章中，我们将学习与图相关的概念，
+并研究在算法中表示图的不同方法。
 
-\section{Graph terminology}
+\section{图术语}
 
-\index{graph}
-\index{node}
-\index{edge}
+\index{图}
+\index{节点}
+\index{边}
 
-A \key{graph} consists of \key{nodes}
-and \key{edges}. In this book,
-the variable $n$ denotes the number of nodes
-in a graph, and the variable $m$ denotes
-the number of edges.
-The nodes are numbered
-using integers $1,2,\ldots,n$.
+\key{图}由\key{节点}和\key{边}组成。
+在本书中，变量 $n$ 表示图中
+的节点数，变量 $m$ 表示
+边的数量。
+节点使用整数 $1,2,\ldots,n$
+来编号。
 
-For example, the following graph consists of 5 nodes and 7 edges:
+例如，以下图由5个节点和7条边组成：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -49,16 +46,16 @@ For example, the following graph consists of 5 nodes and 7 edges:
 \end{tikzpicture}
 \end{center}
 
-\index{path}
+\index{路径}
 
-A \key{path} leads from node $a$ to node $b$
-through edges of the graph.
-The \key{length} of a path is the number of
-edges in it.
-For example, the above graph contains
-a path $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$
-of length 3
-from node 1 to node 5:
+\key{路径}从节点 $a$ 出发，经过图中的边
+到达节点 $b$。
+路径的\key{长度}是其中
+边的数量。
+例如，上图包含一条
+长度为3的路径
+$1 \rightarrow 3 \rightarrow 4 \rightarrow 5$，
+从节点1到节点5：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -82,14 +79,14 @@ from node 1 to node 5:
 \end{tikzpicture}
 \end{center}
 
-\index{cycle}
+\index{环}
 
-A path is a \key{cycle} if the first and last
-node is the same.
-For example, the above graph contains
-a cycle $1 \rightarrow 3 \rightarrow 4 \rightarrow 1$.
-A path is \key{simple} if each node appears
-at most once in the path.
+如果路径的第一个节点和最后一个节点相同，
+则该路径是一个\key{环}。
+例如，上图包含一个
+环 $1 \rightarrow 3 \rightarrow 4 \rightarrow 1$。
+如果路径中每个节点最多出现一次，
+则该路径是\key{简单路径}。
 
 
 % 
@@ -102,13 +99,13 @@ at most once in the path.
 % \item $1 \rightarrow 3 \rightarrow 4 \rightarrow 2 \rightarrow 5$ (length 4)
 % \end{itemize}
 
-\subsubsection{Connectivity}
+\subsubsection{连通性}
 
-\index{connected graph}
+\index{连通图}
 
-A graph is \key{connected} if there is a path
-between any two nodes.
-For example, the following graph is connected:
+如果任意两个节点之间都存在路径，
+则该图是\key{连通的}。
+例如，以下图是连通的：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -123,9 +120,9 @@ For example, the following graph is connected:
 \end{tikzpicture}
 \end{center}
 
-The following graph is not connected,
-because it is not possible to get
-from node 4 to any other node:
+以下图不是连通的，
+因为无法从节点4
+到达任何其他节点：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -138,15 +135,13 @@ from node 4 to any other node:
 \end{tikzpicture}
 \end{center}
 
-\index{component}
+\index{连通分量}
 
-The connected parts of a graph are
-called its \key{components}.
-For example, the following graph
-contains three components:
-$\{1,\,2,\,3\}$,
-$\{4,\,5,\,6,\,7\}$ and
-$\{8\}$.
+图的连通部分称为其\key{连通分量}。
+例如，以下图包含三个连通分量：
+$\{1,\,2,\,3\}$、
+$\{4,\,5,\,6,\,7\}$ 和
+$\{8\}$。
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -170,13 +165,12 @@ $\{8\}$.
 \end{tikzpicture}
 \end{center}
 
-\index{tree}
+\index{树}
 
-A \key{tree} is a connected graph
-that consists of $n$ nodes and $n-1$ edges.
-There is a unique path
-between any two nodes of a tree.
-For example, the following graph is a tree:
+\key{树}是一种连通图，
+由 $n$ 个节点和 $n-1$ 条边组成。
+树中任意两个节点之间存在唯一路径。
+例如，以下图是一棵树：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -195,14 +189,13 @@ For example, the following graph is a tree:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Edge directions}
+\subsubsection{边的方向}
 
-\index{directed graph}
+\index{有向图}
 
-A graph is \key{directed}
-if the edges can be traversed
-in one direction only.
-For example, the following graph is directed:
+如果边只能沿一个方向遍历，
+则该图是\key{有向的}。
+例如，以下图是有向图：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -219,19 +212,18 @@ For example, the following graph is directed:
 \end{tikzpicture}
 \end{center}
 
-The above graph contains
-a path $3 \rightarrow 1 \rightarrow 2 \rightarrow 5$
-from node $3$ to node $5$,
-but there is no path from node $5$ to node $3$.
+上图包含一条
+从节点 $3$ 到节点 $5$ 的路径
+$3 \rightarrow 1 \rightarrow 2 \rightarrow 5$，
+但没有从节点 $5$ 到节点 $3$ 的路径。
 
-\subsubsection{Edge weights}
+\subsubsection{边权}
 
-\index{weighted graph}
+\index{带权图}
 
-In a \key{weighted} graph, each edge is assigned
-a \key{weight}.
-The weights are often interpreted as edge lengths.
-For example, the following graph is weighted:
+在\key{带权}图中，每条边被赋予一个\key{权值}。
+权值通常被解释为边的长度。
+例如，以下图是带权图：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -248,27 +240,25 @@ For example, the following graph is weighted:
 \end{tikzpicture}
 \end{center}
 
-The length of a path in a weighted graph
-is the sum of the edge weights on the path.
-For example, in the above graph,
-the length of the path
-$1 \rightarrow 2 \rightarrow 5$ is $12$,
-and the length of the path
-$1 \rightarrow 3 \rightarrow 4 \rightarrow 5$ is $11$.
-The latter path is the \key{shortest} path from node $1$ to node $5$.
+带权图中路径的长度
+是路径上所有边的权值之和。
+例如，在上图中，
+路径 $1 \rightarrow 2 \rightarrow 5$ 的长度为 $12$，
+路径 $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$ 的长度为 $11$。
+后一条路径是从节点 $1$ 到节点 $5$ 的\key{最短}路径。
 
-\subsubsection{Neighbors and degrees}
+\subsubsection{邻居和度}
 
-\index{neighbor}
-\index{degree}
+\index{邻居}
+\index{度}
 
-Two nodes are \key{neighbors} or \key{adjacent}
-if there is an edge between them.
-The \key{degree} of a node
-is the number of its neighbors.
-For example, in the following graph,
-the neighbors of node 2 are 1, 4 and 5,
-so its degree is 3.
+如果两个节点之间有一条边，
+则它们是\key{邻居}或\key{相邻的}。
+一个节点的\key{度}
+是其邻居的数量。
+例如，在以下图中，
+节点2的邻居是1、4和5，
+所以它的度为3。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -288,33 +278,32 @@ so its degree is 3.
 \end{tikzpicture}
 \end{center}
 
-The sum of degrees in a graph is always $2m$,
-where $m$ is the number of edges,
-because each edge
-increases the degree of exactly two nodes by one.
-For this reason, the sum of degrees is always even.
+图中所有节点的度数之和总是 $2m$，
+其中 $m$ 是边的数量，
+因为每条边恰好使
+两个节点的度数各增加1。
+因此，度数之和总是偶数。
 
-\index{regular graph}
-\index{complete graph}
+\index{正则图}
+\index{完全图}
 
-A graph is \key{regular} if the
-degree of every node is a constant $d$.
-A graph is \key{complete} if the
-degree of every node is $n-1$, i.e.,
-the graph contains all possible edges
-between the nodes.
+如果图中每个节点的度数
+都是常数 $d$，则该图是\key{正则的}。
+如果图中每个节点的度数
+都是 $n-1$，即图中包含
+所有节点之间可能的边，
+则该图是\key{完全的}。
 
-\index{indegree}
-\index{outdegree}
+\index{入度}
+\index{出度}
 
-In a directed graph, the \key{indegree}
-of a node is the number of edges
-that end at the node,
-and the \key{outdegree} of a node
-is the number of edges that start at the node.
-For example, in the following graph,
-the indegree of node 2 is 2,
-and the outdegree of node 2 is 1.
+在有向图中，一个节点的\key{入度}
+是指向该边的数量，
+一个节点的\key{出度}
+是从该节点出发的边的数量。
+例如，在以下图中，
+节点2的入度为2，
+出度为1。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -333,21 +322,21 @@ and the outdegree of node 2 is 1.
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Colorings}
+\subsubsection{着色}
 
-\index{coloring}
-\index{bipartite graph}
+\index{着色}
+\index{二分图}
 
-In a \key{coloring} of a graph,
-each node is assigned a color so that
-no adjacent nodes have the same color.
+在图的\key{着色}中，
+每个节点被赋予一种颜色，
+使得相邻节点的颜色不同。
 
-A graph is \key{bipartite} if
-it is possible to color it using two colors.
-It turns out that a graph is bipartite
-exactly when it does not contain a cycle
-with an odd number of edges.
-For example, the graph
+如果可以用两种颜色对图进行着色，
+则该图是\key{二分图}。
+事实上，一个图是二分图
+当且仅当它不包含
+具有奇数条边的环。
+例如，图
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$2$};
@@ -364,7 +353,7 @@ For example, the graph
 \path[draw,thick,-] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-is bipartite, because it can be colored as follows:
+是二分图，因为它可以按如下方式着色：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle, fill=blue!40] (1) at (1,3) {$2$};
@@ -381,7 +370,7 @@ is bipartite, because it can be colored as follows:
 \path[draw,thick,-] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-However, the graph
+然而，图
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$2$};
@@ -399,8 +388,8 @@ However, the graph
 \path[draw,thick,-] (1) -- (6);
 \end{tikzpicture}
 \end{center}
-is not bipartite, because it is not possible to color
-the following cycle of three nodes using two colors:
+不是二分图，因为无法用两种颜色
+对以下由三个节点组成的环进行着色：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$2$};
@@ -423,16 +412,15 @@ the following cycle of three nodes using two colors:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Simplicity}
+\subsubsection{简单性}
 
-\index{simple graph}
+\index{简单图}
 
-A graph is \key{simple}
-if no edge starts and ends at the same node,
-and there are no multiple
-edges between two nodes.
-Often we assume that graphs are simple.
-For example, the following graph is \emph{not} simple:
+如果图中没有边从同一个节点出发又回到该节点，
+并且两个节点之间没有多条边，
+则该图是\key{简单的}。
+通常我们假设图是简单的。
+例如，以下图\emph{不是}简单图：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$2$};
@@ -456,36 +444,35 @@ For example, the following graph is \emph{not} simple:
 \end{tikzpicture}
 \end{center}
 
-\section{Graph representation}
+\section{图的表示}
 
-There are several ways to represent graphs
-in algorithms.
-The choice of a data structure
-depends on the size of the graph and
-the way the algorithm processes it.
-Next we will go through three common representations.
+在算法中有多种表示图的方法。
+数据结构的选择
+取决于图的大小
+以及算法处理图的方式。
+接下来我们将介绍三种常见的表示方法。
 
-\subsubsection{Adjacency list representation}
+\subsubsection{邻接表表示}
 
-\index{adjacency list}
+\index{邻接表}
 
-In the adjacency list representation,
-each node $x$ in the graph is assigned an \key{adjacency list}
-that consists of nodes
-to which there is an edge from $x$.
-Adjacency lists are the most popular
-way to represent graphs, and most algorithms can be
-efficiently implemented using them.
+在邻接表表示中，
+图中的每个节点 $x$ 被赋予一个\key{邻接表}，
+其中包含从 $x$ 出发的边
+所到达的节点。
+邻接表是表示图最流行的方式，
+大多数算法都可以使用邻接表
+高效地实现。
 
-A convenient way to store the adjacency lists is to declare
-an array of vectors as follows:
+存储邻接表的一种便捷方法是声明
+一个向量数组，如下所示：
 \begin{lstlisting}
 vector<int> adj[N];
 \end{lstlisting}
 
-The constant $N$ is chosen so that all
-adjacency lists can be stored.
-For example, the graph
+选择常数 $N$ 使得能够存储所有的
+邻接表。
+例如，图
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -501,7 +488,7 @@ For example, the graph
 \path[draw,thick,->,>=latex] (4) -- (1);
 \end{tikzpicture}
 \end{center}
-can be stored as follows:
+可以按如下方式存储：
 \begin{lstlisting}
 adj[1].push_back(2);
 adj[2].push_back(3);
@@ -510,20 +497,20 @@ adj[3].push_back(4);
 adj[4].push_back(1);
 \end{lstlisting}
 
-If the graph is undirected, it can be stored in a similar way,
-but each edge is added in both directions.
+如果图是无向的，可以用类似的方式存储，
+但每条边需要在两个方向上各添加一次。
 
-For a weighted graph, the structure can be extended
-as follows:
+对于带权图，可以按如下方式
+扩展该结构：
 
 \begin{lstlisting}
 vector<pair<int,int>> adj[N];
 \end{lstlisting}
 
-In this case, the adjacency list of node $a$
-contains the pair $(b,w)$
-always when there is an edge from node $a$ to node $b$
-with weight $w$. For example, the graph
+在这种情况下，节点 $a$ 的邻接表
+在有从节点 $a$ 到节点 $b$、
+权值为 $w$ 的边时，
+包含对 $(b,w)$。例如，图
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -539,7 +526,7 @@ with weight $w$. For example, the graph
 \path[draw,thick,->,>=latex] (4) -- node[font=\small,label=left:2] {} (1);
 \end{tikzpicture}
 \end{center}
-can be stored as follows:
+可以按如下方式存储：
 \begin{lstlisting}
 adj[1].push_back({2,5});
 adj[2].push_back({3,7});
@@ -548,37 +535,36 @@ adj[3].push_back({4,5});
 adj[4].push_back({1,2});
 \end{lstlisting}
 
-The benefit of using adjacency lists is that
-we can efficiently find the nodes to which
-we can move from a given node through an edge.
-For example, the following loop goes through all nodes
-to which we can move from node $s$:
+使用邻接表的好处是
+我们可以高效地找到从给定节点
+通过边可以到达的节点。
+例如，以下循环遍历了所有
+我们可以从节点 $s$ 到达的节点：
 
 \begin{lstlisting}
 for (auto u : adj[s]) {
-    // process node u
+    // 处理节点 u
 }
 \end{lstlisting}
 
-\subsubsection{Adjacency matrix representation}
+\subsubsection{邻接矩阵表示}
 
-\index{adjacency matrix}
+\index{邻接矩阵}
 
-An \key{adjacency matrix} is a two-dimensional array
-that indicates which edges the graph contains.
-We can efficiently check from an adjacency matrix
-if there is an edge between two nodes.
-The matrix can be stored as an array
+\key{邻接矩阵}是一个二维数组，
+用于表示图中包含哪些边。
+我们可以高效地从邻接矩阵中
+检查两个节点之间是否有边。
+该矩阵可以存储为数组
 \begin{lstlisting}
 int adj[N][N];
 \end{lstlisting}
-where each value $\texttt{adj}[a][b]$ indicates
-whether the graph contains an edge from
-node $a$ to node $b$.
-If the edge is included in the graph,
-then $\texttt{adj}[a][b]=1$,
-and otherwise $\texttt{adj}[a][b]=0$.
-For example, the graph
+其中每个值 $\texttt{adj}[a][b]$ 表示
+图中是否包含从节点 $a$ 到节点 $b$ 的边。
+如果图中包含该边，
+则 $\texttt{adj}[a][b]=1$，
+否则 $\texttt{adj}[a][b]=0$。
+例如，图
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -593,7 +579,7 @@ For example, the graph
 \path[draw,thick,->,>=latex] (4) -- (1);
 \end{tikzpicture}
 \end{center}
-can be represented as follows:
+可以按如下方式表示：
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (4,4);
@@ -624,11 +610,10 @@ can be represented as follows:
 \end{tikzpicture}
 \end{center}
 
-If the graph is weighted, the adjacency matrix
-representation can be extended so that
-the matrix contains the weight of the edge
-if the edge exists.
-Using this representation, the graph
+如果图是带权的，邻接矩阵表示
+可以扩展为在边存在时
+矩阵中存储该边的权值。
+使用这种表示方法，图
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -645,7 +630,7 @@ Using this representation, the graph
 \end{tikzpicture}
 \end{center}
 \begin{samepage}
-corresponds to the following matrix:
+对应以下矩阵：
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (4,4);
@@ -677,30 +662,30 @@ corresponds to the following matrix:
 \end{center}
 \end{samepage}
 
-The drawback of the adjacency matrix representation
-is that the matrix contains $n^2$ elements,
-and usually most of them are zero.
-For this reason, the representation cannot be used
-if the graph is large.
+邻接矩阵表示的缺点
+是矩阵包含 $n^2$ 个元素，
+而其中大部分通常为零。
+因此，如果图很大，
+则不能使用这种表示方法。
 
-\subsubsection{Edge list representation}
+\subsubsection{边集表表示}
 
-\index{edge list}
+\index{边集表}
 
-An \key{edge list} contains all edges of a graph
-in some order.
-This is a convenient way to represent a graph
-if the algorithm processes all edges of the graph
-and it is not needed to find edges that start
-at a given node.
+\key{边集表}按某种顺序
+包含图中的所有边。
+如果算法需要处理图中的所有边，
+而不需要查找从某个节点
+出发的边，
+这是一种便捷的表示方法。
 
-The edge list can be stored in a vector
+边集表可以存储在向量中
 \begin{lstlisting}
 vector<pair<int,int>> edges;
 \end{lstlisting}
-where each pair $(a,b)$ denotes that
-there is an edge from node $a$ to node $b$.
-Thus, the graph
+其中每个对 $(a,b)$ 表示
+从节点 $a$ 到节点 $b$ 有一条边。
+因此，图
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -716,7 +701,7 @@ Thus, the graph
 \path[draw,thick,->,>=latex] (4) -- (1);
 \end{tikzpicture}
 \end{center}
-can be represented as follows:
+可以表示如下：
 \begin{lstlisting}
 edges.push_back({1,2});
 edges.push_back({2,3});
@@ -726,15 +711,15 @@ edges.push_back({4,1});
 \end{lstlisting}
 
 \noindent
-If the graph is weighted, the structure can
-be extended as follows:
+如果图是带权的，
+可以按如下方式扩展该结构：
 \begin{lstlisting}
 vector<tuple<int,int,int>> edges;
 \end{lstlisting}
-Each element in this list is of the
-form $(a,b,w)$, which means that there
-is an edge from node $a$ to node $b$ with weight $w$.
-For example, the graph
+该列表中每个元素的形式为
+$(a,b,w)$，表示从节点 $a$ 到节点 $b$ 有一条
+权值为 $w$ 的边。
+例如，图
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -751,9 +736,9 @@ For example, the graph
 \end{tikzpicture}
 \end{center}
 \begin{samepage}
-can be represented as follows\footnote{In some older compilers, the function
-\texttt{make\_tuple} must be used instead of the braces (for example,
-\texttt{make\_tuple(1,2,5)} instead of \texttt{\{1,2,5\}}).}:
+可以表示如下\footnote{在一些较旧的编译器中，必须使用函数
+\texttt{make\_tuple} 代替花括号（例如，
+使用 \texttt{make\_tuple(1,2,5)} 代替 \texttt{\{1,2,5\}}）。}：
 \begin{lstlisting}
 edges.push_back({1,2,5});
 edges.push_back({2,3,7});

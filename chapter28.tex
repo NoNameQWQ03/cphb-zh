@@ -1,19 +1,17 @@
-\chapter{Segment trees revisited}
+\chapter{再论线段树}
 
-\index{segment tree}
+\index{线段树}
 
-A segment tree is a versatile data structure
-that can be used to solve a large number of algorithm problems.
-However, there are many topics related to segment trees
-that we have not touched yet.
-Now is time to discuss some more advanced variants
-of segment trees.
+线段树是一种多功能的数据结构，
+可以用来解决大量的算法问题。
+然而，还有许多与线段树相关的话题
+我们尚未涉及。
+现在是时候讨论一些更高级的线段树变体了。
 
-So far, we have implemented the operations
-of a segment tree by walking \emph{from bottom to top}
-in the tree.
-For example, we have calculated
-range sums as follows (Chapter 9.3):
+到目前为止，我们实现线段树操作的方式是
+在树中\emph{从下到上}遍历。
+例如，我们按如下方式计算
+区间和（第9.3章）：
 
 \begin{lstlisting}
 int sum(int a, int b) {
@@ -28,10 +26,10 @@ int sum(int a, int b) {
 }
 \end{lstlisting}
 
-However, in more advanced segment trees,
-it is often necessary to implement the operations
-in another way, \emph{from top to bottom}.
-Using this approach, the function becomes as follows:
+然而，在更高级的线段树中，
+通常需要以另一种方式实现操作，
+即\emph{从上到下}遍历。
+使用这种方法，函数变为如下形式：
 \begin{lstlisting}
 int sum(int a, int b, int k, int x, int y) {
     if (b < x || a > y) return 0;
@@ -41,34 +39,32 @@ int sum(int a, int b, int k, int x, int y) {
 }
 \end{lstlisting}
 
-Now we can calculate any value of $\texttt{sum}_q(a,b)$
-(the sum of array values in range $[a,b]$) as follows:
+现在我们可以按如下方式计算任意 $\texttt{sum}_q(a,b)$ 的值
+（区间 $[a,b]$ 中数组值的和）：
 \begin{lstlisting}
 int s = sum(a, b, 1, 0, n-1);
 \end{lstlisting}
 
-The parameter $k$ indicates the current position
-in \texttt{tree}.
-Initially $k$ equals 1, because we begin
-at the root of the tree.
-The range $[x,y]$ corresponds to $k$
-and is initially $[0,n-1]$.
-When calculating the sum,
-if $[x,y]$ is outside $[a,b]$,
-the sum is 0,
-and if $[x,y]$ is completely inside $[a,b]$,
-the sum can be found in \texttt{tree}.
-If $[x,y]$ is partially inside $[a,b]$,
-the search continues recursively to the
-left and right half of $[x,y]$.
-The left half is $[x,d]$
-and the right half is $[d+1,y]$
-where $d=\lfloor \frac{x+y}{2} \rfloor$.
+参数 $k$ 表示在 \texttt{tree} 中的当前位置。
+初始时 $k$ 等于1，因为我们从树的根开始。
+区间 $[x,y]$ 对应于 $k$，
+初始为 $[0,n-1]$。
+在计算和时，
+如果 $[x,y]$ 在 $[a,b]$ 之外，
+则和为0，
+如果 $[x,y]$ 完全在 $[a,b]$ 内部，
+则和可以在 \texttt{tree} 中找到。
+如果 $[x,y]$ 部分在 $[a,b]$ 内部，
+则搜索递归地继续到
+$[x,y]$ 的左半部分和右半部分。
+左半部分是 $[x,d]$，
+右半部分是 $[d+1,y]$，
+其中 $d=\lfloor \frac{x+y}{2} \rfloor$。
 
-The following picture shows how the search proceeds
-when calculating the value of $\texttt{sum}_q(a,b)$.
-The gray nodes indicate nodes where the recursion
-stops and the sum can be found in \texttt{tree}.
+下图展示了计算 $\texttt{sum}_q(a,b)$ 的值时
+搜索是如何进行的。
+灰色节点表示递归停止的节点，
+其和可以在 \texttt{tree} 中找到。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -163,56 +159,49 @@ stops and the sum can be found in \texttt{tree}.
 \end{tikzpicture}
 \end{center}
 
-Also in this implementation,
-operations take $O(\log n)$ time,
-because the total number of visited nodes is $O(\log n)$.
+在这个实现中，
+操作同样需要 $O(\log n)$ 时间，
+因为访问的节点总数为 $O(\log n)$。
 
-\section{Lazy propagation}
+\section{懒传播}
 
-\index{lazy propagation}
-\index{lazy segment tree}
+\index{懒传播}
+\index{懒线段树}
 
-Using \key{lazy propagation}, we can build
-a segment tree that supports \emph{both} range updates
-and range queries in $O(\log n)$ time.
-The idea is to perform updates and queries
-from top to bottom and perform updates
-\emph{lazily} so that they are propagated
-down the tree only when it is necessary.
+使用 \key{懒传播}，我们可以构建
+一个支持\emph{同时}进行区间更新和
+区间查询的线段树，时间复杂度为 $O(\log n)$。
+其思想是从上到下执行更新和查询，
+并\emph{懒惰地}执行更新，
+使得它们仅在必要时才向树的下方传播。
 
-In a lazy segment tree, nodes contain two types of
-information.
-Like in an ordinary segment tree,
-each node contains the sum or some other value
-related to the corresponding subarray.
-In addition, the node may contain information
-related to lazy updates, which has not been
-propagated to its children.
+在懒线段树中，节点包含两种类型的信息。
+与普通线段树一样，
+每个节点包含对应子数组的和或其他相关值。
+此外，节点还可能包含与懒更新相关的信息，
+这些信息尚未传播到其子节点。
 
-There are two types of range updates:
-each array value in the range is either
-\emph{increased} by some value
-or \emph{assigned} some value.
-Both operations can be implemented using
-similar ideas, and it is even possible to construct
-a tree that supports both operations at the same time.
+区间更新有两种类型：
+区间内的每个数组值要么被\emph{增加}某个值，
+要么被\emph{赋值}为某个值。
+两种操作都可以用类似的思想实现，
+甚至可以构建一个同时支持两种操作的树。
 
-\subsubsection{Lazy segment trees}
+\subsubsection{懒线段树}
 
-Let us consider an example where our goal is to
-construct a segment tree that supports
-two operations: increasing each value in
-$[a,b]$ by a constant and calculating the sum of
-values in $[a,b]$.
+让我们考虑一个例子，我们的目标是
+构建一个支持两种操作的线段树：
+将 $[a,b]$ 中的每个值增加一个常数，
+以及计算 $[a,b]$ 中值的和。
 
-We will construct a tree where each node
-has two values $s/z$:
-$s$ denotes the sum of values in the range,
-and $z$ denotes the value of a lazy update,
-which means that all values in the range
-should be increased by $z$.
-In the following tree, $z=0$ in all nodes,
-so there are no ongoing lazy updates.
+我们将构建一棵树，其中每个节点
+有两个值 $s/z$：
+$s$ 表示区间中值的和，
+$z$ 表示懒更新的值，
+这意味着区间中的所有值
+都应增加 $z$。
+在下面的树中，所有节点的 $z=0$，
+因此没有正在进行的懒更新。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (16,1);
@@ -285,19 +274,19 @@ so there are no ongoing lazy updates.
 \end{tikzpicture}
 \end{center}
 
-When the elements in $[a,b]$ are increased by $u$,
-we walk from the root towards the leaves
-and modify the nodes of the tree as follows:
-If the range $[x,y]$ of a node is
-completely inside $[a,b]$,
-we increase the $z$ value of the node by $u$ and stop.
-If $[x,y]$ only partially belongs to $[a,b]$,
-we increase the $s$ value of the node by $hu$,
-where $h$ is the size of the intersection of $[a,b]$
-and $[x,y]$, and continue our walk recursively in the tree.
+当 $[a,b]$ 中的元素增加 $u$ 时，
+我们从根向叶子遍历，
+并按如下方式修改树的节点：
+如果某个节点的区间 $[x,y]$
+完全在 $[a,b]$ 内部，
+我们将该节点的 $z$ 值增加 $u$ 并停止。
+如果 $[x,y]$ 仅部分属于 $[a,b]$，
+我们将该节点的 $s$ 值增加 $hu$，
+其中 $h$ 是 $[a,b]$ 与 $[x,y]$ 交集的大小，
+然后在树中递归地继续遍历。
 
-For example, the following picture shows the tree after
-increasing the elements in $[a,b]$ by 2:
+例如，下图展示了将 $[a,b]$ 中的元素
+增加2后的树：
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=gray!50] (5,0) rectangle (6,1);
@@ -389,25 +378,22 @@ increasing the elements in $[a,b]$ by 2:
 \end{tikzpicture}
 \end{center}
 
-We also calculate the sum of elements in a range $[a,b]$
-by walking in the tree from top to bottom.
-If the range $[x,y]$ of a node completely belongs
-to $[a,b]$, we add the $s$ value of the node to the sum.
-Otherwise, we continue the search recursively
-downwards in the tree.
+我们也通过在树中从上到下遍历
+来计算区间 $[a,b]$ 中元素的和。
+如果某个节点的区间 $[x,y]$ 完全属于
+$[a,b]$，我们将该节点的 $s$ 值加到总和中。
+否则，我们在树中继续递归向下搜索。
 
-Both in updates and queries,
-the value of a lazy update is always propagated
-to the children of the node
-before processing the node.
-The idea is that updates will be propagated
-downwards only when it is necessary,
-which guarantees that the operations are always efficient.
+在更新和查询中，
+懒更新的值总是在处理节点之前
+传播到该节点的子节点。
+其思想是，更新仅在必要时才向下传播，
+这保证了操作始终是高效的。
 
-The following picture shows how the tree changes
-when we calculate the value of $\texttt{sum}_a(a,b)$.
-The rectangle shows the nodes whose values change,
-because a lazy update is propagated downwards.
+下图展示了当我们计算 $\texttt{sum}_a(a,b)$ 的值时
+树是如何变化的。
+矩形表示值发生变化的节点，
+因为懒更新被向下传播了。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -496,67 +482,59 @@ because a lazy update is propagated downwards.
 \end{tikzpicture}
 \end{center}
 
-Note that sometimes it is needed to combine lazy updates.
-This happens when a node that already has a lazy update
-is assigned another lazy update.
-When calculating sums, it is easy to combine lazy updates,
-because the combination of updates $z_1$ and $z_2$
-corresponds to an update $z_1+z_2$.
+注意，有时需要合并懒更新。
+这发生在一个已经有懒更新的节点
+被分配另一个懒更新时。
+在计算和时，合并懒更新很容易，
+因为更新 $z_1$ 和 $z_2$ 的组合
+对应于更新 $z_1+z_2$。
 
-\subsubsection{Polynomial updates}
+\subsubsection{多项式更新}
 
-Lazy updates can be generalized so that it is
-possible to update ranges using polynomials of the form
+懒更新可以推广，使得可以使用以下形式的多项式
+来更新区间
 \[p(u) = t_k u^k + t_{k-1} u^{k-1} + \cdots + t_0.\]
 
-In this case, the update for a value
-at position $i$ in $[a,b]$ is $p(i-a)$.
-For example, adding the polynomial $p(u)=u+1$
-to $[a,b]$ means that the value at position $a$
-increases by 1, the value at position $a+1$
-increases by 2, and so on.
+在这种情况下，$[a,b]$ 中位置 $i$ 处的更新为 $p(i-a)$。
+例如，将多项式 $p(u)=u+1$
+加到 $[a,b]$ 上意味着位置 $a$ 处的值增加1，
+位置 $a+1$ 处的值增加2，依此类推。
 
-To support polynomial updates,
-each node is assigned $k+2$ values,
-where $k$ equals the degree of the polynomial.
-The value $s$ is the sum of the elements in the range,
-and the values $z_0,z_1,\ldots,z_k$ are the coefficients
-of a polynomial that corresponds to a lazy update.
+为了支持多项式更新，
+每个节点被分配 $k+2$ 个值，
+其中 $k$ 等于多项式的次数。
+值 $s$ 是区间中元素的和，
+而值 $z_0,z_1,\ldots,z_k$ 是对应于懒更新的多项式的系数。
 
-Now, the sum of values in a range $[x,y]$ equals
+现在，区间 $[x,y]$ 中值的和等于
 \[s+\sum_{u=0}^{y-x} z_k u^k + z_{k-1} u^{k-1} + \cdots + z_0.\]
 
-The value of such a sum
-can be efficiently calculated using sum formulas.
-For example, the term $z_0$ corresponds to the sum
-$(y-x+1)z_0$, and the term $z_1 u$ corresponds to the sum
+这样的和的值可以使用求和公式高效地计算。
+例如，项 $z_0$ 对应于和
+$(y-x+1)z_0$，而项 $z_1 u$ 对应于和
 \[z_1(0+1+\cdots+y-x) = z_1 \frac{(y-x)(y-x+1)}{2} .\]
 
-When propagating an update in the tree,
-the indices of $p(u)$ change,
-because in each range $[x,y]$,
-the values are
-calculated for $u=0,1,\ldots,y-x$.
-However, this is not a problem, because
-$p'(u)=p(u+h)$ is a polynomial
-of equal degree as $p(u)$.
-For example, if $p(u)=t_2 u^2+t_1 u-t_0$, then
+在树中传播更新时，
+$p(u)$ 的索引会发生变化，
+因为在每个区间 $[x,y]$ 中，
+值是针对 $u=0,1,\ldots,y-x$ 计算的。
+然而，这不是问题，因为
+$p'(u)=p(u+h)$ 是一个与 $p(u)$ 具有相同次数的多项式。
+例如，如果 $p(u)=t_2 u^2+t_1 u-t_0$，则
 \[p'(u)=t_2(u+h)^2+t_1(u+h)-t_0=t_2 u^2 + (2ht_2+t_1)u+t_2h^2+t_1h-t_0.\]
 
-\section{Dynamic trees}
+\section{动态树}
 
-\index{dynamic segment tree}
+\index{动态线段树}
 
-An ordinary segment tree is static,
-which means that each node has a fixed position
-in the array and the tree requires
-a fixed amount of memory.
-In a \key{dynamic segment tree},
-memory is allocated only for nodes that
-are actually accessed during the algorithm,
-which can save a large amount of memory.
+普通线段树是静态的，
+这意味着每个节点在数组中有固定的位置，
+并且树需要固定大小的内存。
+在 \key{动态线段树} 中，
+仅为算法中实际访问的节点分配内存，
+这可以节省大量内存。
 
-The nodes of a dynamic tree can be represented as structs:
+动态树的节点可以用结构体表示：
 \begin{lstlisting}
 struct node {
     int value;
@@ -565,40 +543,36 @@ struct node {
     node(int v, int x, int y) : value(v), x(x), y(y) {}
 };
 \end{lstlisting}
-Here \texttt{value} is the value of the node,
-$[\texttt{x},\texttt{y}]$ is the corresponding range,
-and \texttt{left} and \texttt{right} point to the left
-and right subtree.
+这里 \texttt{value} 是节点的值，
+$[\texttt{x},\texttt{y}]$ 是对应的区间，
+\texttt{left} 和 \texttt{right} 指向左子树和右子树。
 
-After this, nodes can be created as follows:
+之后，可以按如下方式创建节点：
 \begin{lstlisting}
-// create new node
+// 创建新节点
 node *x = new node(0, 0, 15);
-// change value
+// 修改值
 x->value = 5;
 \end{lstlisting}
 
-\subsubsection{Sparse segment trees}
+\subsubsection{稀疏线段树}
 
-\index{sparse segment tree}
+\index{稀疏线段树}
 
-A dynamic segment tree is useful when
-the underlying array is \emph{sparse},
-i.e., the range $[0,n-1]$
-of allowed indices is large,
-but most array values are zeros.
-While an ordinary segment tree uses $O(n)$ memory,
-a dynamic segment tree only uses $O(k \log n)$ memory,
-where $k$ is the number of operations performed.
+当底层数组是\emph{稀疏}的时，
+即允许的索引范围 $[0,n-1]$
+很大，但大多数数组值为零时，
+动态线段树非常有用。
+普通线段树使用 $O(n)$ 内存，
+而动态线段树仅使用 $O(k \log n)$ 内存，
+其中 $k$ 是执行的操作数。
 
-A \key{sparse segment tree} initially has
-only one node $[0,n-1]$ whose value is zero,
-which means that every array value is zero.
-After updates, new nodes are dynamically added
-to the tree.
-For example, if $n=16$ and the elements
-in positions 3 and 10 have been modified,
-the tree contains the following nodes:
+\key{稀疏线段树}初始时只有
+一个节点 $[0,n-1]$，其值为零，
+这意味着每个数组值都为零。
+更新后，新节点被动态地添加到树中。
+例如，如果 $n=16$ 且位置 3 和 10 处的元素
+已被修改，则树包含以下节点：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \scriptsize
@@ -624,44 +598,35 @@ the tree contains the following nodes:
 \end{tikzpicture}
 \end{center}
 
-Any path from the root node to a leaf contains
-$O(\log n)$ nodes,
-so each operation adds at most $O(\log n)$
-new nodes to the tree.
-Thus, after $k$ operations, the tree contains
-at most $O(k \log n)$ nodes.
+从根节点到叶子的任何路径都包含
+$O(\log n)$ 个节点，
+因此每次操作最多向树中添加 $O(\log n)$ 个新节点。
+因此，在 $k$ 次操作之后，树中最多包含
+$O(k \log n)$ 个节点。
 
-Note that if we know all elements to be updated
-at the beginning of the algorithm,
-a dynamic segment tree is not necessary,
-because we can use an ordinary segment tree with
-index compression (Chapter 9.4).
-However, this is not possible when the indices
-are generated during the algorithm.
+注意，如果我们在算法开始时就知道所有要更新的元素，
+则不需要动态线段树，
+因为我们可以使用带索引压缩的普通线段树（第9.4章）。
+然而，当索引是在算法过程中生成时，这是不可能的。
 
-\subsubsection{Persistent segment trees}
+\subsubsection{持久化线段树}
 
-\index{persistent segment tree}
+\index{持久化线段树}
 
-Using a dynamic implementation,
-it is also possible to create a
-\key{persistent segment tree} that stores
-the \emph{modification history} of the tree.
-In such an implementation, we can
-efficiently access
-all versions of the tree that have
-existed during the algorithm.
+使用动态实现，
+还可以创建存储树\emph{修改历史}的
+\key{持久化线段树}。
+在这种实现中，我们可以高效地访问
+算法过程中存在过的所有版本的树。
 
-When the modification history is available,
-we can perform queries in any previous tree
-like in an ordinary segment tree, because the
-full structure of each tree is stored.
-We can also create new trees based on previous
-trees and modify them independently.
+当修改历史可用时，
+我们可以像普通线段树一样在任何先前的树中执行查询，
+因为每棵树的完整结构都被存储了。
+我们还可以基于先前的树创建新树，并独立地修改它们。
 
-Consider the following sequence of updates,
-where red nodes change
-and other nodes remain the same:
+考虑以下更新序列，
+其中红色节点发生变化，
+其他节点保持不变：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
@@ -707,18 +672,15 @@ and other nodes remain the same:
 \path[draw,thick,->] (3c) -- (6c);
 \path[draw,thick,->] (3c) -- (7c);
 
-\node at (3,-3) {step 1};
-\node at (3+5,-3) {step 2};
-\node at (3+10,-3) {step 3};
+\node at (3,-3) {步骤 1};
+\node at (3+5,-3) {步骤 2};
+\node at (3+10,-3) {步骤 3};
 \end{tikzpicture}
 \end{center}
-After each update, most nodes of the tree
-remain the same,
-so an efficient way to store the modification history
-is to represent each tree in the history as a combination
-of new nodes and subtrees of previous trees.
-In this example, the modification history can be
-stored as follows:
+每次更新后，树的大部分节点
+保持不变，
+因此存储修改历史的一种高效方式是将历史中的每棵树表示为新节点与先前树的子树的组合。
+在这个例子中，修改历史可以按如下方式存储：
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
 \path[use as bounding box] (0, 1) rectangle (16, -3.5);
@@ -759,34 +721,25 @@ stored as follows:
 
 \path[draw,thick,->] (3c) -- (7c);
 
-\node at (3,-3) {step 1};
-\node at (3+5,-3) {step 2};
-\node at (3+10,-3) {step 3};
+\node at (3,-3) {步骤 1};
+\node at (3+5,-3) {步骤 2};
+\node at (3+10,-3) {步骤 3};
 \end{tikzpicture}
 \end{center}
+每个先前树的结构可以通过从对应的根节点开始跟随指针来重建。
+由于每次操作仅向树中添加 $O(\log n)$ 个新节点，
+因此可以存储树的完整修改历史。
 
-The structure of each previous tree can be
-reconstructed by following the pointers
-starting at the corresponding root node.
-Since each operation
-adds only $O(\log n)$ new nodes to the tree,
-it is possible to store the full modification history of the tree.
+\section{数据结构}
 
-\section{Data structures}
+线段树中的节点不仅可以包含单个值，
+还可以包含维护相应区间信息的\emph{数据结构}。
+在这种树中，操作需要 $O(f(n) \log n)$ 时间，
+其中 $f(n)$ 是操作过程中处理单个节点所需的时间。
 
-Instead of single values, nodes in a segment tree
-can also contain \emph{data structures} that maintain information
-about the corresponding ranges.
-In such a tree, the operations take
-$O(f(n) \log n)$ time, where $f(n)$ is
-the time needed for processing a single node during an operation.
-
-As an example, consider a segment tree that
-supports queries of the form
-''how many times does an element $x$ appear
-in the range $[a,b]$?''
-For example, the element 1 appears three times
-in the following range:
+例如，考虑一个支持如下查询的线段树：
+“元素 $x$ 在区间 $[a,b]$ 中出现多少次？”
+例如，元素1在以下区间中出现三次：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -804,17 +757,13 @@ in the following range:
 \end{tikzpicture}
 \end{center}
 
-To support such queries, we build a segment tree
-where each node is assigned a data structure
-that can be asked how many times any element $x$
-appears in the corresponding range.
-Using this tree,
-the answer to a query can be calculated
-by combining the results from the nodes
-that belong to the range.
+为了支持这样的查询，我们构建一棵线段树，
+其中每个节点被分配一个数据结构，
+可以查询任何元素 $x$ 在对应区间中出现的次数。
+使用这棵树，
+查询的答案可以通过组合属于该区间的节点的结果来计算。
 
-For example, the following segment tree
-corresponds to the above array:
+例如，以下线段树对应于上述数组：
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 
@@ -958,29 +907,22 @@ corresponds to the above array:
 \end{tikzpicture}
 \end{center}
 
-We can build the tree so
-that each node contains a \texttt{map} structure.
-In this case, the time needed for processing each
-node is $O(\log n)$, so the total time complexity
-of a query is $O(\log^2 n)$.
-The tree uses $O(n \log n)$ memory,
-because there are $O(\log n)$ levels
-and each level contains
-$O(n)$ elements.
+我们可以这样构建树，
+使得每个节点包含一个 \texttt{map} 结构。
+在这种情况下，处理每个节点所需的时间为 $O(\log n)$，
+因此查询的总时间复杂度为 $O(\log^2 n)$。
+树使用 $O(n \log n)$ 内存，
+因为有 $O(\log n)$ 层，每层包含 $O(n)$ 个元素。
 
-\section{Two-dimensionality}
+\section{二维性}
 
-\index{two-dimensional segment tree}
+\index{二维线段树}
 
-A \key{two-dimensional segment tree} supports
-queries related to rectangular subarrays
-of a two-dimensional array.
-Such a tree can be implemented as
-nested segment trees: a big tree corresponds to the
-rows of the array, and each node contains a small tree
-that corresponds to a column.
+\key{二维线段树}支持与二维数组的矩形子数组相关的查询。
+这种树可以实现为嵌套的线段树：
+大树对应数组的行，每个节点包含一棵对应列的小树。
 
-For example, in the array
+例如，在数组
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (4,4);
@@ -1006,9 +948,8 @@ For example, in the array
 \node[anchor=center] at (3.5, 3.5) {6};
 \end{tikzpicture}
 \end{center}
-the sum of any subarray
-can be calculated
-from the following segment tree:
+任何子数组的和都可以
+从以下线段树中计算：
 \begin{center}
 \begin{tikzpicture}[scale=0.4]
 \footnotesize
@@ -1154,8 +1095,6 @@ from the following segment tree:
 \end{tikzpicture}
 \end{center}
 
-The operations of a two-dimensional segment tree
-take $O(\log^2 n)$ time, because the big tree
-and each small tree consist of $O(\log n)$ levels.
-The tree requires $O(n^2)$ memory, because each
-small tree contains $O(n)$ values.
+二维线段树的操作需要 $O(\log^2 n)$ 时间，
+因为大树和每棵小树都由 $O(\log n)$ 层组成。
+树需要 $O(n^2)$ 内存，因为每棵小树包含 $O(n)$ 个值。

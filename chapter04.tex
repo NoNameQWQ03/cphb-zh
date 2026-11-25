@@ -1,39 +1,32 @@
-\chapter{Data structures}
+\chapter{数据结构}
 
-\index{data structure}
+\index{数据结构}
 
-A \key{data structure} is a way to store
-data in the memory of a computer.
-It is important to choose an appropriate
-data structure for a problem,
-because each data structure has its own
-advantages and disadvantages.
-The crucial question is: which operations
-are efficient in the chosen data structure?
+\key{数据结构}是一种在计算机内存中存储数据的方式。
+为问题选择合适的数据结构非常重要，
+因为每种数据结构都有其自身的
+优势和劣势。
+关键问题是：在所选的数据结构中，
+哪些操作是高效的？
 
-This chapter introduces the most important
-data structures in the C++ standard library.
-It is a good idea to use the standard library
-whenever possible,
-because it will save a lot of time.
-Later in the book we will learn about more sophisticated
-data structures that are not available
-in the standard library.
+本章介绍C++标准库中最重要的数据结构。
+尽可能使用标准库是一个好习惯，
+因为它可以节省大量时间。
+在本书的后半部分，我们将学习标准库中
+没有提供的更高级的数据结构。
 
-\section{Dynamic arrays}
+\section{动态数组}
 
-\index{dynamic array}
+\index{动态数组}
 \index{vector}
 
-A \key{dynamic array} is an array whose
-size can be changed during the execution
-of the program.
-The most popular dynamic array in C++ is
-the \texttt{vector} structure,
-which can be used almost like an ordinary array.
+\key{动态数组}是一种大小可以在程序执行过程中
+改变的数据结构。
+C++中最常用的动态数组是
+\texttt{vector}结构，
+它的使用方式几乎和普通数组一样。
 
-The following code creates an empty vector and
-adds three elements to it:
+以下代码创建一个空vector并向其中添加三个元素：
 
 \begin{lstlisting}
 vector<int> v;
@@ -42,7 +35,7 @@ v.push_back(2); // [3,2]
 v.push_back(5); // [3,2,5]
 \end{lstlisting}
 
-After this, the elements can be accessed like in an ordinary array:
+此后，可以像普通数组一样访问元素：
 
 \begin{lstlisting}
 cout << v[0] << "\n"; // 3
@@ -50,9 +43,8 @@ cout << v[1] << "\n"; // 2
 cout << v[2] << "\n"; // 5
 \end{lstlisting}
 
-The function \texttt{size} returns the number of elements in the vector.
-The following code iterates through
-the vector and prints all elements in it:
+函数\texttt{size}返回vector中元素的数量。
+以下代码遍历vector并打印其中的所有元素：
 
 \begin{lstlisting}
 for (int i = 0; i < v.size(); i++) {
@@ -61,7 +53,7 @@ for (int i = 0; i < v.size(); i++) {
 \end{lstlisting}
 
 \begin{samepage}
-A shorter way to iterate through a vector is as follows:
+遍历vector的一种更简洁的方式如下：
 
 \begin{lstlisting}
 for (auto x : v) {
@@ -70,9 +62,8 @@ for (auto x : v) {
 \end{lstlisting}
 \end{samepage}
 
-The function \texttt{back} returns the last element
-in the vector, and
-the function \texttt{pop\_back} removes the last element:
+函数\texttt{back}返回vector中的最后一个元素，
+函数\texttt{pop\_back}移除最后一个元素：
 
 \begin{lstlisting}
 vector<int> v;
@@ -83,47 +74,42 @@ v.pop_back();
 cout << v.back() << "\n"; // 5
 \end{lstlisting}
 
-The following code creates a vector with five elements:
+以下代码创建一个包含五个元素的vector：
 
 \begin{lstlisting}
 vector<int> v = {2,4,2,5,1};
 \end{lstlisting}
 
-Another way to create a vector is to give the number
-of elements and the initial value for each element:
+创建vector的另一种方式是指定元素的数量
+和每个元素的初始值：
 
 \begin{lstlisting}
-// size 10, initial value 0
+// 大小为10，初始值为0
 vector<int> v(10);
 \end{lstlisting}
 \begin{lstlisting}
-// size 10, initial value 5
+// 大小为10，初始值为5
 vector<int> v(10, 5);
 \end{lstlisting}
 
-The internal implementation of a vector
-uses an ordinary array.
-If the size of the vector increases and
-the array becomes too small,
-a new array is allocated and all the
-elements are moved to the new array.
-However, this does not happen often and the
-average time complexity of
-\texttt{push\_back} is $O(1)$.
+vector的内部实现使用的是普通数组。
+如果vector的大小增加导致数组变得太小，
+就会分配一个新的数组，并将所有元素
+移动到新数组中。
+然而，这种情况并不经常发生，
+\texttt{push\_back}的平均时间复杂度为$O(1)$。
 
 \index{string}
 
-The \texttt{string} structure
-is also a dynamic array that can be used almost like a vector.
-In addition, there is special syntax for strings
-that is not available in other data structures.
-Strings can be combined using the \texttt{+} symbol.
-The function $\texttt{substr}(k,x)$ returns the substring
-that begins at position $k$ and has length $x$,
-and the function $\texttt{find}(\texttt{t})$ finds the position
-of the first occurrence of a substring \texttt{t}.
+\texttt{string}结构
+也是一种动态数组，其使用方式几乎与vector相同。
+此外，字符串有一些其他数据结构所没有的特殊语法。
+字符串可以使用\texttt{+}符号进行拼接。
+函数$\texttt{substr}(k,x)$返回从位置$k$开始、
+长度为$x$的子串，
+函数$\texttt{find}(\texttt{t})$查找子串\texttt{t}第一次出现的位置。
 
-The following code presents some string operations:
+以下代码展示了一些字符串操作：
 
 \begin{lstlisting}
 string a = "hatti";
@@ -135,38 +121,31 @@ string c = b.substr(3,4);
 cout << c << "\n"; // tiva
 \end{lstlisting}
 
-\section{Set structures}
+\section{集合结构}
 
 \index{set}
 
-A \key{set} is a data structure that
-maintains a collection of elements.
-The basic operations of sets are element
-insertion, search and removal.
+\key{集合}是一种维护一组元素的数据结构。
+集合的基本操作包括元素
+插入、查找和删除。
 
-The C++ standard library contains two set
-implementations:
-The structure \texttt{set} is based on a balanced
-binary tree and its operations work in $O(\log n)$ time.
-The structure \texttt{unordered\_set} uses hashing,
-and its operations work in $O(1)$ time on average.
+C++标准库包含两种集合实现：
+\texttt{set}结构基于平衡二叉树，
+其操作的时间复杂度为$O(\log n)$。
+\texttt{unordered\_set}结构使用哈希，
+其操作的平均时间复杂度为$O(1)$。
 
-The choice of which set implementation to use
-is often a matter of taste.
-The benefit of the \texttt{set} structure
-is that it maintains the order of the elements
-and provides functions that are not available
-in \texttt{unordered\_set}.
-On the other hand, \texttt{unordered\_set}
-can be more efficient.
+选择哪种集合实现通常是个人偏好的问题。
+\texttt{set}结构的优势在于它能维护元素的顺序，
+并提供\texttt{unordered\_set}中不可用的函数。
+另一方面，\texttt{unordered\_set}
+可能更高效。
 
-The following code creates a set
-that contains integers,
-and shows some of the operations.
-The function \texttt{insert} adds an element to the set,
-the function \texttt{count} returns the number of occurrences
-of an element in the set,
-and the function \texttt{erase} removes an element from the set.
+以下代码创建一个包含整数的集合，
+并展示了一些操作。
+函数\texttt{insert}向集合中添加元素，
+函数\texttt{count}返回元素在集合中出现的次数，
+函数\texttt{erase}从集合中移除元素。
 
 \begin{lstlisting}
 set<int> s;
@@ -181,12 +160,10 @@ cout << s.count(3) << "\n"; // 0
 cout << s.count(4) << "\n"; // 1
 \end{lstlisting}
 
-A set can be used mostly like a vector,
-but it is not possible to access
-the elements using the \texttt{[]} notation.
-The following code creates a set,
-prints the number of elements in it, and then
-iterates through all the elements:
+集合的使用方式大体上与vector类似，
+但不能使用\texttt{[]}语法来访问元素。
+以下代码创建一个集合，
+打印其中元素的数量，然后遍历所有元素：
 \begin{lstlisting}
 set<int> s = {2,5,6,8};
 cout << s.size() << "\n"; // 4
@@ -195,15 +172,14 @@ for (auto x : s) {
 }
 \end{lstlisting}
 
-An important property of sets is
-that all their elements are \emph{distinct}.
-Thus, the function \texttt{count} always returns
-either 0 (the element is not in the set)
-or 1 (the element is in the set),
-and the function \texttt{insert} never adds
-an element to the set if it is
-already there.
-The following code illustrates this:
+集合的一个重要性质是
+所有元素都是\emph{互异的}。
+因此，函数\texttt{count}总是返回
+0（元素不在集合中）
+或1（元素在集合中），
+而函数\texttt{insert}在元素已存在时
+不会再次添加。
+以下代码说明了这一点：
 
 \begin{lstlisting}
 set<int> s;
@@ -213,13 +189,12 @@ s.insert(5);
 cout << s.count(5) << "\n"; // 1
 \end{lstlisting}
 
-C++ also contains the structures
-\texttt{multiset} and \texttt{unordered\_multiset}
-that otherwise work like \texttt{set}
-and \texttt{unordered\_set}
-but they can contain multiple instances of an element.
-For example, in the following code all three instances
-of the number 5 are added to a multiset:
+C++还包含\texttt{multiset}和\texttt{unordered\_multiset}结构，
+它们的使用方式与\texttt{set}
+和\texttt{unordered\_set}类似，
+但它们可以包含同一个元素的多个实例。
+例如，以下代码将数字5的三个实例
+都添加到一个multiset中：
 
 \begin{lstlisting}
 multiset<int> s;
@@ -228,44 +203,38 @@ s.insert(5);
 s.insert(5);
 cout << s.count(5) << "\n"; // 3
 \end{lstlisting}
-The function \texttt{erase} removes
-all instances of an element
-from a multiset:
+函数\texttt{erase}会从multiset中
+移除一个元素的所有实例：
 \begin{lstlisting}
 s.erase(5);
 cout << s.count(5) << "\n"; // 0
 \end{lstlisting}
-Often, only one instance should be removed,
-which can be done as follows:
+通常，只需要移除一个实例，
+可以按如下方式实现：
 \begin{lstlisting}
 s.erase(s.find(5));
 cout << s.count(5) << "\n"; // 2
 \end{lstlisting}
 
-\section{Map structures}
+\section{映射结构}
 
 \index{map}
 
-A \key{map} is a generalized array
-that consists of key-value-pairs.
-While the keys in an ordinary array are always
-the consecutive integers $0,1,\ldots,n-1$,
-where $n$ is the size of the array,
-the keys in a map can be of any data type and
-they do not have to be consecutive values.
+\key{映射}是一种广义数组，
+由键值对组成。
+普通数组的键总是连续的整数$0,1,\ldots,n-1$，
+其中$n$是数组的大小，
+而映射的键可以是任何数据类型，
+且不需要是连续的值。
 
-The C++ standard library contains two map
-implementations that correspond to the set
-implementations: the structure
-\texttt{map} is based on a balanced
-binary tree and accessing elements
-takes $O(\log n)$ time,
-while the structure
-\texttt{unordered\_map} uses hashing
-and accessing elements takes $O(1)$ time on average.
+C++标准库包含两种映射实现，
+与集合的实现相对应：
+\texttt{map}结构基于平衡二叉树，
+访问元素的时间复杂度为$O(\log n)$，
+而\texttt{unordered\_map}结构使用哈希，
+访问元素的平均时间复杂度为$O(1)$。
 
-The following code creates a map
-where the keys are strings and the values are integers:
+以下代码创建一个键为字符串、值为整数的映射：
 
 \begin{lstlisting}
 map<string,int> m;
@@ -275,50 +244,44 @@ m["harpsichord"] = 9;
 cout << m["banana"] << "\n"; // 3
 \end{lstlisting}
 
-If the value of a key is requested
-but the map does not contain it,
-the key is automatically added to the map with
-a default value.
-For example, in the following code,
-the key ''aybabtu'' with value 0
-is added to the map.
+如果请求一个键的值，
+但映射中不包含该键，
+则该键会自动添加到映射中并赋予默认值。
+例如，在以下代码中，
+键''aybabtu''的值0被添加到映射中。
 
 \begin{lstlisting}
 map<string,int> m;
 cout << m["aybabtu"] << "\n"; // 0
 \end{lstlisting}
-The function \texttt{count} checks
-if a key exists in a map:
+函数\texttt{count}检查映射中
+是否存在某个键：
 \begin{lstlisting}
 if (m.count("aybabtu")) {
-    // key exists
+    // 键存在
 }
 \end{lstlisting}
-The following code prints all the keys and values
-in a map:
+以下代码打印映射中所有的键和值：
 \begin{lstlisting}
 for (auto x : m) {
     cout << x.first << " " << x.second << "\n";
 }
 \end{lstlisting}
 
-\section{Iterators and ranges}
+\section{迭代器与范围}
 
-\index{iterator}
+\index{迭代器}
 
-Many functions in the C++ standard library
-operate with iterators.
-An \key{iterator} is a variable that points
-to an element in a data structure.
+C++标准库中的许多函数都使用迭代器来操作。
+\key{迭代器}是一个指向
+数据结构中某个元素的变量。
 
-The often used iterators \texttt{begin}
-and \texttt{end} define a range that contains
-all elements in a data structure.
-The iterator \texttt{begin} points to
-the first element in the data structure,
-and the iterator \texttt{end} points to
-the position \emph{after} the last element.
-The situation looks as follows:
+常用的迭代器\texttt{begin}
+和\texttt{end}定义了一个范围，
+该范围包含数据结构中的所有元素。
+迭代器\texttt{begin}指向数据结构中的第一个元素，
+而迭代器\texttt{end}指向最后一个元素\emph{之后}的位置。
+情况如下图所示：
 
 \begin{center}
 \begin{tabular}{llllllllll}
@@ -328,24 +291,21 @@ The situation looks as follows:
 \end{tabular}
 \end{center}
 
-Note the asymmetry in the iterators:
-\texttt{s.begin()} points to an element in the data structure,
-while \texttt{s.end()} points outside the data structure.
-Thus, the range defined by the iterators is \emph{half-open}.
+注意迭代器中的不对称性：
+\texttt{s.begin()}指向数据结构中的一个元素，
+而\texttt{s.end()}指向数据结构之外。
+因此，迭代器定义的范围是\emph{半开}的。
 
-\subsubsection{Working with ranges}
+\subsubsection{范围操作}
 
-Iterators are used in C++ standard library functions
-that are given a range of elements in a data structure.
-Usually, we want to process all elements in a
-data structure, so the iterators
-\texttt{begin} and \texttt{end} are given for the function.
+迭代器用于C++标准库中那些需要接收数据结构中
+一个元素范围的函数。
+通常，我们希望处理数据结构中的所有元素，
+因此需要为函数提供\texttt{begin}和\texttt{end}迭代器。
 
-For example, the following code sorts a vector
-using the function \texttt{sort},
-then reverses the order of the elements using the function
-\texttt{reverse}, and finally shuffles the order of
-the elements using the function \texttt{random\_shuffle}.
+例如，以下代码使用函数\texttt{sort}对一个vector排序，
+然后使用函数\texttt{reverse}反转元素的顺序，
+最后使用函数\texttt{random\_shuffle}随机打乱元素的顺序。
 
 \index{sort@\texttt{sort}}
 \index{reverse@\texttt{reverse}}
@@ -357,9 +317,9 @@ reverse(v.begin(), v.end());
 random_shuffle(v.begin(), v.end());
 \end{lstlisting}
 
-These functions can also be used with an ordinary array.
-In this case, the functions are given pointers to the array
-instead of iterators:
+这些函数也可以用于普通数组。
+在这种情况下，需要为数组提供指针
+而不是迭代器：
 
 \newpage
 \begin{lstlisting}
@@ -368,74 +328,65 @@ reverse(a, a+n);
 random_shuffle(a, a+n);
 \end{lstlisting}
 
-\subsubsection{Set iterators}
+\subsubsection{集合迭代器}
 
-Iterators are often used to access
-elements of a set.
-The following code creates an iterator
-\texttt{it} that points to the smallest element in a set:
+迭代器常用于访问集合中的元素。
+以下代码创建一个迭代器\texttt{it}，
+指向集合中最小的元素：
 \begin{lstlisting}
 set<int>::iterator it = s.begin();
 \end{lstlisting}
-A shorter way to write the code is as follows:
+一种更简洁的写法如下：
 \begin{lstlisting}
 auto it = s.begin();
 \end{lstlisting}
-The element to which an iterator points
-can be accessed using the \texttt{*} symbol.
-For example, the following code prints
-the first element in the set:
+可以使用\texttt{*}符号访问迭代器所指向的元素。
+例如，以下代码打印集合中的第一个元素：
 
 \begin{lstlisting}
 auto it = s.begin();
 cout << *it << "\n";
 \end{lstlisting}
 
-Iterators can be moved using the operators
-\texttt{++} (forward) and \texttt{--} (backward),
-meaning that the iterator moves to the next
-or previous element in the set.
+可以使用运算符\texttt{++}（向前）和\texttt{--}（向后）
+来移动迭代器，
+即迭代器会移动到集合中的下一个或上一个元素。
 
-The following code prints all the elements
-in increasing order:
+以下代码按递增顺序打印所有元素：
 \begin{lstlisting}
 for (auto it = s.begin(); it != s.end(); it++) {
     cout << *it << "\n";
 }
 \end{lstlisting}
-The following code prints the largest element in the set:
+以下代码打印集合中最大的元素：
 \begin{lstlisting}
 auto it = s.end(); it--;
 cout << *it << "\n";
 \end{lstlisting}
 
-The function $\texttt{find}(x)$ returns an iterator
-that points to an element whose value is $x$.
-However, if the set does not contain $x$,
-the iterator will be \texttt{end}.
+函数$\texttt{find}(x)$返回一个
+指向值为$x$的元素的迭代器。
+但如果集合中不包含$x$，
+迭代器将为\texttt{end}。
 
 \begin{lstlisting}
 auto it = s.find(x);
 if (it == s.end()) {
-    // x is not found
+    // 未找到x
 }
 \end{lstlisting}
 
-The function $\texttt{lower\_bound}(x)$ returns
-an iterator to the smallest element in the set
-whose value is \emph{at least} $x$, and
-the function $\texttt{upper\_bound}(x)$
-returns an iterator to the smallest element in the set
-whose value is \emph{larger than} $x$.
-In both functions, if such an element does not exist,
-the return value is \texttt{end}.
-These functions are not supported by the
-\texttt{unordered\_set} structure which
-does not maintain the order of the elements.
+函数$\texttt{lower\_bound}(x)$返回
+一个迭代器，指向集合中值\emph{至少为}$x$的最小元素，
+函数$\texttt{upper\_bound}(x)$
+返回一个迭代器，指向集合中值\emph{大于}$x$的最小元素。
+在两个函数中，如果这样的元素不存在，
+返回值均为\texttt{end}。
+这两个函数不被\texttt{unordered\_set}结构支持，
+因为该结构不维护元素的顺序。
 
 \begin{samepage}
-For example, the following code finds the element
-nearest to $x$:
+例如，以下代码查找最接近$x$的元素：
 
 \begin{lstlisting}
 auto it = s.lower_bound(x);
@@ -452,30 +403,27 @@ if (it == s.begin()) {
 }
 \end{lstlisting}
 
-The code assumes that the set is not empty,
-and goes through all possible cases
-using an iterator \texttt{it}.
-First, the iterator points to the smallest
-element whose value is at least $x$.
-If \texttt{it} equals \texttt{begin},
-the corresponding element is nearest to $x$.
-If \texttt{it} equals \texttt{end},
-the largest element in the set is nearest to $x$.
-If none of the previous cases hold,
-the element nearest to $x$ is either the
-element that corresponds to \texttt{it} or the previous element.
+该代码假设集合不为空，
+并使用迭代器\texttt{it}遍历所有可能的情况。
+首先，迭代器指向值至少为$x$的最小元素。
+如果\texttt{it}等于\texttt{begin}，
+则对应的元素最接近$x$。
+如果\texttt{it}等于\texttt{end}，
+则集合中最大的元素最接近$x$。
+如果以上情况都不成立，
+最接近$x$的元素要么是\texttt{it}对应的元素，
+要么是前一个元素。
 \end{samepage}
 
-\section{Other structures}
+\section{其他结构}
 
 \subsubsection{Bitset}
 
 \index{bitset}
 
-A \key{bitset} is an array
-whose each value is either 0 or 1.
-For example, the following code creates
-a bitset that contains 10 elements:
+\key{bitset（位集）}是一种每个值
+只能是0或1的数组。
+例如，以下代码创建一个包含10个元素的bitset：
 \begin{lstlisting}
 bitset<10> s;
 s[1] = 1;
@@ -486,35 +434,32 @@ cout << s[4] << "\n"; // 1
 cout << s[5] << "\n"; // 0
 \end{lstlisting}
 
-The benefit of using bitsets is that
-they require less memory than ordinary arrays,
-because each element in a bitset only
-uses one bit of memory.
-For example, 
-if $n$ bits are stored in an \texttt{int} array,
-$32n$ bits of memory will be used,
-but a corresponding bitset only requires $n$ bits of memory.
-In addition, the values of a bitset
-can be efficiently manipulated using
-bit operators, which makes it possible to
-optimize algorithms using bit sets.
+使用bitset的优势在于
+它们比普通数组占用更少的内存，
+因为bitset中的每个元素只占用一位内存。
+例如，
+如果将$n$个位存储在\texttt{int}数组中，
+将使用$32n$位内存，
+而相应的bitset只需$n$位内存。
+此外，bitset的值可以使用位运算高效操作，
+这使得用位集优化算法成为可能。
 
-The following code shows another way to create the above bitset:
+以下代码展示了创建上述bitset的另一种方式：
 \begin{lstlisting}
-bitset<10> s(string("0010011010")); // from right to left
+bitset<10> s(string("0010011010")); // 从右到左
 cout << s[4] << "\n"; // 1
 cout << s[5] << "\n"; // 0
 \end{lstlisting}
 
-The function \texttt{count} returns the number
-of ones in the bitset:
+函数\texttt{count}返回
+bitset中1的个数：
 
 \begin{lstlisting}
 bitset<10> s(string("0010011010"));
 cout << s.count() << "\n"; // 4
 \end{lstlisting}
 
-The following code shows examples of using bit operations:
+以下代码展示了位运算的使用示例：
 \begin{lstlisting}
 bitset<10> a(string("0010110110"));
 bitset<10> b(string("1011011000"));
@@ -527,16 +472,14 @@ cout << (a^b) << "\n"; // 1001101110
 
 \index{deque}
 
-A \key{deque} is a dynamic array
-whose size can be efficiently
-changed at both ends of the array.
-Like a vector, a deque provides the functions
-\texttt{push\_back} and \texttt{pop\_back}, but
-it also includes the functions
-\texttt{push\_front} and \texttt{pop\_front}
-which are not available in a vector.
+\key{deque（双端队列）}是一种动态数组，
+其大小可以在数组的两端高效地改变。
+与vector一样，deque提供了函数
+\texttt{push\_back}和\texttt{pop\_back}，
+但它还包含了vector中不可用的函数
+\texttt{push\_front}和\texttt{pop\_front}。
 
-A deque can be used as follows:
+deque的使用方式如下：
 \begin{lstlisting}
 deque<int> d;
 d.push_back(5); // [5]
@@ -546,25 +489,21 @@ d.pop_back(); // [3,5]
 d.pop_front(); // [5]
 \end{lstlisting}
 
-The internal implementation of a deque
-is more complex than that of a vector,
-and for this reason, a deque is slower than a vector.
-Still, both adding and removing
-elements take $O(1)$ time on average at both ends.
+deque的内部实现比vector更复杂，
+因此deque比vector更慢。
+不过，在两端添加和移除元素的平均时间复杂度均为$O(1)$。
 
 \subsubsection{Stack}
 
 \index{stack}
 
-A \key{stack}
-is a data structure that provides two
-$O(1)$ time operations:
-adding an element to the top,
-and removing an element from the top.
-It is only possible to access the top
-element of a stack.
+\key{stack（栈）}
+是一种提供两种$O(1)$时间操作的数据结构：
+在顶部添加元素，
+以及从顶部移除元素。
+只能访问栈顶的元素。
 
-The following code shows how a stack can be used:
+以下代码展示了如何使用栈：
 \begin{lstlisting}
 stack<int> s;
 s.push(3);
@@ -578,14 +517,12 @@ cout << s.top(); // 2
 
 \index{queue}
 
-A \key{queue} also
-provides two $O(1)$ time operations:
-adding an element to the end of the queue,
-and removing the first element in the queue.
-It is only possible to access the first
-and last element of a queue.
+\key{queue（队列）}也提供两种$O(1)$时间操作：
+在队列末尾添加元素，
+以及移除队列中的第一个元素。
+只能访问队列的第一个和最后一个元素。
 
-The following code shows how a queue can be used:
+以下代码展示了如何使用队列：
 \begin{lstlisting}
 queue<int> q;
 q.push(3);
@@ -596,34 +533,28 @@ q.pop();
 cout << q.front(); // 2
 \end{lstlisting}
 
-\subsubsection{Priority queue}
+\subsubsection{优先队列}
 
-\index{priority queue}
-\index{heap}
+\index{优先队列}
+\index{堆}
 
-A \key{priority queue}
-maintains a set of elements.
-The supported operations are insertion and,
-depending on the type of the queue,
-retrieval and removal of
-either the minimum or maximum element.
-Insertion and removal take $O(\log n)$ time,
-and retrieval takes $O(1)$ time.
+\key{优先队列}（priority queue）
+维护一组元素。
+支持的操作包括插入，以及根据队列类型
+检索和移除最小或最大元素。
+插入和移除的时间复杂度为$O(\log n)$，
+检索的时间复杂度为$O(1)$。
 
-While an ordered set efficiently supports
-all the operations of a priority queue,
-the benefit of using a priority queue is
-that it has smaller constant factors.
-A priority queue is usually implemented using
-a heap structure that is much simpler than a
-balanced binary tree used in an ordered set.
+虽然有序集合也能高效支持优先队列的所有操作，
+但使用优先队列的优势在于它的常数因子更小。
+优先队列通常使用堆结构实现，
+这比有序集合中使用的平衡二叉树简单得多。
 
 \begin{samepage}
-By default, the elements in a C++
-priority queue are sorted in decreasing order,
-and it is possible to find and remove the
-largest element in the queue.
-The following code illustrates this:
+默认情况下，C++优先队列中的元素
+按递减顺序排列，
+可以查找和移除队列中最大的元素。
+以下代码说明了这一点：
 
 \begin{lstlisting}
 priority_queue<int> q;
@@ -641,36 +572,32 @@ q.pop();
 \end{lstlisting}
 \end{samepage}
 
-If we want to create a priority queue
-that supports finding and removing
-the smallest element,
-we can do it as follows:
+如果我们想创建一个支持查找和移除
+最小元素的优先队列，
+可以按如下方式实现：
 
 \begin{lstlisting}
 priority_queue<int,vector<int>,greater<int>> q;
 \end{lstlisting}
 
-\subsubsection{Policy-based data structures}
+\subsubsection{基于策略的数据结构}
 
-The \texttt{g++} compiler also supports
-some data structures that are not part
-of the C++ standard library.
-Such structures are called \emph{policy-based}
-data structures.
-To use these structures, the following lines
-must be added to the code:
+\texttt{g++}编译器还支持
+一些不属于C++标准库的数据结构。
+这些结构被称为\emph{基于策略的}数据结构。
+要使用这些结构，必须在代码中添加以下行：
 \begin{lstlisting}
 #include <ext/pb_ds/assoc_container.hpp>
 using namespace __gnu_pbds; 
 \end{lstlisting}
-After this, we can define a data structure \texttt{indexed\_set} that
-is like \texttt{set} but can be indexed like an array.
-The definition for \texttt{int} values is as follows:
+此后，我们可以定义一个数据结构\texttt{indexed\_set}，
+它类似于\texttt{set}，但可以像数组一样进行索引。
+对于\texttt{int}值的定义如下：
 \begin{lstlisting}
 typedef tree<int,null_type,less<int>,rb_tree_tag,
              tree_order_statistics_node_update> indexed_set; 
 \end{lstlisting}
-Now we can create a set as follows:
+现在我们可以按如下方式创建一个集合：
 \begin{lstlisting}
 indexed_set s;
 s.insert(2);
@@ -678,92 +605,83 @@ s.insert(3);
 s.insert(7);
 s.insert(9);
 \end{lstlisting}
-The speciality of this set is that we have access to
-the indices that the elements would have in a sorted array.
-The function $\texttt{find\_by\_order}$ returns
-an iterator to the element at a given position:
+这个集合的特殊之处在于，我们可以访问
+元素在有序数组中对应的索引。
+函数$\texttt{find\_by\_order}$返回
+指向给定位置元素的迭代器：
 \begin{lstlisting}
 auto x = s.find_by_order(2);
 cout << *x << "\n"; // 7
 \end{lstlisting}
-And the function $\texttt{order\_of\_key}$
-returns the position of a given element:
+函数$\texttt{order\_of\_key}$
+返回给定元素的位置：
 \begin{lstlisting}
 cout << s.order_of_key(7) << "\n"; // 2
 \end{lstlisting}
-If the element does not appear in the set,
-we get the position that the element would have
-in the set:
+如果元素不在集合中，
+我们得到的是该元素在集合中
+将会处于的位置：
 \begin{lstlisting}
 cout << s.order_of_key(6) << "\n"; // 2
 cout << s.order_of_key(8) << "\n"; // 3
 \end{lstlisting}
-Both the functions work in logarithmic time.
+这两个函数都以对数时间运行。
 
-\section{Comparison to sorting}
+\section{与排序的比较}
 
-It is often possible to solve a problem
-using either data structures or sorting.
-Sometimes there are remarkable differences
-in the actual efficiency of these approaches,
-which may be hidden in their time complexities.
+通常可以用数据结构或排序来解决同一个问题。
+有时这两种方法的实际效率
+存在显著差异，
+而这种差异可能隐藏在它们的时间复杂度中。
 
-Let us consider a problem where
-we are given two lists $A$ and $B$
-that both contain $n$ elements.
-Our task is to calculate the number of elements
-that belong to both of the lists.
-For example, for the lists
-\[A = [5,2,8,9] \hspace{10px} \textrm{and} \hspace{10px} B = [3,2,9,5],\]
-the answer is 3 because the numbers 2, 5
-and 9 belong to both of the lists.
+考虑一个问题：给定两个列表$A$和$B$，
+它们都包含$n$个元素。
+我们的任务是计算同时属于两个列表的元素数量。
+例如，对于列表
+\[A = [5,2,8,9] \hspace{10pt} \textrm{和} \hspace{10pt} B = [3,2,9,5],\]
+答案是3，因为数字2、5和9
+同时属于两个列表。
 
-A straightforward solution to the problem is
-to go through all pairs of elements in $O(n^2)$ time,
-but next we will focus on
-more efficient algorithms.
+该问题的一个直接解决方案是
+在$O(n^2)$时间内遍历所有元素对，
+但接下来我们将关注更高效的算法。
 
-\subsubsection{Algorithm 1}
+\subsubsection{算法1}
 
-We construct a set of the elements that appear in $A$,
-and after this, we iterate through the elements
-of $B$ and check for each elements if it
-also belongs to $A$.
-This is efficient because the elements of $A$
-are in a set.
-Using the \texttt{set} structure,
-the time complexity of the algorithm is $O(n \log n)$.
+我们用$A$中出现的元素构造一个集合，
+然后遍历$B$的元素，
+检查每个元素是否也属于$A$。
+这种方法很高效，因为$A$的元素存储在集合中。
+使用\texttt{set}结构，
+算法的时间复杂度为$O(n \log n)$。
 
-\subsubsection{Algorithm 2}
+\subsubsection{算法2}
 
-It is not necessary to maintain an ordered set,
-so instead of the \texttt{set} structure
-we can also use the \texttt{unordered\_set} structure.
-This is an easy way to make the algorithm
-more efficient, because we only have to change
-the underlying data structure.
-The time complexity of the new algorithm is $O(n)$.
+没有必要维护一个有序集合，
+因此我们可以用\texttt{unordered\_set}结构
+代替\texttt{set}结构。
+这是一种使算法更高效的简单方法，
+因为我们只需要更改底层数据结构。
+新算法的时间复杂度为$O(n)$。
 
-\subsubsection{Algorithm 3}
+\subsubsection{算法3}
 
-Instead of data structures, we can use sorting.
-First, we sort both lists $A$ and $B$.
-After this, we iterate through both the lists
-at the same time and find the common elements.
-The time complexity of sorting is $O(n \log n)$,
-and the rest of the algorithm works in $O(n)$ time,
-so the total time complexity is $O(n \log n)$.
+除了数据结构，我们还可以使用排序。
+首先，对两个列表$A$和$B$分别排序。
+然后，同时遍历两个列表，
+找出共同的元素。
+排序的时间复杂度为$O(n \log n)$，
+算法的其余部分在$O(n)$时间内运行，
+因此总时间复杂度为$O(n \log n)$。
 
-\subsubsection{Efficiency comparison}
+\subsubsection{效率比较}
 
-The following table shows how efficient
-the above algorithms are when $n$ varies and
-the elements of the lists are random
-integers between $1 \ldots 10^9$:
+下表展示了当$n$变化且列表元素为$1 \ldots 10^9$之间的随机整数时，
+上述算法的效率：
 
 \begin{center}
 \begin{tabular}{rrrr}
-$n$ & Algorithm 1 & Algorithm 2 & Algorithm 3 \\
+$n$ & 算法1 & 算法2 & 算法3 \\
 \hline
 $10^6$ & $1.5$ s & $0.3$ s & $0.2$ s \\
 $2 \cdot 10^6$ & $3.7$ s & $0.8$ s & $0.3$ s \\
@@ -773,22 +691,19 @@ $5 \cdot 10^6$ & $10.0$ s & $2.3$ s & $0.9$ s \\
 \end{tabular}
 \end{center}
 
-Algorithms 1 and 2 are equal except that
-they use different set structures.
-In this problem, this choice has an important effect on
-the running time, because Algorithm 2
-is 4–5 times faster than Algorithm 1.
+算法1和算法2的唯一区别在于
+它们使用了不同的集合结构。
+在这个问题中，这个选择对运行时间有重要影响，
+因为算法2比算法1快4–5倍。
 
-However, the most efficient algorithm is Algorithm 3
-which uses sorting.
-It only uses half the time compared to Algorithm 2.
-Interestingly, the time complexity of both
-Algorithm 1 and Algorithm 3 is $O(n \log n)$,
-but despite this, Algorithm 3 is ten times faster.
-This can be explained by the fact that
-sorting is a simple procedure and it is done
-only once at the beginning of Algorithm 3,
-and the rest of the algorithm works in linear time.
-On the other hand,
-Algorithm 1 maintains a complex balanced binary tree
-during the whole algorithm.
+然而，最有效的算法是使用排序的算法3。
+它所需的时间仅为算法2的一半。
+有趣的是，算法1和算法3的时间复杂度
+都是$O(n \log n)$，
+尽管如此，算法3还是快了十倍。
+这可以解释为：排序是一个简单的操作，
+只在算法3的开头执行一次，
+而算法的其余部分以线性时间运行。
+另一方面，
+算法1在整个算法过程中都要维护
+一个复杂的平衡二叉树。

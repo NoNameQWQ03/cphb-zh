@@ -1,17 +1,15 @@
-\chapter{Geometry}
+\chapter{几何}
 
-\index{geometry}
+\index{几何}
 
-In geometric problems, it is often challenging
-to find a way to approach the problem so that
-the solution to the problem can be conveniently implemented
-and the number of special cases is small.
+在几何问题中，找到一种合适的方法来处理问题往往具有挑战性，
+需要使得问题的解决方案能够方便地实现，并且特殊情况的数量较少。
 
-As an example, consider a problem where
-we are given the vertices of a quadrilateral
-(a polygon that has four vertices),
-and our task is to calculate its area.
-For example, a possible input for the problem is as follows:
+作为一个例子，考虑这样一个问题：
+给定一个四边形的顶点
+（有四个顶点的多边形），
+我们的任务是计算它的面积。
+例如，该问题的一个可能的输入如下：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
@@ -23,9 +21,8 @@ For example, a possible input for the problem is as follows:
 \draw[thick] (6,2) -- (5,6) -- (2,5) -- (1,1) -- (6,2);
 \end{tikzpicture}
 \end{center}
-One way to approach the problem is to divide
-the quadrilateral into two triangles by a straight
-line between two opposite vertices:
+解决这个问题的一种方法是通过两个对角顶点之间的直线
+将四边形分成两个三角形：
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 
@@ -38,24 +35,22 @@ line between two opposite vertices:
 \draw[dashed,thick] (2,5) -- (6,2);
 \end{tikzpicture}
 \end{center}
-After this, it suffices to sum the areas
-of the triangles.
-The area of a triangle can be calculated,
-for example, using \key{Heron's formula}
+然后，只需将两个三角形的面积相加即可。
+三角形的面积可以通过例如\key{海伦公式}计算
 %\footnote{Heron of Alexandria (c. 10--70) was a Greek mathematician.}
 \[ \sqrt{s (s-a) (s-b) (s-c)},\]
-where $a$, $b$ and $c$ are the lengths
-of the triangle's sides and
-$s=(a+b+c)/2$.
-\index{Heron's formula}
+其中 $a$、$b$ 和 $c$ 是
+三角形各边的长度，
+$s=(a+b+c)/2$。
+\index{海伦公式}
 
-This is a possible way to solve the problem,
-but there is one pitfall:
-how to divide the quadrilateral into triangles?
-It turns out that sometimes we cannot just pick
-two arbitrary opposite vertices.
-For example, in the following situation,
-the division line is \emph{outside} the quadrilateral:
+这是解决问题的一种可能方法，
+但有一个陷阱：
+如何将四边形分成三角形？
+事实证明，有时我们不能简单地选取
+两个任意的对角顶点。
+例如，在以下情况中，
+分割线在四边形的\emph{外部}：
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 
@@ -68,7 +63,7 @@ the division line is \emph{outside} the quadrilateral:
 \draw[dashed,thick] (2,5) -- (6,2);
 \end{tikzpicture}
 \end{center}
-However, another way to draw the line works:
+然而，用另一种方式画线就可以了：
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 
@@ -81,37 +76,35 @@ However, another way to draw the line works:
 \draw[dashed,thick] (3,2) -- (1,1);
 \end{tikzpicture}
 \end{center}
-It is clear for a human which of the lines is the correct
-choice, but the situation is difficult for a computer.
+对于人类来说，哪条线是正确的选择是很明显的，
+但对于计算机来说情况却很困难。
                            
-However, it turns out that we can solve the problem using
-another method that is more convenient to a programmer.
-Namely, there is a general formula
+然而，事实证明我们可以用
+另一种更适合程序员的方法来解决这个问题。
+即，有一个通用公式
 \[x_1y_2-x_2y_1+x_2y_3-x_3y_2+x_3y_4-x_4y_3+x_4y_1-x_1y_4,\]
-that calculates the area of a quadrilateral
-whose vertices are
-$(x_1,y_1)$,
-$(x_2,y_2)$,
-$(x_3,y_3)$ and
-$(x_4,y_4)$.
-This formula is easy to implement, there are no special
-cases, and we can even generalize the formula
-to \emph{all} polygons.
+可以计算顶点为
+$(x_1,y_1)$、
+$(x_2,y_2)$、
+$(x_3,y_3)$ 和
+$(x_4,y_4)$ 的四边形的面积。
+这个公式很容易实现，没有特殊情况，
+我们甚至可以将该公式推广到\emph{所有}多边形。
 
-\section{Complex numbers}
+\section{复数}
 
-\index{complex number}
-\index{point}
-\index{vector}
+\index{复数}
+\index{点}
+\index{向量}
 
-A \key{complex number} is a number of the form $x+y i$,
-where $i = \sqrt{-1}$ is the \key{imaginary unit}.
-A geometric interpretation of a complex number is
-that it represents a two-dimensional point $(x,y)$
-or a vector from the origin to a point $(x,y)$.
+\key{复数}是形如 $x+y i$ 的数，
+其中 $i = \sqrt{-1}$ 是\key{虚数单位}。
+复数的几何解释是
+它表示二维点 $(x,y)$
+或从原点到点 $(x,y)$ 的向量。
 
-For example, $4+2i$ corresponds to the
-following point and vector:
+例如，$4+2i$ 对应于以下
+点和向量：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
@@ -128,16 +121,16 @@ following point and vector:
 
 \index{complex@\texttt{complex}}
 
-The C++ complex number class \texttt{complex} is
-useful when solving geometric problems.
-Using the class we can represent points and vectors
-as complex numbers, and the class contains tools
-that are useful in geometry.
+C++ 的复数类 \texttt{complex} 在
+解决几何问题时非常有用。
+使用这个类，我们可以将点和向量
+表示为复数，并且该类包含
+在几何中有用的工具。
 
-In the following code, \texttt{C} is the type of
-a coordinate and \texttt{P} is the type of a point or a vector.
-In addition, the code defines macros \texttt{X} and \texttt{Y}
-that can be used to refer to x and y coordinates.
+在以下代码中，\texttt{C} 是坐标的类型，
+\texttt{P} 是点或向量的类型。
+此外，代码定义了宏 \texttt{X} 和 \texttt{Y}，
+可用于引用 x 和 y 坐标。
 
 \begin{lstlisting}
 typedef long long C;
@@ -146,16 +139,16 @@ typedef complex<C> P;
 #define Y imag()
 \end{lstlisting}
 
-For example, the following code defines a point $p=(4,2)$
-and prints its x and y coordinates:
+例如，以下代码定义了一个点 $p=(4,2)$
+并打印其 x 和 y 坐标：
 
 \begin{lstlisting}
 P p = {4,2};
 cout << p.X << " " << p.Y << "\n"; // 4 2
 \end{lstlisting}
 
-The following code defines vectors $v=(3,1)$ and $u=(2,2)$,
-and after that calculates the sum $s=v+u$.
+以下代码定义了向量 $v=(3,1)$ 和 $u=(2,2)$，
+然后计算它们的和 $s=v+u$。
 
 \begin{lstlisting}
 P v = {3,1};
@@ -164,57 +157,55 @@ P s = v+u;
 cout << s.X << " " << s.Y << "\n"; // 5 3
 \end{lstlisting}
 
-In practice,
-an appropriate coordinate type is usually
-\texttt{long long} (integer) or \texttt{long double}
-(real number).
-It is a good idea to use integer whenever possible,
-because calculations with integers are exact.
-If real numbers are needed,
-precision errors should be taken into account
-when comparing numbers.
-A safe way to check if real numbers $a$ and $b$ are equal
-is to compare them using $|a-b|<\epsilon$,
-where $\epsilon$ is a small number (for example, $\epsilon=10^{-9}$).
+在实践中，合适的坐标类型通常是
+\texttt{long long}（整数）或 \texttt{long double}
+（实数）。
+尽可能使用整数是个好主意，
+因为整数的运算是精确的。
+如果需要使用实数，
+在比较数字时应考虑精度误差。
+检查实数 $a$ 和 $b$ 是否相等的安全方法
+是使用 $|a-b|<\epsilon$ 进行比较，
+其中 $\epsilon$ 是一个很小的数（例如 $\epsilon=10^{-9}$）。
 
-\subsubsection*{Functions}
+\subsubsection*{函数}
 
-In the following examples, the coordinate type is
-\texttt{long double}.
+在以下示例中，坐标类型为
+\texttt{long double}。
 
-The function $\texttt{abs}(v)$ calculates the length
-$|v|$ of a vector $v=(x,y)$
-using the formula $\sqrt{x^2+y^2}$.
-The function can also be used for
-calculating the distance between points
-$(x_1,y_1)$ and $(x_2,y_2)$,
-because that distance equals the length
-of the vector $(x_2-x_1,y_2-y_1)$.
+函数 $\texttt{abs}(v)$ 使用公式
+$\sqrt{x^2+y^2}$ 计算向量 $v=(x,y)$
+的长度 $|v|$。
+该函数也可用于
+计算点
+$(x_1,y_1)$ 和 $(x_2,y_2)$ 之间的距离，
+因为该距离等于
+向量 $(x_2-x_1,y_2-y_1)$ 的长度。
 
-The following code calculates the distance
-between points $(4,2)$ and $(3,-1)$:
+以下代码计算点
+$(4,2)$ 和 $(3,-1)$ 之间的距离：
 \begin{lstlisting}
 P a = {4,2};
 P b = {3,-1};
 cout << abs(b-a) << "\n"; // 3.16228
 \end{lstlisting}
 
-The function $\texttt{arg}(v)$ calculates the
-angle of a vector $v=(x,y)$ with respect to the x axis.
-The function gives the angle in radians,
-where $r$ radians equals $180 r/\pi$ degrees.
-The angle of a vector that points to the right is 0,
-and angles decrease clockwise and increase
-counterclockwise.
+函数 $\texttt{arg}(v)$ 计算向量
+$v=(x,y)$ 相对于 x 轴的角度。
+该函数返回的角度以弧度为单位，
+其中 $r$ 弧度等于 $180 r/\pi$ 度。
+向右指的向量的角度为 0，
+角度顺时针递减，逆时针递增。
 
-The function $\texttt{polar}(s,a)$ constructs a vector
-whose length is $s$ and that points to an angle $a$.
-A vector can be rotated by an angle $a$
-by multiplying it by a vector with length 1 and angle $a$.
+函数 $\texttt{polar}(s,a)$ 构造一个
+长度为 $s$ 且指向角度 $a$ 的向量。
+通过将一个向量乘以长度为 1、角度为 $a$ 的向量，
+可以将该向量旋转角度 $a$。
 
-The following code calculates the angle of
-the vector $(4,2)$, rotates it $1/2$ radians
-counterclockwise, and then calculates the angle again:
+以下代码计算
+向量 $(4,2)$ 的角度，
+将其逆时针旋转 $1/2$ 弧度，
+然后再次计算角度：
 
 \begin{lstlisting}
 P v = {4,2};
@@ -223,19 +214,17 @@ v *= polar(1.0,0.5);
 cout << arg(v) << "\n"; // 0.963648
 \end{lstlisting}
 
-\section{Points and lines}
+\section{点与直线}
 
-\index{cross product}
+\index{叉积}
 
-The \key{cross product} $a \times b$ of vectors
-$a=(x_1,y_1)$ and $b=(x_2,y_2)$ is calculated
-using the formula $x_1 y_2 - x_2 y_1$.
-The cross product tells us whether $b$
-turns left (positive value), does not turn (zero)
-or turns right (negative value)
-when it is placed directly after $a$.
+向量 $a=(x_1,y_1)$ 和 $b=(x_2,y_2)$ 的\key{叉积}
+$a \times b$ 使用公式 $x_1 y_2 - x_2 y_1$ 计算。
+叉积告诉我们当 $b$ 直接接在 $a$ 之后时，
+$b$ 是向左转（正值）、不转弯（零）
+还是向右转（负值）。
 
-The following picture illustrates the above cases:
+下图说明了上述情况：
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 
@@ -266,10 +255,9 @@ The following picture illustrates the above cases:
 \end{center}
 
 \noindent
-For example, in the first case
-$a=(4,2)$ and $b=(1,2)$.
-The following code calculates the cross product
-using the class \texttt{complex}:
+例如，在第一种情况中
+$a=(4,2)$ 且 $b=(1,2)$。
+以下代码使用 \texttt{complex} 类计算叉积：
 
 \begin{lstlisting}
 P a = {4,2};
@@ -277,24 +265,20 @@ P b = {1,2};
 C p = (conj(a)*b).Y; // 6
 \end{lstlisting}
 
-The above code works, because
-the function \texttt{conj} negates the y coordinate
-of a vector,
-and when the vectors $(x_1,-y_1)$ and $(x_2,y_2)$
-are multiplied together, the y coordinate
-of the result is $x_1 y_2 - x_2 y_1$.
+上面的代码有效，因为
+函数 \texttt{conj} 会取向量 y 坐标的相反数，
+当向量 $(x_1,-y_1)$ 和 $(x_2,y_2)$
+相乘时，结果的 y 坐标
+为 $x_1 y_2 - x_2 y_1$。
 
-\subsubsection{Point location}
+\subsubsection{点的位置}
 
-Cross products can be used to test
-whether a point is located on the left or right
-side of a line.
-Assume that the line goes through points
-$s_1$ and $s_2$, we are looking from $s_1$
-to $s_2$ and the point is $p$.
+叉积可用于测试一个点位于直线的左侧还是右侧。
+假设直线经过点 $s_1$ 和 $s_2$，
+我们从 $s_1$ 向 $s_2$ 看，点为 $p$。
 
-For example, in the following picture,
-$p$ is on the left side of the line:
+例如，在下图中，
+$p$ 在直线的左侧：
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 \draw[dashed,thick,->] (0,-3)--(12,6);
@@ -307,31 +291,29 @@ $p$ is on the left side of the line:
 \end{tikzpicture}
 \end{center}
 
-The cross product $(p-s_1) \times (p-s_2)$
-tells us the location of the point $p$.
-If the cross product is positive,
-$p$ is located on the left side,
-and if the cross product is negative,
-$p$ is located on the right side.
-Finally, if the cross product is zero,
-points $s_1$, $s_2$ and $p$ are on the same line.
+叉积 $(p-s_1) \times (p-s_2)$
+告诉我们点 $p$ 的位置。
+如果叉积为正，
+则 $p$ 位于左侧；
+如果叉积为负，
+则 $p$ 位于右侧。
+最后，如果叉积为零，
+则点 $s_1$、$s_2$ 和 $p$ 在同一条直线上。
 
-\subsubsection{Line segment intersection}
+\subsubsection{线段相交}
 
-\index{line segment intersection}
+\index{线段相交}
 
-Next we consider the problem of testing
-whether two line segments
-$ab$ and $cd$ intersect. The possible cases are:
+接下来我们考虑测试两条线段
+$ab$ 和 $cd$ 是否相交的问题。可能的情况有：
 
-\textit{Case 1:}
-The line segments are on the same line
-and they overlap each other.
-In this case, there is an infinite number of
-intersection points.
-For example, in the following picture,
-all points between $c$ and $b$ are
-intersection points:
+\textit{情况 1：}
+两条线段在同一条直线上
+并且互相重叠。
+在这种情况下，交点有无限多个。
+例如，在下图中，
+$c$ 和 $b$ 之间的所有点都是
+交点：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \draw (1.5,1.5)--(6,3);
@@ -347,16 +329,16 @@ intersection points:
 \end{tikzpicture}
 \end{center}
 
-In this case, we can use cross products to
-check if all points are on the same line.
-After this, we can sort the points and check
-whether the line segments overlap each other.
+在这种情况下，我们可以使用叉积来
+检查所有点是否在同一条直线上。
+然后，我们可以对点进行排序并
+检查两条线段是否互相重叠。
 
-\textit{Case 2:}
-The line segments have a common vertex
-that is the only intersection point.
-For example, in the following picture the
-intersection point is $b=c$:
+\textit{情况 2：}
+两条线段有一个公共顶点，
+且该顶点是唯一的交点。
+例如，在下图中，
+交点为 $b=c$：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -372,16 +354,15 @@ intersection point is $b=c$:
 \end{tikzpicture}
 \end{center}
 
-This case is easy to check, because
-there are only four possibilities
-for the intersection point:
-$a=c$, $a=d$, $b=c$ and $b=d$.
+这种情况很容易检查，因为
+交点只有四种可能：
+$a=c$、$a=d$、$b=c$ 和 $b=d$。
 
-\textit{Case 3:}
-There is exactly one intersection point
-that is not a vertex of any line segment.
-In the following picture, the point $p$
-is the intersection point:
+\textit{情况 3：}
+恰好有一个交点，
+且该交点不是任何线段的顶点。
+在下图中，点 $p$
+是交点：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \draw (0,1)--(6,3);
@@ -399,25 +380,25 @@ is the intersection point:
 \end{tikzpicture}
 \end{center}
 
-In this case, the line segments intersect
-exactly when both points $c$ and $d$ are
-on different sides of a line through $a$ and $b$,
-and points $a$ and $b$ are on different
-sides of a line through $c$ and $d$.
-We can use cross products to check this.
+在这种情况下，当点 $c$ 和 $d$ 分别在
+经过 $a$ 和 $b$ 的直线的不同侧，
+且点 $a$ 和 $b$ 分别在
+经过 $c$ 和 $d$ 的直线的不同侧时，
+两条线段恰好相交。
+我们可以使用叉积来检查这一点。
 
-\subsubsection{Point distance from a line}
+\subsubsection{点到直线的距离}
 
-Another feature of cross products is that
-the area of a triangle can be calculated
-using the formula
+叉积的另一个特性是可以
+使用公式
 \[\frac{| (a-c) \times (b-c) |}{2},\]
-where $a$, $b$ and $c$ are the vertices of the triangle.
-Using this fact, we can derive a formula
-for calculating the shortest distance between a point and a line.
-For example, in the following picture $d$ is the
-shortest distance between the point $p$ and the line
-that is defined by the points $s_1$ and $s_2$:
+计算三角形的面积，
+其中 $a$、$b$ 和 $c$ 是三角形的顶点。
+利用这一事实，我们可以推导出
+计算点与直线之间最短距离的公式。
+例如，在下图中 $d$ 是
+点 $p$ 与由点 $s_1$ 和 $s_2$ 定义的直线之间的
+最短距离：
 \begin{center}
 \begin{tikzpicture}[scale=0.75]
 \draw (-2,-1)--(6,3);
@@ -432,22 +413,21 @@ that is defined by the points $s_1$ and $s_2$:
 \end{tikzpicture}
 \end{center}
 
-The area of the triangle whose vertices are
-$s_1$, $s_2$ and $p$ can be calculated in two ways:
-it is both
-$\frac{1}{2} |s_2-s_1| d$ and
-$\frac{1}{2} ((s_1-p) \times (s_2-p))$.
-Thus, the shortest distance is
+顶点为 $s_1$、$s_2$ 和 $p$ 的三角形的面积
+可以用两种方式计算：
+它既等于
+$\frac{1}{2} |s_2-s_1| d$，
+也等于
+$\frac{1}{2} ((s_1-p) \times (s_2-p))$。
+因此，最短距离为
 \[ d = \frac{(s_1-p) \times (s_2-p)}{|s_2-s_1|} .\]
 
-\subsubsection{Point inside a polygon}
+\subsubsection{点在多边形内部}
 
-Let us now consider the problem of
-testing whether a point is located inside or outside
-a polygon.
-For example, in the following picture point $a$
-is inside the polygon and point $b$ is outside
-the polygon.
+现在我们来考虑测试一个点
+位于多边形内部还是外部的问题。
+例如，在下图中点 $a$
+在多边形内部，点 $b$ 在多边形外部。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.75]
@@ -461,17 +441,16 @@ the polygon.
 \end{tikzpicture}
 \end{center}
 
-A convenient way to solve the problem is to
-send a \emph{ray} from the point to an arbitrary direction
-and calculate the number of times it touches
-the boundary of the polygon.
-If the number is odd,
-the point is inside the polygon,
-and if the number is even,
-the point is outside the polygon.
+解决这个问题的一种方便方法是从该点
+向任意方向发射一条\emph{射线}，
+并计算它与多边形边界相交的次数。
+如果次数为奇数，
+则点在多边形内部，
+如果次数为偶数，
+则点在多边形外部。
 
 \begin{samepage}
-For example, we could send the following rays:
+例如，我们可以发射以下射线：
 \begin{center}
 \begin{tikzpicture}[scale=0.75]
 \draw (0,0)--(2,2)--(5,1)--(2,3)--(1,2)--(-1,2)--(1,4)--(-2,4)--(-2,1)--(-3,3)--(-4,0)--(0,0);
@@ -490,28 +469,27 @@ For example, we could send the following rays:
 \end{center}
 \end{samepage}
 
-The rays from $a$ touch 1 and 3 times
-the boundary of the polygon,
-so $a$ is inside the polygon.
-Correspondingly, the rays from $b$
-touch 0 and 2 times the boundary of the polygon,
-so $b$ is outside the polygon.
+从 $a$ 发出的射线分别与多边形边界
+相交 1 次和 3 次，
+所以 $a$ 在多边形内部。
+相应地，从 $b$ 发出的射线
+分别与多边形边界相交 0 次和 2 次，
+所以 $b$ 在多边形外部。
 
-\section{Polygon area}
+\section{多边形面积}
 
-A general formula for calculating the area
-of a polygon, sometimes called the \key{shoelace formula},
-is as follows: \index{shoelace formula}
+计算多边形面积的通用公式，
+有时称为\key{鞋带公式}，
+如下所示：\index{鞋带公式}
 \[\frac{1}{2} |\sum_{i=1}^{n-1} (p_i \times p_{i+1})| =
 \frac{1}{2} |\sum_{i=1}^{n-1} (x_i y_{i+1} - x_{i+1} y_i)|, \]
-Here the vertices are
-$p_1=(x_1,y_1)$, $p_2=(x_2,y_2)$, $\ldots$, $p_n=(x_n,y_n)$
-in such an order that
-$p_i$ and $p_{i+1}$ are adjacent vertices on the boundary
-of the polygon,
-and the first and last vertex is the same, i.e., $p_1=p_n$.
+这里顶点为
+$p_1=(x_1,y_1)$、$p_2=(x_2,y_2)$、$\ldots$、$p_n=(x_n,y_n)$，
+其顺序满足
+$p_i$ 和 $p_{i+1}$ 是多边形边界上相邻的顶点，
+且第一个和最后一个顶点相同，即 $p_1=p_n$。
 
-For example, the area of the polygon
+例如，以下多边形的面积
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \filldraw (4,1.4) circle (2pt);
@@ -527,13 +505,13 @@ For example, the area of the polygon
 \path[draw] (4,1.4) -- (7,3.4) -- (5,5.4) -- (2,4.4) -- (4,3.4) -- (4,1.4);
 \end{tikzpicture}
 \end{center}
-is
+为
 \[\frac{|(2\cdot5-5\cdot4)+(5\cdot3-7\cdot5)+(7\cdot1-4\cdot3)+(4\cdot3-4\cdot1)+(4\cdot4-2\cdot3)|}{2} = 17/2.\]
 
-The idea of the formula is to go through trapezoids
-whose one side is a side of the polygon,
-and another side lies on the horizontal line $y=0$.
-For example:
+该公式的思想是遍历梯形，
+这些梯形的一边是多边形的一条边，
+另一边位于水平线 $y=0$ 上。
+例如：
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \path[draw,fill=lightgray] (5,5.4) -- (7,3.4) -- (7,0) -- (5,0) -- (5,5.4);
@@ -551,35 +529,35 @@ For example:
 \draw (0,0) -- (10,0);
 \end{tikzpicture}
 \end{center}
-The area of such a trapezoid is
+这样一个梯形的面积为
 \[(x_{i+1}-x_{i}) \frac{y_i+y_{i+1}}{2},\]
-where the vertices of the polygon are $p_i$ and $p_{i+1}$.
-If $x_{i+1}>x_{i}$, the area is positive,
-and if $x_{i+1}<x_{i}$, the area is negative.
+其中多边形的顶点为 $p_i$ 和 $p_{i+1}$。
+如果 $x_{i+1}>x_{i}$，则面积为正，
+如果 $x_{i+1}<x_{i}$，则面积为负。
 
-The area of the polygon is the sum of areas of
-all such trapezoids, which yields the formula
+多边形的面积是所有这些梯形面积的总和，
+由此得到公式
 \[|\sum_{i=1}^{n-1} (x_{i+1}-x_{i}) \frac{y_i+y_{i+1}}{2}| =
 \frac{1}{2} |\sum_{i=1}^{n-1} (x_i y_{i+1} - x_{i+1} y_i)|.\]
 
-Note that the absolute value of the sum is taken,
-because the value of the sum may be positive or negative,
-depending on whether we walk clockwise or counterclockwise
-along the boundary of the polygon.
+注意这里取的是和的绝对值，
+因为和的值可能是正的也可能是负的，
+取决于我们是顺时针还是逆时针
+沿着多边形的边界行走。
 
-\subsubsection{Pick's theorem}
+\subsubsection{Pick定理}
 
-\index{Pick's theorem}
+\index{Pick定理}
 
-\key{Pick's theorem} provides another way to calculate
-the area of a polygon provided that all vertices 
-of the polygon have integer coordinates.
-According to Pick's theorem, the area of the polygon is
+\key{Pick定理}提供了另一种计算
+多边形面积的方法，条件是多边形
+的所有顶点都具有整数坐标。
+根据Pick定理，多边形的面积为
 \[ a + b/2 -1,\]
-where $a$ is the number of integer points inside the polygon
-and $b$ is the number of integer points on the boundary of the polygon.
+其中 $a$ 是多边形内部的整数点数，
+$b$ 是多边形边界上的整数点数。
 
-For example, the area of the polygon
+例如，以下多边形的面积
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \filldraw (4,1.4) circle (2pt);
@@ -609,27 +587,26 @@ For example, the area of the polygon
 \filldraw (5,2.4) circle (2pt);
 \end{tikzpicture}
 \end{center}
-is $6+7/2-1=17/2$.
+为 $6+7/2-1=17/2$。
 
-\section{Distance functions}
+\section{距离函数}
 
-\index{distance function}
-\index{Euclidean distance}
-\index{Manhattan distance}
+\index{距离函数}
+\index{欧几里得距离}
+\index{曼哈顿距离}
 
-A \key{distance function} defines the distance between
-two points.
-The usual distance function is the
-\key{Euclidean distance} where the distance between
-points $(x_1,y_1)$ and $(x_2,y_2)$ is
+\key{距离函数}定义两个点之间的距离。
+通常的距离函数是
+\key{欧几里得距离}，其中点
+$(x_1,y_1)$ 和 $(x_2,y_2)$ 之间的距离为
 \[\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}.\]
-An alternative distance function is the
-\key{Manhattan distance}
-where the distance between points
-$(x_1,y_1)$ and $(x_2,y_2)$ is
+另一种距离函数是
+\key{曼哈顿距离}，
+其中点
+$(x_1,y_1)$ 和 $(x_2,y_2)$ 之间的距离为
 \[|x_1-x_2|+|y_1-y_2|.\]
 \begin{samepage}
-For example, consider the following picture:
+例如，考虑下图：
 \begin{center}
 \begin{tikzpicture}
 
@@ -650,41 +627,40 @@ For example, consider the following picture:
 \draw[dashed] (5+2,1) -- (5+2,2);
 \draw[dashed] (5+2,2) -- (5+5,2);
 
-\node at (3.5,-0.5) {Euclidean distance};
-\node at (5+3.5,-0.5) {Manhattan distance};
+\node at (3.5,-0.5) {欧几里得距离};
+\node at (5+3.5,-0.5) {曼哈顿距离};
 \end{tikzpicture}
 \end{center}
 \end{samepage}
-The Euclidean distance between the points is
+两点之间的欧几里得距离为
 \[\sqrt{(5-2)^2+(2-1)^2}=\sqrt{10}\]
-and the Manhattan distance is
+曼哈顿距离为
 \[|5-2|+|2-1|=4.\]
-The following picture shows regions that are within a distance of 1
-from the center point, using the Euclidean and Manhattan distances:
+下图显示了在欧几里得距离和曼哈顿距离下，
+距离中心点 1 以内的区域：
 \begin{center}
 \begin{tikzpicture}
 
 \draw[fill=gray!20] (0,0) circle [radius=1];
 \draw[fill] (0,0) circle [radius=0.05];
 
-\node at (0,-1.5) {Euclidean distance};
+\node at (0,-1.5) {欧几里得距离};
 
 \draw[fill=gray!20] (5+0,1) -- (5-1,0) -- (5+0,-1) -- (5+1,0) -- (5+0,1);
 \draw[fill] (5,0) circle [radius=0.05];
-\node at (5,-1.5) {Manhattan distance};
+\node at (5,-1.5) {曼哈顿距离};
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Rotating coordinates}
+\subsubsection{坐标旋转}
 
-Some problems are easier to solve if
-Manhattan distances are used instead of Euclidean distances.
-As an example, consider a problem where we are given
-$n$ points in the two-dimensional plane
-and our task is to calculate the maximum Manhattan
-distance between any two points.
+如果使用曼哈顿距离而不是欧几里得距离，
+某些问题会更容易解决。
+作为一个例子，考虑这样一个问题：给定二维平面上
+$n$ 个点，
+我们的任务是计算任意两点之间的最大曼哈顿距离。
 
-For example, consider the following set of points:
+例如，考虑以下点集：
 \begin{center}
 \begin{tikzpicture}[scale=0.65]
 \draw[color=gray] (-1,-1) grid (4,4);
@@ -700,8 +676,7 @@ For example, consider the following set of points:
 \node at (3,0.5) {$D$};
 \end{tikzpicture}
 \end{center}
-The maximum Manhattan distance is 5
-between points $B$ and $C$:
+点 $B$ 和 $C$ 之间的最大曼哈顿距离为 5：
 \begin{center}
 \begin{tikzpicture}[scale=0.65]
 \draw[color=gray] (-1,-1) grid (4,4);
@@ -720,11 +695,11 @@ between points $B$ and $C$:
 \end{tikzpicture}
 \end{center}
 
-A useful technique related to Manhattan distances
-is to rotate all coordinates 45 degrees so that
-a point $(x,y)$ becomes $(x+y,y-x)$.
-For example, after rotating the above points,
-the result is:
+与曼哈顿距离相关的一个有用技巧是
+将所有坐标旋转 45 度，
+使得点 $(x,y)$ 变为 $(x+y,y-x)$。
+例如，旋转上述点后，
+结果为：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
@@ -741,7 +716,7 @@ the result is:
 \node at (4,-2.5) {$D$};
 \end{tikzpicture}
 \end{center}
-And the maximum distance is as follows:
+最大距离如下：
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
 \draw[color=gray] (0,-3) grid (7,3);
@@ -760,23 +735,23 @@ And the maximum distance is as follows:
 \end{tikzpicture}
 \end{center}
 
-Consider two points $p_1=(x_1,y_1)$ and $p_2=(x_2,y_2)$ whose rotated
-coordinates are $p'_1=(x'_1,y'_1)$ and $p'_2=(x'_2,y'_2)$.
-Now there are two ways to express the Manhattan distance
-between $p_1$ and $p_2$:
+考虑两个点 $p_1=(x_1,y_1)$ 和 $p_2=(x_2,y_2)$，其旋转后
+的坐标为 $p'_1=(x'_1,y'_1)$ 和 $p'_2=(x'_2,y'_2)$。
+现在有两种方式来表示
+$p_1$ 和 $p_2$ 之间的曼哈顿距离：
 \[|x_1-x_2|+|y_1-y_2| = \max(|x'_1-x'_2|,|y'_1-y'_2|)\]
 
-For example, if $p_1=(1,0)$ and $p_2=(3,3)$,
-the rotated coordinates are $p'_1=(1,-1)$ and $p'_2=(6,0)$
-and the Manhattan distance is
+例如，如果 $p_1=(1,0)$ 且 $p_2=(3,3)$，
+旋转后的坐标为 $p'_1=(1,-1)$ 和 $p'_2=(6,0)$，
+曼哈顿距离为
 \[|1-3|+|0-3| = \max(|1-6|,|-1-0|) = 5.\]
 
-The rotated coordinates provide a simple way
-to operate with Manhattan distances, because we can
-consider x and y coordinates separately.
-To maximize the Manhattan distance between two points,
-we should find two points whose
-rotated coordinates maximize the value of
+旋转后的坐标提供了一种简单的
+处理曼哈顿距离的方法，因为我们可以
+分别考虑 x 和 y 坐标。
+要最大化两点之间的曼哈顿距离，
+我们应该找到旋转后的坐标能使以下值最大化的
+两个点：
 \[\max(|x'_1-x'_2|,|y'_1-y'_2|).\]
-This is easy, because either the horizontal or vertical
-difference of the rotated coordinates has to be maximum.
+这很简单，因为旋转后坐标的
+水平或垂直差值中必有一个是最大的。

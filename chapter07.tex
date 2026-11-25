@@ -1,88 +1,85 @@
-\chapter{Dynamic programming}
+\chapter{动态规划}
 
-\index{dynamic programming}
+\index{动态规划}
 
-\key{Dynamic programming}
-is a technique that combines the correctness
-of complete search and the efficiency
-of greedy algorithms.
-Dynamic programming can be applied if the
-problem can be divided into overlapping subproblems
-that can be solved independently.
+\key{动态规划}是一种结合了
+完备搜索的正确性和
+贪心算法的效率的技术。
+如果问题可以被分解为
+可以独立求解的重叠子问题，
+就可以使用动态规划。
 
-There are two uses for dynamic programming:
+动态规划有两种用途：
 
 \begin{itemize}
 \item
-\key{Finding an optimal solution}:
-We want to find a solution that is
-as large as possible or as small as possible.
+\key{寻找最优解}：
+我们希望找到一个尽可能大
+或尽可能小的解。
 \item
-\key{Counting the number of solutions}:
-We want to calculate the total number of
-possible solutions.
+\key{计算解的数量}：
+我们希望计算所有
+可能解的总数。
 \end{itemize}
 
-We will first see how dynamic programming can
-be used to find an optimal solution,
-and then we will use the same idea for
-counting the solutions.
+我们将首先了解如何使用动态规划
+来寻找最优解，
+然后再用同样的思想来
+计算解的数量。
 
-Understanding dynamic programming is a milestone
-in every competitive programmer's career.
-While the basic idea is simple,
-the challenge is how to apply
-dynamic programming to different problems.
-This chapter introduces a set of classic problems
-that are a good starting point.
+理解动态规划是每个
+竞赛程序员职业生涯中的一个里程碑。
+虽然基本思想很简单，
+但挑战在于如何将
+动态规划应用于不同的问题。
+本章介绍了一组经典问题，
+它们是一个很好的起点。
 
-\section{Coin problem}
+\section{硬币问题}
 
-We first focus on a problem that we
-have already seen in Chapter 6:
-Given a set of coin values $\texttt{coins} = \{c_1,c_2,\ldots,c_k\}$
-and a target sum of money $n$, our task is to
-form the sum $n$ using as few coins as possible.
+我们首先关注一个
+在第6章中已经见过的问题：
+给定一组硬币面值 $\texttt{coins} = \{c_1,c_2,\ldots,c_k\}$
+和一个目标金额 $n$，
+我们的任务是使用尽可能少的硬币
+来凑成金额 $n$。
 
-In Chapter 6, we solved the problem using a
-greedy algorithm that always chooses the largest
-possible coin.
-The greedy algorithm works, for example,
-when the coins are the euro coins,
-but in the general case the greedy algorithm
-does not necessarily produce an optimal solution.
+在第6章中，我们使用
+贪心算法来解决这个问题，
+该算法总是选择尽可能大的硬币。
+例如，当硬币是欧元硬币时，
+贪心算法是有效的，
+但在一般情况下，贪心算法
+不一定能产生最优解。
 
-Now is time to solve the problem efficiently
-using dynamic programming, so that the algorithm
-works for any coin set.
-The dynamic programming
-algorithm is based on a recursive function
-that goes through all possibilities how to
-form the sum, like a brute force algorithm.
-However, the dynamic programming
-algorithm is efficient because
-it uses \emph{memoization} and
-calculates the answer to each subproblem only once.
+现在是时候使用动态规划
+来高效地解决这个问题了，
+这样算法就能适用于任何硬币集合。
+动态规划算法基于一个递归函数，
+该函数遍历所有凑成金额的可能方式，
+就像暴力算法一样。
+然而，动态规划算法是高效的，
+因为它使用了\emph{记忆化}，
+并且每个子问题的答案只计算一次。
 
-\subsubsection{Recursive formulation}
+\subsubsection{递归公式}
 
-The idea in dynamic programming is to
-formulate the problem recursively so
-that the solution to the problem can be
-calculated from solutions to smaller
-subproblems.
-In the coin problem, a natural recursive
-problem is as follows:
-what is the smallest number of coins
-required to form a sum $x$?
+动态规划的思想是将
+问题用递归的方式表达，
+使得问题的解可以
+从更小的子问题的解中计算出来。
+在硬币问题中，一个自然的递归
+问题如下：
+凑成金额 $x$ 所需的最少硬币数
+是多少？
 
-Let $\texttt{solve}(x)$
-denote the minimum
-number of coins required for a sum $x$.
-The values of the function depend on the
-values of the coins.
-For example, if $\texttt{coins} = \{1,3,4\}$,
-the first values of the function are as follows:
+令 $\texttt{solve}(x)$
+表示凑成金额 $x$ 所需的
+最少硬币数。
+函数的值取决于
+硬币的面值。
+例如，如果 $\texttt{coins} = \{1,3,4\}$，
+函数的前几个值如下：
 
 \[
 \begin{array}{lcl}
@@ -100,25 +97,24 @@ the first values of the function are as follows:
 \end{array}
 \]
 
-For example, $\texttt{solve}(10)=3$,
-because at least 3 coins are needed
-to form the sum 10.
-The optimal solution is $3+3+4=10$.
+例如，$\texttt{solve}(10)=3$，
+因为凑成金额10至少需要3枚硬币。
+最优解是 $3+3+4=10$。
 
-The essential property of $\texttt{solve}$ is
-that its values can be
-recursively calculated from its smaller values.
-The idea is to focus on the \emph{first}
-coin that we choose for the sum.
-For example, in the above scenario,
-the first coin can be either 1, 3 or 4.
-If we first choose coin 1,
-the remaining task is to form the sum 9
-using the minimum number of coins,
-which is a subproblem of the original problem.
-Of course, the same applies to coins 3 and 4.
-Thus, we can use the following recursive formula
-to calculate the minimum number of coins:
+$\texttt{solve}$ 的关键性质是
+它的值可以
+从更小的值递归地计算出来。
+核心思想是关注我们为金额选择的
+\emph{第一枚}硬币。
+例如，在上述场景中，
+第一枚硬币可以是1、3或4。
+如果我们首先选择硬币1，
+那么剩下的任务就是用最少的硬币
+凑成金额9，
+这是原问题的一个子问题。
+当然，硬币3和4也是如此。
+因此，我们可以使用以下递归公式
+来计算最少的硬币数：
 \begin{equation*}
 \begin{split}
 \texttt{solve}(x) = \min( & \texttt{solve}(x-1)+1, \\
@@ -126,14 +122,14 @@ to calculate the minimum number of coins:
                            & \texttt{solve}(x-4)+1).
 \end{split}
 \end{equation*}
-The base case of the recursion is $\texttt{solve}(0)=0$,
-because no coins are needed to form an empty sum.
-For example,
+递归的边界条件是 $\texttt{solve}(0)=0$，
+因为凑成空金额不需要任何硬币。
+例如，
 \[ \texttt{solve}(10) = \texttt{solve}(7)+1 = \texttt{solve}(4)+2 = \texttt{solve}(0)+3 = 3.\]
 
-Now we are ready to give a general recursive function
-that calculates the minimum number of
-coins needed to form a sum $x$:
+现在我们准备给出一个通用的递归函数，
+计算凑成金额 $x$ 
+所需的最少硬币数：
 \begin{equation*}
     \texttt{solve}(x) = \begin{cases}
                \infty               & x < 0\\
@@ -142,19 +138,17 @@ coins needed to form a sum $x$:
            \end{cases}
 \end{equation*}
 
-First, if $x<0$, the value is $\infty$,
-because it is impossible to form a negative
-sum of money.
-Then, if $x=0$, the value is $0$,
-because no coins are needed to form an empty sum.
-Finally, if $x>0$, the variable $c$ goes through
-all possibilities how to choose the first coin
-of the sum.
+首先，如果 $x<0$，值为 $\infty$，
+因为不可能凑成负的金额。
+然后，如果 $x=0$，值为 $0$，
+因为凑成空金额不需要任何硬币。
+最后，如果 $x>0$，变量 $c$ 遍历
+选择金额的第一枚硬币的
+所有可能方式。
 
-Once a recursive function that solves the problem
-has been found,
-we can directly implement a solution in C++
-(the constant \texttt{INF} denotes infinity):
+一旦找到了解决问题的递归函数，
+我们就可以直接用C++实现解决方案
+（常量 \texttt{INF} 表示无穷大）：
 
 \begin{lstlisting}
 int solve(int x) {
@@ -168,40 +162,41 @@ int solve(int x) {
 }
 \end{lstlisting}
 
-Still, this function is not efficient,
-because there may be an exponential number of ways
-to construct the sum.
-However, next we will see how to make the
-function efficient using a technique called memoization.
+然而，这个函数并不高效，
+因为构造金额可能
+有指数级数量的方式。
+不过，接下来我们将看到如何使用
+一种称为记忆化的技术
+来使函数变得高效。
 
-\subsubsection{Using memoization}
+\subsubsection{使用记忆化}
 
-\index{memoization}
+\index{记忆化}
 
-The idea of dynamic programming is to use
-\key{memoization} to efficiently calculate
-values of a recursive function.
-This means that the values of the function
-are stored in an array after calculating them.
-For each parameter, the value of the function
-is calculated recursively only once, and after this,
-the value can be directly retrieved from the array.
+动态规划的思想是使用
+\key{记忆化}来高效地计算
+递归函数的值。
+这意味着函数的值在计算后
+会被存储在数组中。
+对于每个参数，函数的值
+只会递归计算一次，之后
+就可以直接从数组中获取该值。
 
-In this problem, we use arrays
+在这个问题中，我们使用数组
 \begin{lstlisting}
 bool ready[N];
 int value[N];
 \end{lstlisting}
 
-where $\texttt{ready}[x]$ indicates
-whether the value of $\texttt{solve}(x)$ has been calculated,
-and if it is, $\texttt{value}[x]$
-contains this value.
-The constant $N$ has been chosen so
-that all required values fit in the arrays.
+其中 $\texttt{ready}[x]$ 表示
+$\texttt{solve}(x)$ 的值是否已经被计算过，
+如果是，则 $\texttt{value}[x]$
+包含这个值。
+常量 $N$ 的选择应确保
+所有需要的值都能放入数组中。
 
-Now the function can be efficiently
-implemented as follows:
+现在这个函数可以高效地
+实现如下：
 
 \begin{lstlisting}
 int solve(int x) {
@@ -218,30 +213,31 @@ int solve(int x) {
 }
 \end{lstlisting}
 
-The function handles the base cases
-$x<0$ and $x=0$ as previously.
-Then the function checks from
-$\texttt{ready}[x]$ if
-$\texttt{solve}(x)$ has already been stored
-in $\texttt{value}[x]$,
-and if it is, the function directly returns it.
-Otherwise the function calculates the value
-of $\texttt{solve}(x)$
-recursively and stores it in $\texttt{value}[x]$.
+函数像之前一样处理
+边界情况 $x<0$ 和 $x=0$。
+然后函数通过
+$\texttt{ready}[x]$ 检查
+$\texttt{solve}(x)$ 是否已经被存储
+在 $\texttt{value}[x]$ 中，
+如果是，函数直接返回它。
+否则，函数递归地计算
+$\texttt{solve}(x)$ 的值
+并将其存储在 $\texttt{value}[x]$ 中。
 
-This function works efficiently,
-because the answer for each parameter $x$
-is calculated recursively only once.
-After a value of $\texttt{solve}(x)$ has been stored in $\texttt{value}[x]$,
-it can be efficiently retrieved whenever the
-function will be called again with the parameter $x$.
-The time complexity of the algorithm is $O(nk)$,
-where $n$ is the target sum and $k$ is the number of coins.
+这个函数高效地工作，
+因为每个参数 $x$ 的答案
+只会被递归计算一次。
+在 $\texttt{solve}(x)$ 的值被存储在 $\texttt{value}[x]$ 之后，
+每当函数再次以参数 $x$ 被调用时，
+就可以高效地获取它。
+算法的时间复杂度为 $O(nk)$，
+其中 $n$ 是目标金额，$k$ 是硬币的数量。
 
-Note that we can also \emph{iteratively}
-construct the array \texttt{value} using
-a loop that simply calculates all the values
-of $\texttt{solve}$ for parameters $0 \ldots n$:
+注意，我们也可以\emph{迭代地}
+构造数组 \texttt{value}，
+只需使用一个循环计算
+$\texttt{solve}$ 在参数 $0 \ldots n$ 上的
+所有值：
 \begin{lstlisting}
 value[0] = 0;
 for (int x = 1; x <= n; x++) {
@@ -254,30 +250,28 @@ for (int x = 1; x <= n; x++) {
 }
 \end{lstlisting}
 
-In fact, most competitive programmers prefer this
-implementation, because it is shorter and has
-lower constant factors.
-From now on, we also use iterative implementations
-in our examples.
-Still, it is often easier to think about
-dynamic programming solutions
-in terms of recursive functions.
+事实上，大多数竞赛程序员更喜欢这种
+实现方式，因为它更短而且
+常数因子更低。
+从现在起，我们在示例中也
+使用迭代实现。
+尽管如此，用递归函数的方式来思考
+动态规划解决方案通常更加容易。
 
 
-\subsubsection{Constructing a solution}
+\subsubsection{构造解}
 
-Sometimes we are asked both to find the value
-of an optimal solution and to give
-an example how such a solution can be constructed.
-In the coin problem, for example,
-we can declare another array
-that indicates for
-each sum of money the first coin 
-in an optimal solution:
+有时我们不仅被要求找到
+最优解的值，还被要求给出
+如何构造这样一个解的示例。
+例如，在硬币问题中，
+我们可以声明另一个数组，
+为每个金额指出
+最优解中的第一枚硬币：
 \begin{lstlisting}
 int first[N];
 \end{lstlisting}
-Then, we can modify the algorithm as follows:
+然后，我们可以如下修改算法：
 \begin{lstlisting}
 value[0] = 0;
 for (int x = 1; x <= n; x++) {
@@ -290,9 +284,9 @@ for (int x = 1; x <= n; x++) {
     }
 }
 \end{lstlisting}
-After this, the following code can be used to
-print the coins that appear in an optimal solution for
-the sum $n$:
+之后，可以使用以下代码
+打印出金额 $n$ 的
+最优解中出现的硬币：
 \begin{lstlisting}
 while (n > 0) {
     cout << first[n] << "\n";
@@ -300,14 +294,14 @@ while (n > 0) {
 }
 \end{lstlisting}
 
-\subsubsection{Counting the number of solutions}
+\subsubsection{计算解的数量}
 
-Let us now consider another version
-of the coin problem where our task is to
-calculate the total number of ways
-to produce a sum $x$ using the coins.
-For example, if $\texttt{coins}=\{1,3,4\}$ and
-$x=5$, there are a total of 6 ways:
+现在让我们考虑硬币问题的
+另一个版本，我们的任务是
+计算用硬币凑成金额 $x$ 的
+总方法数。
+例如，如果 $\texttt{coins}=\{1,3,4\}$ 且
+$x=5$，总共有6种方法：
 
 \begin{multicols}{2}
 \begin{itemize}
@@ -320,11 +314,11 @@ $x=5$, there are a total of 6 ways:
 \end{itemize}
 \end{multicols}
 
-Again, we can solve the problem recursively.
-Let $\texttt{solve}(x)$ denote the number of ways
-we can form the sum $x$.
-For example, if $\texttt{coins}=\{1,3,4\}$,
-then $\texttt{solve}(5)=6$ and the recursive formula is
+同样，我们可以递归地解决该问题。
+令 $\texttt{solve}(x)$ 表示
+我们能凑成金额 $x$ 的方法数。
+例如，如果 $\texttt{coins}=\{1,3,4\}$，
+那么 $\texttt{solve}(5)=6$，递归公式为
 \begin{equation*}
 \begin{split}
 \texttt{solve}(x) = & \texttt{solve}(x-1) + \\
@@ -333,7 +327,7 @@ then $\texttt{solve}(5)=6$ and the recursive formula is
 \end{split}
 \end{equation*}
 
-Then, the general recursive function is as follows:
+然后，通用的递归函数如下：
 \begin{equation*}
     \texttt{solve}(x) = \begin{cases}
                0               & x < 0\\
@@ -342,17 +336,18 @@ Then, the general recursive function is as follows:
            \end{cases}
 \end{equation*}
 
-If $x<0$, the value is 0, because there are no solutions.
-If $x=0$, the value is 1, because there is only one way
-to form an empty sum.
-Otherwise we calculate the sum of all values
-of the form $\texttt{solve}(x-c)$ where $c$ is in \texttt{coins}.
+如果 $x<0$，值为0，因为没有解。
+如果 $x=0$，值为1，因为凑成空金额
+只有一种方法。
+否则我们计算所有形如
+$\texttt{solve}(x-c)$ 的值的总和，
+其中 $c$ 属于 \texttt{coins}。
 
-The following code constructs an array
-$\texttt{count}$ such that
-$\texttt{count}[x]$ equals
-the value of $\texttt{solve}(x)$
-for $0 \le x \le n$:
+以下代码构造了一个数组
+$\texttt{count}$，使得
+$\texttt{count}[x]$ 等于
+$\texttt{solve}(x)$ 的值，
+其中 $0 \le x \le n$：
 
 \begin{lstlisting}
 count[0] = 1;
@@ -365,42 +360,41 @@ for (int x = 1; x <= n; x++) {
 }
 \end{lstlisting}
 
-Often the number of solutions is so large
-that it is not required to calculate the exact number
-but it is enough to give the answer modulo $m$
-where, for example, $m=10^9+7$.
-This can be done by changing the code so that
-all calculations are done modulo $m$.
-In the above code, it suffices to add the line
-\begin{lstlisting}
-        count[x] %= m;
-\end{lstlisting}
-after the line
+通常解的数量非常大，
+以至于不需要计算精确值，
+只需给出答案模 $m$ 的结果即可，
+例如 $m=10^9+7$。
+这可以通过修改代码使得
+所有计算都对 $m$ 取模来实现。
+在上述代码中，只需在以下行之后
 \begin{lstlisting}
         count[x] += count[x-c];
 \end{lstlisting}
+添加这一行：
+\begin{lstlisting}
+        count[x] %= m;
+\end{lstlisting}
 
-Now we have discussed all basic
-ideas of dynamic programming.
-Since dynamic programming can be used
-in many different situations,
-we will now go through a set of problems
-that show further examples about the
-possibilities of dynamic programming.
+我们已经讨论了动态规划的
+所有基本思想。
+由于动态规划可以在
+许多不同的情况下使用，
+我们现在将通过一组问题
+来进一步展示
+动态规划的可能性。
 
-\section{Longest increasing subsequence}
+\section{最长递增子序列}
 
-\index{longest increasing subsequence}
+\index{最长递增子序列}
 
-Our first problem is to find the
-\key{longest increasing subsequence}
-in an array of $n$ elements.
-This is a maximum-length
-sequence of array elements
-that goes from left to right,
-and each element in the sequence is larger
-than the previous element.
-For example, in the array
+我们的第一个问题是
+在包含 $n$ 个元素的数组中找到
+\key{最长递增子序列}。
+这是一个从左到右的、最大长度的
+数组元素序列，
+且序列中的每个元素都大于
+前一个元素。
+例如，在数组
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -425,8 +419,8 @@ For example, in the array
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-the longest increasing subsequence
-contains 4 elements:
+最长递增子序列
+包含4个元素：
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (1,0) rectangle (2,1);
@@ -459,16 +453,15 @@ contains 4 elements:
 \end{tikzpicture}
 \end{center}
 
-Let $\texttt{length}(k)$ denote
-the length of the
-longest increasing subsequence
-that ends at position $k$.
-Thus, if we calculate all values of
-$\texttt{length}(k)$ where $0 \le k \le n-1$,
-we will find out the length of the
-longest increasing subsequence.
-For example, the values of the function
-for the above array are as follows:
+令 $\texttt{length}(k)$ 表示
+以位置 $k$ 结尾的
+最长递增子序列的长度。
+因此，如果我们计算
+$\texttt{length}(k)$ 在 $0 \le k \le n-1$ 范围内的所有值，
+我们就能找到
+最长递增子序列的长度。
+例如，上述数组对应的
+函数值如下：
 \[
 \begin{array}{lcl}
 \texttt{length}(0) & = & 1 \\
@@ -482,29 +475,29 @@ for the above array are as follows:
 \end{array}
 \]
 
-For example, $\texttt{length}(6)=4$,
-because the longest increasing subsequence
-that ends at position 6 consists of 4 elements.
+例如，$\texttt{length}(6)=4$，
+因为以位置6结尾的最长递增子序列
+由4个元素组成。
 
-To calculate a value of $\texttt{length}(k)$,
-we should find a position $i<k$
-for which $\texttt{array}[i]<\texttt{array}[k]$
-and $\texttt{length}(i)$ is as large as possible.
-Then we know that
-$\texttt{length}(k)=\texttt{length}(i)+1$,
-because this is an optimal way to add
-$\texttt{array}[k]$ to a subsequence.
-However, if there is no such position $i$,
-then $\texttt{length}(k)=1$,
-which means that the subsequence only contains
-$\texttt{array}[k]$.
+为了计算 $\texttt{length}(k)$ 的值，
+我们需要找到一个位置 $i<k$，
+使得 $\texttt{array}[i]<\texttt{array}[k]$
+且 $\texttt{length}(i)$ 尽可能大。
+然后我们知道
+$\texttt{length}(k)=\texttt{length}(i)+1$，
+因为这是将 $\texttt{array}[k]$ 
+添加到子序列中的最优方式。
+然而，如果不存在这样的位置 $i$，
+则 $\texttt{length}(k)=1$，
+这意味着子序列仅包含
+$\texttt{array}[k]$。
 
-Since all values of the function can be calculated
-from its smaller values,
-we can use dynamic programming.
-In the following code, the values
-of the function will be stored in an array
-$\texttt{length}$.
+由于函数的所有值都可以
+从更小的值计算出来，
+我们可以使用动态规划。
+在以下代码中，函数的值
+将被存储在数组
+$\texttt{length}$ 中。
 
 \begin{lstlisting}
 for (int k = 0; k < n; k++) {
@@ -517,27 +510,26 @@ for (int k = 0; k < n; k++) {
 }
 \end{lstlisting}
 
-This code works in $O(n^2)$ time,
-because it consists of two nested loops.
-However, it is also possible to implement
-the dynamic programming calculation
-more efficiently in $O(n \log n)$ time.
-Can you find a way to do this?
+这段代码的时间复杂度为 $O(n^2)$，
+因为它由两层嵌套循环组成。
+然而，也可以用 $O(n \log n)$ 的时间
+更高效地实现
+动态规划计算。
+你能找到实现方法吗？
 
-\section{Paths in a grid}
+\section{网格中的路径}
 
-Our next problem is to find a path
-from the upper-left corner to
-the lower-right corner
-of an $n \times n$ grid, such that
-we only move down and right.
-Each square contains a positive integer,
-and the path should be constructed so
-that the sum of the values along
-the path is as large as possible.
+我们的下一个问题是
+在 $n \times n$ 网格中找到一条
+从左上角到
+右下角的路径，
+使得我们只向下和向右移动。
+每个格子包含一个正整数，
+路径的构造应使
+沿路径的值之和尽可能大。
 
-The following picture shows an optimal
-path in a grid:
+下图展示了一个网格中的
+最优路径：
 \begin{center}
 \begin{tikzpicture}[scale=.65]
   \begin{scope}
@@ -579,34 +571,33 @@ path in a grid:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-The sum of the values on the path is 67,
-and this is the largest possible sum on a path
-from the
-upper-left corner to the lower-right corner.
+路径上值之和为67，
+这是从
+左上角到右下角的路径上
+可能的最大和。
 
-Assume that the rows and columns of the
-grid are numbered from 1 to $n$,
-and $\texttt{value}[y][x]$ equals the value
-of square $(y,x)$.
-Let $\texttt{sum}(y,x)$ denote the maximum
-sum on a path from the upper-left corner
-to square $(y,x)$.
-Now $\texttt{sum}(n,n)$ tells us
-the maximum sum
-from the upper-left corner to
-the lower-right corner.
-For example, in the above grid,
-$\texttt{sum}(5,5)=67$.
+假设网格的行和列
+从1到 $n$ 编号，
+且 $\texttt{value}[y][x]$ 等于
+格子 $(y,x)$ 的值。
+令 $\texttt{sum}(y,x)$ 表示
+从左上角到格子 $(y,x)$ 的
+路径上的最大和。
+现在 $\texttt{sum}(n,n)$ 告诉我们
+从左上角到
+右下角的最大和。
+例如，在上述网格中，
+$\texttt{sum}(5,5)=67$。
 
-We can recursively calculate the sums
-as follows:
+我们可以递归地计算
+这些和如下：
 \[ \texttt{sum}(y,x) = \max(\texttt{sum}(y,x-1),\texttt{sum}(y-1,x))+\texttt{value}[y][x]\]
 
 
-The recursive formula is based on the observation
-that a path that ends at square $(y,x)$
-can come either from square $(y,x-1)$
-or square $(y-1,x)$:
+递归公式基于这样的观察：
+到达格子 $(y,x)$ 的路径
+要么来自格子 $(y,x-1)$，
+要么来自格子 $(y-1,x)$：
 \begin{center}
 \begin{tikzpicture}[scale=.65]
   \begin{scope}
@@ -620,19 +611,20 @@ or square $(y-1,x)$:
 \end{tikzpicture}
 \end{center}
 
-Thus, we select the direction that maximizes
-the sum.
-We assume that $\texttt{sum}(y,x)=0$
-if $y=0$ or $x=0$ (because no such paths exist),
-so the recursive formula also works when $y=1$ or $x=1$.
+因此，我们选择使和
+最大化的方向。
+我们假设当 $y=0$ 或 $x=0$ 时
+$\texttt{sum}(y,x)=0$
+（因为这样的路径不存在），
+所以递归公式在 $y=1$ 或 $x=1$ 时也适用。
 
-Since the function \texttt{sum} has two parameters,
-the dynamic programming array also has two dimensions.
-For example, we can use an array
+由于函数 \texttt{sum} 有两个参数，
+动态规划数组也有两个维度。
+例如，我们可以使用数组
 \begin{lstlisting}
 int sum[N][N];
 \end{lstlisting}
-and calculate the sums as follows:
+并按如下方式计算和：
 \begin{lstlisting}
 for (int y = 1; y <= n; y++) {
     for (int x = 1; x <= n; x++) {
@@ -640,26 +632,26 @@ for (int y = 1; y <= n; y++) {
     }
 }
 \end{lstlisting}
-The time complexity of the algorithm is $O(n^2)$.
+算法的时间复杂度为 $O(n^2)$。
 
-\section{Knapsack problems}
+\section{背包问题}
 
-\index{knapsack}
+\index{背包}
 
-The term \key{knapsack} refers to problems where
-a set of objects is given, and 
-subsets with some properties
-have to be found.
-Knapsack problems can often be solved
-using dynamic programming.
+术语\key{背包}指的是这样一类问题：
+给定一组物品，
+需要找出
+具有某些性质的子集。
+背包问题通常可以使用
+动态规划来解决。
 
-In this section, we focus on the following
-problem: Given a list of weights
-$[w_1,w_2,\ldots,w_n]$,
-determine all
-sums that can be constructed using the weights.
-For example, if the weights are
-$[1,3,3,5]$, the following sums are possible:
+在本节中，我们关注以下问题：
+给定一个权重列表
+$[w_1,w_2,\ldots,w_n]$，
+确定可以使用这些权重
+构造的所有和。
+例如，如果权重为
+$[1,3,3,5]$，以下和是可能的：
 
 \begin{center}
 \begin{tabular}{rrrrrrrrrrrrr}
@@ -669,41 +661,42 @@ $[1,3,3,5]$, the following sums are possible:
 \end{tabular}
 \end{center}
 
-In this case, all sums between $0 \ldots 12$
-are possible, except 2 and 10.
-For example, the sum 7 is possible because we
-can select the weights $[1,3,3]$.
+在这种情况下，$0 \ldots 12$ 之间的所有和
+都是可能的，除了2和10。
+例如，和7是可能的，因为我们
+可以选择权重 $[1,3,3]$。
 
-To solve the problem, we focus on subproblems
-where we only use the first $k$ weights
-to construct sums.
-Let $\texttt{possible}(x,k)=\textrm{true}$ if
-we can construct a sum $x$
-using the first $k$ weights,
-and otherwise $\texttt{possible}(x,k)=\textrm{false}$.
-The values of the function can be recursively
-calculated as follows:
+为了解决这个问题，我们关注子问题，
+即仅使用前 $k$ 个权重
+来构造和。
+令 $\texttt{possible}(x,k)=\textrm{true}$ 表示
+我们可以用前 $k$ 个权重
+构造和 $x$，
+否则 $\texttt{possible}(x,k)=\textrm{false}$。
+函数的值可以
+递归地计算如下：
 \[ \texttt{possible}(x,k) = \texttt{possible}(x-w_k,k-1) \lor \texttt{possible}(x,k-1) \]
-The formula is based on the fact that we can
-either use or not use the weight $w_k$ in the sum.
-If we use $w_k$, the remaining task is to
-form the sum $x-w_k$ using the first $k-1$ weights,
-and if we do not use $w_k$,
-the remaining task is to form the sum $x$
-using the first $k-1$ weights.
-As the base cases,
+该公式基于这样一个事实：
+我们可以选择使用或不使用
+权重 $w_k$ 来构造和。
+如果使用 $w_k$，剩余的任务是
+用前 $k-1$ 个权重凑成和 $x-w_k$，
+如果不使用 $w_k$，
+剩余的任务是用前 $k-1$ 个权重
+凑成和 $x$。
+作为边界条件，
 \begin{equation*}
     \texttt{possible}(x,0) = \begin{cases}
                \textrm{true}    & x = 0\\
                \textrm{false}   & x \neq 0 \\
            \end{cases}
 \end{equation*}
-because if no weights are used,
-we can only form the sum 0.
+因为如果不使用任何权重，
+我们只能凑成和0。
 
-The following table shows all values of the function
-for the weights $[1,3,3,5]$ (the symbol ''X''
-indicates the true values):
+下表展示了权重 $[1,3,3,5]$ 的
+所有函数值（符号''X''
+表示真值）：
 
 \begin{center}
 \begin{tabular}{r|rrrrrrrrrrrrr}
@@ -717,14 +710,14 @@ $k \backslash x$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
 \end{tabular}
 \end{center}
 
-After calculating those values, $\texttt{possible}(x,n)$
-tells us whether we can construct a
-sum $x$ using \emph{all} weights.
+计算完这些值后，$\texttt{possible}(x,n)$
+告诉我们是否可以使用\emph{所有}权重
+构造和 $x$。
 
-Let $W$ denote the total sum of the weights.
-The following $O(nW)$ time
-dynamic programming solution
-corresponds to the recursive function:
+令 $W$ 表示权重的总和。
+以下 $O(nW)$ 时间的
+动态规划解决方案
+对应于该递归函数：
 \begin{lstlisting}
 possible[0][0] = true;
 for (int k = 1; k <= n; k++) {
@@ -735,11 +728,11 @@ for (int k = 1; k <= n; k++) {
 }
 \end{lstlisting}
 
-However, here is a better implementation that only uses
-a one-dimensional array $\texttt{possible}[x]$
-that indicates whether we can construct a subset with sum $x$.
-The trick is to update the array from right to left for
-each new weight:
+然而，这里有一个更好的实现，
+只使用一维数组 $\texttt{possible}[x]$，
+该数组指示我们是否能构造一个和为 $x$ 的子集。
+技巧是对于每个新权重，
+从右到左更新数组：
 \begin{lstlisting}
 possible[0] = true;
 for (int k = 1; k <= n; k++) {
@@ -749,52 +742,51 @@ for (int k = 1; k <= n; k++) {
 }
 \end{lstlisting}
 
-Note that the general idea presented here can be used
-in many knapsack problems.
-For example, if we are given objects with weights and values,
-we can determine for each weight sum the maximum value
-sum of a subset.
+注意，这里介绍的一般思想可以用于
+许多背包问题。
+例如，如果给定具有权重和价值的物品，
+我们可以确定每个权重和对应的子集的
+最大价值和。
 
-\section{Edit distance}
+\section{编辑距离}
 
-\index{edit distance}
-\index{Levenshtein distance}
+\index{编辑距离}
+\index{Levenshtein距离}
 
-The \key{edit distance} or \key{Levenshtein distance}\footnote{The distance
-is named after V. I. Levenshtein who studied it in connection with binary codes \cite{lev66}.}
-is the minimum number of editing operations
-needed to transform a string
-into another string.
-The allowed editing operations are as follows:
+\key{编辑距离}或\key{Levenshtein距离}\footnote{该距离
+以V. I. Levenshtein的名字命名，他在研究二进制码时研究了这一概念 \cite{lev66}。}
+是将一个字符串
+变换为另一个字符串所需的
+最少编辑操作数。
+允许的编辑操作如下：
 \begin{itemize}
-\item insert a character (e.g. \texttt{ABC} $\rightarrow$ \texttt{ABCA})
-\item remove a character (e.g. \texttt{ABC} $\rightarrow$ \texttt{AC})
-\item modify a character (e.g. \texttt{ABC} $\rightarrow$ \texttt{ADC})
+\item 插入一个字符（例如 \texttt{ABC} $\rightarrow$ \texttt{ABCA}）
+\item 删除一个字符（例如 \texttt{ABC} $\rightarrow$ \texttt{AC}）
+\item 修改一个字符（例如 \texttt{ABC} $\rightarrow$ \texttt{ADC}）
 \end{itemize}
 
-For example, the edit distance between
-\texttt{LOVE} and \texttt{MOVIE} is 2,
-because we can first perform the operation
+例如，\texttt{LOVE} 和 \texttt{MOVIE} 之间的编辑距离为2，
+因为我们可以首先执行操作
  \texttt{LOVE} $\rightarrow$ \texttt{MOVE}
-(modify) and then the operation
+（修改），然后执行操作
 \texttt{MOVE} $\rightarrow$ \texttt{MOVIE}
-(insert).
-This is the smallest possible number of operations,
-because it is clear that only one operation is not enough.
+（插入）。
+这是可能的最少操作数，
+因为显然仅用一次操作是不够的。
 
-Suppose that we are given a string \texttt{x}
-of length $n$ and a string \texttt{y} of length $m$,
-and we want to calculate the edit distance between
-\texttt{x} and \texttt{y}.
-To solve the problem, we define a function
-$\texttt{distance}(a,b)$ that gives the
-edit distance between prefixes
-$\texttt{x}[0 \ldots a]$ and $\texttt{y}[0 \ldots b]$.
-Thus, using this function, the edit distance
-between \texttt{x} and \texttt{y} equals $\texttt{distance}(n-1,m-1)$.
+假设给定长度为 $n$ 的字符串 \texttt{x}
+和长度为 $m$ 的字符串 \texttt{y}，
+我们想计算
+\texttt{x} 和 \texttt{y} 之间的编辑距离。
+为了解决这个问题，我们定义一个函数
+$\texttt{distance}(a,b)$，
+它给出前缀
+$\texttt{x}[0 \ldots a]$ 和 $\texttt{y}[0 \ldots b]$ 之间的
+编辑距离。
+因此，使用这个函数，
+\texttt{x} 和 \texttt{y} 之间的编辑距离等于 $\texttt{distance}(n-1,m-1)$。
 
-We can calculate values of \texttt{distance}
-as follows:
+我们可以如下计算 \texttt{distance} 的值：
 \begin{equation*}
 \begin{split}
 \texttt{distance}(a,b) = \min(& \texttt{distance}(a,b-1)+1, \\
@@ -802,23 +794,23 @@ as follows:
                            & \texttt{distance}(a-1,b-1)+\texttt{cost}(a,b)).
 \end{split}
 \end{equation*}
-Here $\texttt{cost}(a,b)=0$ if $\texttt{x}[a]=\texttt{y}[b]$,
-and otherwise $\texttt{cost}(a,b)=1$.
-The formula considers the following ways to
-edit the string \texttt{x}:
+这里如果 $\texttt{x}[a]=\texttt{y}[b]$ 则 $\texttt{cost}(a,b)=0$，
+否则 $\texttt{cost}(a,b)=1$。
+该公式考虑了以下编辑
+字符串 \texttt{x} 的方式：
 \begin{itemize}
-\item $\texttt{distance}(a,b-1)$: insert a character at the end of \texttt{x}
-\item $\texttt{distance}(a-1,b)$: remove the last character from \texttt{x}
-\item $\texttt{distance}(a-1,b-1)$: match or modify the last character of \texttt{x}
+\item $\texttt{distance}(a,b-1)$：在 \texttt{x} 的末尾插入一个字符
+\item $\texttt{distance}(a-1,b)$：删除 \texttt{x} 的最后一个字符
+\item $\texttt{distance}(a-1,b-1)$：匹配或修改 \texttt{x} 的最后一个字符
 \end{itemize}
-In the two first cases, one editing operation is needed
-(insert or remove).
-In the last case, if $\texttt{x}[a]=\texttt{y}[b]$,
-we can match the last characters without editing,
-and otherwise one editing operation is needed (modify).
+在前两种情况下，需要一次编辑操作
+（插入或删除）。
+在最后一种情况下，如果 $\texttt{x}[a]=\texttt{y}[b]$，
+我们可以匹配最后一个字符而无需编辑，
+否则需要一次编辑操作（修改）。
 
-The following table shows the values of \texttt{distance}
-in the example case:
+下表展示了示例情况中
+\texttt{distance} 的值：
 \begin{center}
 \begin{tikzpicture}[scale=.65]
   \begin{scope}
@@ -870,12 +862,12 @@ in the example case:
 \end{tikzpicture}
 \end{center}
 
-The lower-right corner of the table
-tells us that the edit distance between
-\texttt{LOVE} and \texttt{MOVIE} is 2.
-The table also shows how to construct
-the shortest sequence of editing operations.
-In this case the path is as follows:
+表格的右下角
+告诉我们 \texttt{LOVE} 和 \texttt{MOVIE} 
+之间的编辑距离为2。
+表格还展示了如何构造
+最短的编辑操作序列。
+在这种情况下，路径如下：
 
 \begin{center}
 \begin{tikzpicture}[scale=.65]
@@ -931,25 +923,24 @@ In this case the path is as follows:
 \end{tikzpicture}
 \end{center}
 
-The last characters of \texttt{LOVE} and \texttt{MOVIE}
-are equal, so the edit distance between them
-equals the edit distance between \texttt{LOV} and \texttt{MOVI}.
-We can use one editing operation to remove the
-character \texttt{I} from \texttt{MOVI}.
-Thus, the edit distance is one larger than
-the edit distance between \texttt{LOV} and \texttt{MOV}, etc.
+\texttt{LOVE} 和 \texttt{MOVIE} 的最后一个字符
+相同，因此它们之间的编辑距离
+等于 \texttt{LOV} 和 \texttt{MOVI} 之间的编辑距离。
+我们可以用一次编辑操作从
+\texttt{MOVI} 中删除字符 \texttt{I}。
+因此，编辑距离比
+\texttt{LOV} 和 \texttt{MOV} 之间的编辑距离大1，以此类推。
 
-\section{Counting tilings}
+\section{计算铺方案}
 
-Sometimes the states of a dynamic programming solution
-are more complex than fixed combinations of numbers.
-As an example,
-consider the problem of calculating
-the number of distinct ways to
-fill an $n \times m$ grid using
-$1 \times 2$ and $2 \times 1$ size tiles.
-For example, one valid solution
-for the $4 \times 7$ grid is
+有时动态规划解的状态
+比数字的固定组合更加复杂。
+作为一个例子，
+考虑计算使用
+$1 \times 2$ 和 $2 \times 1$ 大小的瓷砖
+填充 $n \times m$ 网格的
+不同方法数。
+例如，$4 \times 7$ 网格的一个有效解是
 \begin{center}
 \begin{tikzpicture}[scale=.65]
     \draw (0,0) grid (7,4);
@@ -971,15 +962,16 @@ for the $4 \times 7$ grid is
 
 \end{tikzpicture}
 \end{center}
-and the total number of solutions is 781.
+总解数为781。
 
-The problem can be solved using dynamic programming
-by going through the grid row by row.
-Each row in a solution can be represented as a
-string that contains $m$ characters from the set
-$\{\sqcap, \sqcup, \sqsubset, \sqsupset \}$.
-For example, the above solution consists of four rows
-that correspond to the following strings:
+这个问题可以用动态规划解决，
+方法是逐行遍历网格。
+解中的每一行可以表示为
+一个包含 $m$ 个字符的字符串，
+字符取自集合
+$\{\sqcap, \sqcup, \sqsubset, \sqsupset \}$。
+例如，上述解由四行组成，
+对应以下字符串：
 \begin{itemize}
 \item
 $\sqcap \sqsubset \sqsupset \sqcap \sqsubset \sqsupset \sqcap$
@@ -991,59 +983,59 @@ $\sqsubset \sqsupset \sqsubset \sqsupset \sqcup \sqcup \sqcap$
 $\sqsubset \sqsupset \sqsubset \sqsupset \sqsubset \sqsupset \sqcup$
 \end{itemize}
 
-Let $\texttt{count}(k,x)$ denote the number of ways to
-construct a solution for rows $1 \ldots k$
-of the grid such that string $x$ corresponds to row $k$.
-It is possible to use dynamic programming here,
-because the state of a row is constrained
-only by the state of the previous row.
+令 $\texttt{count}(k,x)$ 表示
+为网格的第 $1 \ldots k$ 行
+构造解的方法数，
+其中字符串 $x$ 对应第 $k$ 行。
+这里可以使用动态规划，
+因为一行的状态仅受
+前一行的状态约束。
 
-A solution is valid if row $1$ does not contain
-the character $\sqcup$,
-row $n$ does not contain the character $\sqcap$,
-and all consecutive rows are \emph{compatible}.
-For example, the rows
-$\sqcup \sqsubset \sqsupset \sqcup \sqcap \sqcap \sqcup$ and
+一个解是有效的当且仅当第1行不包含
+字符 $\sqcup$，
+第 $n$ 行不包含字符 $\sqcap$，
+且所有相邻行都是\emph{兼容的}。
+例如，行
+$\sqcup \sqsubset \sqsupset \sqcup \sqcap \sqcap \sqcup$ 和
 $\sqsubset \sqsupset \sqsubset \sqsupset \sqcup \sqcup \sqcap$ 
-are compatible, while the rows
-$\sqcap \sqsubset \sqsupset \sqcap \sqsubset \sqsupset \sqcap$ and
+是兼容的，而行
+$\sqcap \sqsubset \sqsupset \sqcap \sqsubset \sqsupset \sqcap$ 和
 $\sqsubset \sqsupset \sqsubset \sqsupset \sqsubset \sqsupset \sqcup$
-are not compatible.
+是不兼容的。
 
-Since a row consists of $m$ characters and there are
-four choices for each character, the number of distinct
-rows is at most $4^m$.
-Thus, the time complexity of the solution is
-$O(n 4^{2m})$ because we can go through the
-$O(4^m)$ possible states for each row,
-and for each state, there are $O(4^m)$
-possible states for the previous row.
-In practice, it is a good idea to rotate the grid
-so that the shorter side has length $m$,
-because the factor $4^{2m}$ dominates the time complexity.
+由于一行由 $m$ 个字符组成，
+每个字符有四种选择，
+因此不同行的数量最多为 $4^m$。
+因此，解决方案的时间复杂度为
+$O(n 4^{2m})$，因为对于每一行，
+我们需要遍历 $O(4^m)$ 个可能状态，
+而对于每个状态，前一行的
+可能状态有 $O(4^m)$ 个。
+实际上，旋转网格使得
+较短边的长度为 $m$ 是一个好主意，
+因为因子 $4^{2m}$ 主导了时间复杂度。
 
-It is possible to make the solution more efficient
-by using a more compact representation for the rows.
-It turns out that it is sufficient to know which
-columns of the previous row contain the upper square
-of a vertical tile.
-Thus, we can represent a row using only characters
-$\sqcap$ and $\Box$, where $\Box$ is a combination
-of characters
-$\sqcup$, $\sqsubset$ and $\sqsupset$.
-Using this representation, there are only
-$2^m$ distinct rows and the time complexity is
-$O(n 2^{2m})$.
+通过使用更紧凑的行表示方法，
+可以使解决方案更加高效。
+事实上，只需要知道前一行的哪些列
+包含竖直瓷砖的上半部分就足够了。
+因此，我们可以仅使用字符
+$\sqcap$ 和 $\Box$ 来表示一行，
+其中 $\Box$ 是字符
+$\sqcup$、$\sqsubset$ 和 $\sqsupset$ 的组合。
+使用这种表示方法，
+仅有 $2^m$ 种不同的行，
+时间复杂度为 $O(n 2^{2m})$。
 
-As a final note, there is also a surprising direct formula
-for calculating the number of tilings\footnote{Surprisingly,
-this formula was discovered in 1961 by two research teams \cite{kas61,tem61}
-that worked independently.}:
+最后值得一提的是，还有一个令人惊讶的直接公式
+用于计算铺方案数\footnote{令人惊讶的是，
+这个公式是在1961年由两个研究团队 \cite{kas61,tem61}
+独立发现的。}：
 \[ \prod_{a=1}^{\lceil n/2 \rceil} \prod_{b=1}^{\lceil m/2 \rceil} 4 \cdot (\cos^2 \frac{\pi a}{n + 1} + \cos^2 \frac{\pi b}{m+1})\]
-This formula is very efficient, because it calculates
-the number of tilings in $O(nm)$ time,
-but since the answer is a product of real numbers,
-a problem when using the formula is
-how to store the intermediate results accurately.
+这个公式非常高效，因为它可以在 $O(nm)$ 时间内
+计算出铺方案数，
+但由于答案是实数的乘积，
+使用该公式时的一个问题是
+如何准确地存储中间结果。
 
 

@@ -1,25 +1,25 @@
-\chapter{Flows and cuts}
+\chapter{流与割}
 
-In this chapter, we focus on the following
-two problems:
+在本章中，我们重点讨论以下
+两个问题：
 
 \begin{itemize}
-\item \key{Finding a maximum flow}:
-What is the maximum amount of flow we can
-send from a node to another node?
-\item \key{Finding a minimum cut}:
-What is a minimum-weight set of edges
-that separates two nodes of the graph?
+\item \key{寻找最大流}：
+我们可以从一个节点向另一个节点
+发送的最大流量是多少？
+\item \key{寻找最小割}：
+什么是将图中两个节点分隔开来的
+最小权重的边集？
 \end{itemize}
 
-The input for both these problems is a directed,
-weighted graph that contains two special nodes:
-the \emph{source} is a node with no incoming edges,
-and the \emph{sink} is a node with no outgoing edges.
+这两个问题的输入都是一个有向带权图，
+其中包含两个特殊节点：
+\emph{源点}是没有入边的节点，
+而\emph{汇点}是没有出边的节点。
 
-As an example, we will use the following graph
-where node 1 is the source and node 6
-is the sink:
+作为示例，我们将使用以下图，
+其中节点 1 是源点，节点 6
+是汇点：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -40,25 +40,22 @@ is the sink:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Maximum flow}
+\subsubsection{最大流}
 
-\index{flow}
-\index{maximum flow}
+\index{流}
+\index{最大流}
 
-In the \key{maximum flow} problem,
-our task is to send as much flow as possible
-from the source to the sink.
-The weight of each edge is a capacity that
-restricts the flow
-that can go through the edge.
-In each intermediate node,
-the incoming and outgoing
-flow has to be equal.
+在\key{最大流}问题中，
+我们的任务是尽可能多地将流
+从源点发送到汇点。
+每条边的权重是一个容量，
+它限制了可以通过该边的流量。
+在每个中间节点，
+入流和出流必须相等。
 
-For example, the maximum size of a flow
-in the example graph is 7.
-The following picture shows how we can
-route the flow:
+例如，示例图中流的最大值为 7。
+下图显示了我们可以如何
+路由该流：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -79,32 +76,29 @@ route the flow:
 \end{tikzpicture}
 \end{center}
 
-The notation $v/k$ means
-that a flow of $v$ units is routed through
-an edge whose capacity is $k$ units.
-The size of the flow is $7$,
-because the source sends $3+4$ units of flow
-and the sink receives $5+2$ units of flow.
-It is easy see that this flow is maximum,
-because the total capacity of the edges
-leading to the sink is $7$.
+记号 $v/k$ 表示
+有 $v$ 个单位的流通过
+一条容量为 $k$ 个单位的边。
+该流的大小为 $7$，
+因为源点发送了 $3+4$ 个单位的流，
+而汇点接收了 $5+2$ 个单位的流。
+很容易看出这个流是最大的，
+因为通向汇点的边的总容量为 $7$。
 
-\subsubsection{Minimum cut}
+\subsubsection{最小割}
 
-\index{cut}
-\index{minimum cut}
+\index{割}
+\index{最小割}
 
-In the \key{minimum cut} problem,
-our task is to remove a set
-of edges from the graph
-such that there will be no path from the source
-to the sink after the removal
-and the total weight of the removed edges
-is minimum.
+在\key{最小割}问题中，
+我们的任务是从图中移除一组边，
+使得移除后从源点到汇点
+不存在路径，
+且被移除边的总权重最小。
 
-The minimum size of a cut in the example graph is 7.
-It suffices to remove the edges $2 \rightarrow 3$
-and $4 \rightarrow 5$:
+示例图中最小割的大小为 7。
+只需移除边 $2 \rightarrow 3$
+和 $4 \rightarrow 5$：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -130,53 +124,51 @@ and $4 \rightarrow 5$:
 \end{tikzpicture}
 \end{center}
 
-After removing the edges,
-there will be no path from the source to the sink.
-The size of the cut is $7$,
-because the weights of the removed edges
-are $6$ and $1$.
-The cut is minimum, because there is no valid
-way to remove edges from the graph such that
-their total weight would be less than $7$.
+移除边后，
+从源点到汇点将不存在路径。
+割的大小为 $7$，
+因为被移除边的权重
+分别为 $6$ 和 $1$。
+这个割是最小的，因为没有有效的
+方式从图中移除边使得
+它们的总权重小于 $7$。
 \\\\
-It is not a coincidence that
-the maximum size of a flow
-and the minimum size of a cut
-are the same in the above example.
-It turns out that a maximum flow
-and a minimum cut are
-\emph{always} equally large,
-so the concepts are two sides of the same coin.
+在上面的例子中，
+最大流的大小和最小割的大小相同，
+这并非巧合。
+事实上，最大流和最小割
+\emph{总是}一样大的，
+所以这两个概念是同一枚硬币的两面。
 
-Next we will discuss the Ford–Fulkerson
-algorithm that can be used to find
-the maximum flow and minimum cut of a graph.
-The algorithm also helps us to understand
-\emph{why} they are equally large.
+接下来我们将讨论 Ford–Fulkerson
+算法，该算法可用于寻找
+图的最大流和最小割。
+该算法还帮助我们理解
+\emph{为什么}它们一样大。
 
-\section{Ford–Fulkerson algorithm}
+\section{Ford–Fulkerson 算法}
 
-\index{Ford–Fulkerson algorithm}
+\index{Ford–Fulkerson 算法}
 
-The \key{Ford–Fulkerson algorithm} \cite{for56} finds
-the maximum flow in a graph.
-The algorithm begins with an empty flow,
-and at each step finds a path from the source
-to the sink that generates more flow.
-Finally, when the algorithm cannot increase the flow
-anymore, the maximum flow has been found.
+\key{Ford–Fulkerson 算法} \cite{for56} 用于寻找
+图中的最大流。
+该算法从一个空流开始，
+在每一步中寻找一条从源点
+到汇点的路径，该路径能产生更多的流。
+最后，当算法无法再增加流量时，
+就找到了最大流。
 
-The algorithm uses a special representation
-of the graph where each original edge has a reverse
-edge in another direction.
-The weight of each edge indicates how much more flow
-we could route through it.
-At the beginning of the algorithm, the weight of each original edge
-equals the capacity of the edge
-and the weight of each reverse edge is zero.
+该算法使用一种特殊的图表示方法，
+其中每条原始边在另一个方向上
+都有一条反向边。
+每条边的权重表示我们还可以
+通过它路由多少流量。
+在算法开始时，每条原始边的权重
+等于该边的容量，
+而每条反向边的权重为零。
 
 \begin{samepage}
-The new representation for the example graph is as follows:
+示例图的新表示如下：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -207,17 +199,15 @@ The new representation for the example graph is as follows:
 \end{center}
 \end{samepage}
 
-\subsubsection{Algorithm description}
+\subsubsection{算法描述}
 
-The Ford–Fulkerson algorithm consists of several
-rounds.
-On each round, the algorithm finds
-a path from the source to the sink
-such that each edge on the path has a positive weight.
-If there is more than one possible path available,
-we can choose any of them.
+Ford–Fulkerson 算法由多个轮次组成。
+在每一轮中，算法寻找一条从源点到汇点的路径，
+使得路径上的每条边都有正权重。
+如果有多条可选路径，
+我们可以选择其中任意一条。
 
-For example, suppose we choose the following path:
+例如，假设我们选择以下路径：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -252,17 +242,17 @@ For example, suppose we choose the following path:
 \end{tikzpicture}
 \end{center}
 
-After choosing the path, the flow increases by $x$ units,
-where $x$ is the smallest edge weight on the path.
-In addition, the weight of each edge on the path
-decreases by $x$ and the weight of each reverse edge
-increases by $x$.
+选择路径后，流量增加 $x$ 个单位，
+其中 $x$ 是路径上最小的边权重。
+此外，路径上每条边的权重
+减少 $x$，而每条反向边的权重
+增加 $x$。
 
-In the above path, the weights of the
-edges are 5, 6, 8 and 2.
-The smallest weight is 2,
-so the flow increases by 2
-and the new graph is as follows:
+在上面的路径中，边的权重
+分别为 5、6、8 和 2。
+最小权重为 2，
+因此流量增加 2，
+新图如下：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -292,17 +282,13 @@ and the new graph is as follows:
 \end{tikzpicture}
 \end{center}
 
-The idea is that increasing the flow decreases the amount of
-flow that can go through the edges in the future.
-On the other hand, it is possible to cancel
-flow later using the reverse edges of the graph
-if it turns out that
-it would be beneficial to route the flow in another way.
+其思想是，增加流会减少未来可以通过边的流量。
+另一方面，如果后来发现以另一种方式路由流更有利，
+可以使用图中的反向边来取消流。
 
-The algorithm increases the flow as long as
-there is a path from the source
-to the sink through positive-weight edges.
-In the present example, our next path can be as follows:
+算法不断增加流量，只要存在一条从源点
+到汇点的正权重边路径。
+在当前示例中，我们的下一条路径可以如下：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -337,12 +323,12 @@ In the present example, our next path can be as follows:
 \end{tikzpicture}
 \end{center}
 
-The minimum edge weight on this path is 3,
-so the path increases the flow by 3,
-and the total flow after processing the path is 5.
+这条路径上的最小边权重为 3，
+因此该路径使流量增加 3，
+处理该路径后的总流量为 5。
 
 \begin{samepage}
-The new graph will be as follows:
+新图如下：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -373,12 +359,12 @@ The new graph will be as follows:
 \end{center}
 \end{samepage}
 
-We still need two more rounds before reaching the maximum flow.
-For example, we can choose the paths
-$1 \rightarrow 2 \rightarrow 3 \rightarrow 6$ and
-$1 \rightarrow 4 \rightarrow 5 \rightarrow 3 \rightarrow 6$.
-Both paths increase the flow by 1,
-and the final graph is as follows:
+我们还需要两轮才能达到最大流。
+例如，我们可以选择路径
+$1 \rightarrow 2 \rightarrow 3 \rightarrow 6$ 和
+$1 \rightarrow 4 \rightarrow 5 \rightarrow 3 \rightarrow 6$。
+两条路径都使流量增加 1，
+最终图如下：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -408,67 +394,65 @@ and the final graph is as follows:
 \end{tikzpicture}
 \end{center}
 
-It is not possible to increase the flow anymore,
-because there is no path from the source
-to the sink with positive edge weights.
-Hence, the algorithm terminates and the maximum flow is 7.
+流量已无法再增加，
+因为不存在从源点到汇点的
+正权重边路径。
+因此，算法终止，最大流为 7。
 
-\subsubsection{Finding paths}
+\subsubsection{寻找路径}
 
-The Ford–Fulkerson algorithm does not specify
-how we should choose the paths that increase the flow.
-In any case, the algorithm will terminate sooner or later
-and correctly find the maximum flow.
-However, the efficiency of the algorithm depends on
-the way the paths are chosen.
+Ford–Fulkerson 算法没有指定
+我们应该如何选择增加流量的路径。
+无论如何，算法迟早会终止
+并正确找到最大流。
+然而，算法的效率取决于
+路径的选择方式。
 
-A simple way to find paths is to use depth-first search.
-Usually, this works well, but in the worst case,
-each path only increases the flow by 1
-and the algorithm is slow.
-Fortunately, we can avoid this situation
-by using one of the following techniques:
+一种简单的寻找路径的方法是使用深度优先搜索。
+通常这很有效，但在最坏情况下，
+每条路径只能使流量增加 1，
+算法会很慢。
+幸运的是，我们可以使用以下技术之一
+来避免这种情况：
 
-\index{Edmonds–Karp algorithm}
+\index{Edmonds–Karp 算法}
 
-The \key{Edmonds–Karp algorithm} \cite{edm72}
-chooses each path so that the number of edges
-on the path is as small as possible.
-This can be done by using breadth-first search
-instead of depth-first search for finding paths.
-It can be proven that this guarantees that
-the flow increases quickly, and the time complexity
-of the algorithm is $O(m^2 n)$.
+\key{Edmonds–Karp 算法} \cite{edm72}
+选择每条路径时使得路径上的边数
+尽可能少。
+这可以通过使用广度优先搜索
+而非深度优先搜索来寻找路径。
+可以证明这保证了流量快速增加，
+算法的时间复杂度为 $O(m^2 n)$。
 
-\index{scaling algorithm}
+\index{缩放算法}
 
-The \key{scaling algorithm} \cite{ahu91} uses depth-first
-search to find paths where each edge weight is
-at least a threshold value.
-Initially, the threshold value is
-some large number, for example the sum of all
-edge weights of the graph.
-Always when a path cannot be found,
-the threshold value is divided by 2.
-The time complexity of the algorithm is $O(m^2 \log c)$,
-where $c$ is the initial threshold value.
+\key{缩放算法} \cite{ahu91} 使用深度优先
+搜索来寻找每条边权重至少为
+某个阈值的路径。
+初始时，阈值是某个较大的数，
+例如图中所有边权重之和。
+每当找不到路径时，
+阈值除以 2。
+算法的时间复杂度为 $O(m^2 \log c)$，
+其中 $c$ 是初始阈值。
 
-In practice, the scaling algorithm is easier to implement,
-because depth-first search can be used for finding paths.
-Both algorithms are efficient enough for problems
-that typically appear in programming contests.
+实际上，缩放算法更容易实现，
+因为可以使用深度优先搜索来寻找路径。
+两种算法都足够高效，
+可以处理竞赛编程中
+常见的问题。
 
-\subsubsection{Minimum cuts}
+\subsubsection{最小割}
 
-\index{minimum cut}
+\index{最小割}
 
-It turns out that once the Ford–Fulkerson algorithm
-has found a maximum flow,
-it has also determined a minimum cut.
-Let $A$ be the set of nodes
-that can be reached from the source
-using positive-weight edges.
-In the example graph, $A$ contains nodes 1, 2 and 4:
+事实上，当 Ford–Fulkerson 算法
+找到最大流时，
+它也确定了一个最小割。
+令 $A$ 为可以从源点
+使用正权重边到达的节点集合。
+在示例图中，$A$ 包含节点 1、2 和 4：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -498,26 +482,24 @@ In the example graph, $A$ contains nodes 1, 2 and 4:
 \end{tikzpicture}
 \end{center}
 
-Now the minimum cut consists of the edges of the original graph
-that start at some node in $A$, end at some node outside $A$,
-and whose capacity is fully
-used in the maximum flow.
-In the above graph, such edges are
-$2 \rightarrow 3$ and $4 \rightarrow 5$,
-that correspond to the minimum cut $6+1=7$.
+现在最小割由原图中满足以下条件的边组成：
+起点在 $A$ 中，终点不在 $A$ 中，
+且其容量在最大流中被完全使用。
+在上图中，这样的边是
+$2 \rightarrow 3$ 和 $4 \rightarrow 5$，
+对应最小割 $6+1=7$。
 
-Why is the flow produced by the algorithm maximum
-and why is the cut minimum?
-The reason is that a graph cannot
-contain a flow whose size is larger
-than the weight of any cut of the graph.
-Hence, always when a flow and a cut are equally large,
-they are a maximum flow and a minimum cut.
+为什么算法产生的流是最大的，
+而割是最小的？
+原因是图不能包含一个大小
+大于图中任何割的权重的流。
+因此，当流和割一样大时，
+它们就是最大流和最小割。
 
-Let us consider any cut of the graph
-such that the source belongs to $A$,
-the sink belongs to $B$
-and there are some edges between the sets:
+考虑图的任意一个割，
+其中源点属于 $A$，
+汇点属于 $B$，
+且两个集合之间存在一些边：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -541,39 +523,35 @@ and there are some edges between the sets:
 \end{tikzpicture}
 \end{center}
 
-The size of the cut is the sum of the edges
-that go from $A$ to $B$.
-This is an upper bound for the flow
-in the graph, because the flow has to proceed
-from $A$ to $B$.
-Thus, the size of a maximum flow is smaller than or equal to
-the size of any cut in the graph.
+割的大小是从 $A$ 到 $B$ 的边
+的权重之和。
+这是图中流的上界，
+因为流必须从 $A$ 流向 $B$。
+因此，最大流的大小小于或等于
+图中任何割的大小。
 
-On the other hand, the Ford–Fulkerson algorithm
-produces a flow whose size is \emph{exactly} as large
-as the size of a cut in the graph.
-Thus, the flow has to be a maximum flow
-and the cut has to be a minimum cut.
+另一方面，Ford–Fulkerson 算法
+产生一个大小与图中某个割的大小\emph{恰好}相等的流。
+因此，该流必定是最大流，
+而该割必定是最小割。
 
-\section{Disjoint paths}
+\section{不相交路径}
 
-Many graph problems can be solved by reducing
-them to the maximum flow problem.
-Our first example of such a problem is
-as follows: we are given a directed graph
-with a source and a sink,
-and our task is to find the maximum number
-of disjoint paths from the source to the sink.
+许多图问题可以通过归约为
+最大流问题来解决。
+我们第一个这样的问题示例是：
+给定一个带有源点和汇点的有向图，
+我们的任务是找到从源点到汇点的
+不相交路径的最大数量。
 
-\subsubsection{Edge-disjoint paths}
+\subsubsection{边不相交路径}
 
-We will first focus on the problem of
-finding the maximum number of
-\key{edge-disjoint paths} from the source to the sink.
-This means that we should construct a set of paths
-such that each edge appears in at most one path.
+我们首先关注寻找从源点到汇点的
+\key{边不相交路径}的最大数量问题。
+这意味着我们应该构造一组路径，
+使得每条边最多出现在一条路径中。
 
-For example, consider the following graph:
+例如，考虑以下图：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,2) {$1$};
@@ -594,11 +572,10 @@ For example, consider the following graph:
 \end{tikzpicture}
 \end{center}
 
-In this graph, the maximum number of edge-disjoint
-paths is 2.
-We can choose the paths
+在这个图中，边不相交路径的最大数量为 2。
+我们可以选择路径
 $1 \rightarrow 2 \rightarrow 4 \rightarrow 3 \rightarrow 6$
-and $1 \rightarrow 4 \rightarrow 5 \rightarrow 6$ as follows:
+和 $1 \rightarrow 4 \rightarrow 5 \rightarrow 6$，如下所示：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -629,29 +606,26 @@ and $1 \rightarrow 4 \rightarrow 5 \rightarrow 6$ as follows:
 \end{tikzpicture}
 \end{center}
 
-It turns out that the maximum number of
-edge-disjoint paths
-equals the maximum flow of the graph,
-assuming that the capacity of each edge is one.
-After the maximum flow has been constructed,
-the edge-disjoint paths can be found greedily
-by following paths from the source to the sink.
+事实证明，边不相交路径的最大数量
+等于图的最大流（
+假设每条边的容量为 1）。
+构造最大流后，
+可以通过从源点到汇点贪心地跟随路径
+来找到边不相交路径。
 
-\subsubsection{Node-disjoint paths}
+\subsubsection{点不相交路径}
 
-Let us now consider another problem:
-finding the maximum number of
-\key{node-disjoint paths} from the source
-to the sink.
-In this problem, every node,
-except for the source and sink,
-may appear in at most one path.
-The number of node-disjoint paths
-may be smaller than the number of
-edge-disjoint paths.
+现在让我们考虑另一个问题：
+寻找从源点到汇点的
+\key{点不相交路径}的最大数量。
+在这个问题中，每个节点，
+除了源点和汇点，
+最多只能出现在一条路径中。
+点不相交路径的数量
+可能小于边不相交路径的数量。
 
-For example, in the previous graph,
-the maximum number of node-disjoint paths is 1:
+例如，在上面的图中，
+点不相交路径的最大数量为 1：
 
 \begin{center}
 \begin{tikzpicture}
@@ -678,17 +652,17 @@ the maximum number of node-disjoint paths is 1:
 \end{tikzpicture}
 \end{center}
 
-We can reduce also this problem to the maximum flow problem.
-Since each node can appear in at most one path,
-we have to limit the flow that goes through the nodes.
-A standard method for this is to divide each node into
-two nodes such that the first node has the incoming edges
-of the original node, the second node has the outgoing
-edges of the original node, and
-there is a new edge from the first node
-to the second node.
+我们也可以将这个问题归约为最大流问题。
+由于每个节点最多只能出现在一条路径中，
+我们必须限制通过节点的流量。
+一种标准方法是将每个节点拆分为
+两个节点，使得第一个节点拥有
+原始节点的入边，第二个节点拥有
+原始节点的出边，并且
+从第一个节点到第二个节点
+有一条新边。
 
-In our example, the graph becomes as follows:
+在我们的示例中，图变为如下：
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,2) {$1$};
@@ -722,7 +696,7 @@ In our example, the graph becomes as follows:
 \end{tikzpicture}
 \end{center}
 
-The maximum flow for the graph is as follows:
+该图的最大流如下：
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,2) {$1$};
@@ -764,35 +738,34 @@ The maximum flow for the graph is as follows:
 \end{tikzpicture}
 \end{center}
 
-Thus, the maximum number of node-disjoint paths
-from the source to the sink is 1.
+因此，从源点到汇点的点不相交路径
+的最大数量为 1。
 
-\section{Maximum matchings}
+\section{最大匹配}
 
-\index{matching}
-\index{maximum matching}
+\index{匹配}
+\index{最大匹配}
 
-The \key{maximum matching} problem asks to find
-a maximum-size set of node pairs in an undirected graph
-such that each pair is connected with an edge and
-each node belongs to at most one pair.
+\key{最大匹配}问题要求在一个无向图中
+找到一个最大大小的节点对集合，
+使得每对节点通过一条边连接，
+且每个节点最多属于一个对。
 
-There are polynomial algorithms for finding
-maximum matchings in general graphs \cite{edm65},
-but such algorithms are complex and
-rarely seen in programming contests.
-However, in bipartite graphs,
-the maximum matching problem is much easier
-to solve, because we can reduce it to the
-maximum flow problem.
+已有在一般图中寻找最大匹配的多项式算法 \cite{edm65}，
+但这些算法复杂，
+在竞赛编程中很少见到。
+然而，在二分图中，
+最大匹配问题更容易解决，
+因为我们可以将其归约为
+最大流问题。
 
-\subsubsection{Finding maximum matchings}
+\subsubsection{寻找最大匹配}
 
-The nodes of a bipartite graph can be always
-divided into two groups such that all edges
-of the graph go from the left group to the right group.
-For example, in the following bipartite graph,
-the groups are $\{1,2,3,4\}$ and $\{5,6,7,8\}$.
+二分图的节点总是可以
+分为两组，使得图中的所有边
+都从左组指向右组。
+例如，在以下二分图中，
+两组分别为 $\{1,2,3,4\}$ 和 $\{5,6,7,8\}$。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
@@ -813,7 +786,7 @@ the groups are $\{1,2,3,4\}$ and $\{5,6,7,8\}$.
 \path[draw,thick,-] (4) -- (7);
 \end{tikzpicture}
 \end{center}
-The size of a maximum matching of this graph is 3:
+该图的最大匹配大小为 3：
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
 \node[draw, circle] (1) at (2,4.5) {1};
@@ -838,16 +811,15 @@ The size of a maximum matching of this graph is 3:
 \end{tikzpicture}
 \end{center}
 
-We can reduce the bipartite maximum matching problem
-to the maximum flow problem by adding two new nodes
-to the graph: a source and a sink.
-We also add edges from the source
-to each left node and from each right node to the sink.
-After this, the size of a maximum flow in the graph
-equals the size of a maximum matching in the original graph.
+我们可以将二分图最大匹配问题
+归约为最大流问题，方法是向图中添加两个新节点：
+一个源点和一个汇点。
+我们还添加从源点到每个左节点的边，
+以及从每个右节点到汇点的边。
+之后，图中的最大流大小
+等于原图中最大匹配的大小。
 
-For example, the reduction for the above
-graph is as follows:
+例如，上述图的归约如下：
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
 \node[draw, circle] (1) at (2,4.5) {1};
@@ -880,7 +852,7 @@ graph is as follows:
 \end{tikzpicture}
 \end{center}
 
-The maximum flow of this graph is as follows:
+该图的最大流如下：
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
 \node[draw, circle] (1) at (2,4.5) {1};
@@ -923,29 +895,25 @@ The maximum flow of this graph is as follows:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Hall's theorem}
+\subsubsection{霍尔定理}
 
-\index{Hall's theorem}
-\index{perfect matching}
+\index{霍尔定理}
+\index{完美匹配}
 
-\key{Hall's theorem} can be used to find out
-whether a bipartite graph has a matching
-that contains all left or right nodes.
-If the number of left and right nodes is the same,
-Hall's theorem tells us if it is possible to
-construct a \key{perfect matching} that
-contains all nodes of the graph.
+\key{霍尔定理}可用于判断
+二分图是否有一个包含所有左节点或右节点的匹配。
+如果左节点和右节点的数量相同，
+霍尔定理告诉我们是否可以构造一个包含图中所有节点的
+\key{完美匹配}。
 
-Assume that we want to find a matching
-that contains all left nodes.
-Let $X$ be any set of left nodes
-and let $f(X)$ be the set of their neighbors.
-According to Hall's theorem, a matching
-that contains all left nodes exists
-exactly when for each $X$, the condition $|X| \le |f(X)|$ holds.
+假设我们想找一个包含所有左节点的匹配。
+令 $X$ 为左节点的任意集合，
+令 $f(X)$ 为它们的邻居集合。
+根据霍尔定理，包含所有左节点的匹配存在
+当且仅当对每个 $X$，条件 $|X| \le |f(X)|$ 成立。
 
-Let us study Hall's theorem in the example graph.
-First, let $X=\{1,3\}$ which yields $f(X)=\{5,6,8\}$:
+让我们在示例图中研究霍尔定理。
+首先，令 $X=\{1,3\}$，得到 $f(X)=\{5,6,8\}$：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
@@ -967,9 +935,9 @@ First, let $X=\{1,3\}$ which yields $f(X)=\{5,6,8\}$:
 \end{tikzpicture}
 \end{center}
 
-The condition of Hall's theorem holds, because
-$|X|=2$ and $|f(X)|=3$.
-Next, let $X=\{2,4\}$ which yields $f(X)=\{7\}$:
+霍尔定理的条件成立，因为
+$|X|=2$ 且 $|f(X)|=3$。
+接下来，令 $X=\{2,4\}$，得到 $f(X)=\{7\}$：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
@@ -991,41 +959,41 @@ Next, let $X=\{2,4\}$ which yields $f(X)=\{7\}$:
 \end{tikzpicture}
 \end{center}
 
-In this case, $|X|=2$ and $|f(X)|=1$,
-so the condition of Hall's theorem does not hold.
-This means that it is not possible to form
-a perfect matching for the graph.
-This result is not surprising, because we already
-know that the maximum matching of the graph is 3 and not 4.
+在这种情况下，$|X|=2$ 且 $|f(X)|=1$，
+因此霍尔定理的条件不成立。
+这意味着不可能为该图构造
+完美匹配。
+这个结果并不令人意外，因为我们已经知道
+该图的最大匹配是 3 而不是 4。
 
-If the condition of Hall's theorem does not hold,
-the set $X$ provides an explanation \emph{why}
-we cannot form such a matching.
-Since $X$ contains more nodes than $f(X)$,
-there are no pairs for all nodes in $X$.
-For example, in the above graph, both nodes 2 and 4
-should be connected with node 7 which is not possible.
+如果霍尔定理的条件不成立，
+集合 $X$ 提供了一个解释，说明\emph{为什么}
+我们无法构造这样的匹配。
+由于 $X$ 包含的节点比 $f(X)$ 多，
+$X$ 中的所有节点无法都有配对。
+例如，在上面的图中，节点 2 和 4
+都应该与节点 7 连接，这是不可能的。
 
-\subsubsection{Kőnig's theorem}
+\subsubsection{柯尼格定理}
 
-\index{Kőnig's theorem}
-\index{node cover}
-\index{minimum node cover}
+\index{柯尼格定理}
+\index{点覆盖}
+\index{最小点覆盖}
 
-A \key{minimum node cover} of a graph
-is a minimum set of nodes such that each edge of the graph
-has at least one endpoint in the set.
-In a general graph, finding a minimum node cover
-is a NP-hard problem.
-However, if the graph is bipartite,
-\key{Kőnig's theorem} tells us that
-the size of a minimum node cover
-and the size of a maximum matching are always equal.
-Thus, we can calculate the size of a minimum node cover
-using a maximum flow algorithm.
+图的\key{最小点覆盖}
+是一个最小节点集合，使得图中的每条边
+至少有一个端点在该集合中。
+在一般图中，寻找最小点覆盖
+是一个 NP 困难问题。
+然而，如果图是二分图，
+\key{柯尼格定理}告诉我们
+最小点覆盖的大小
+和最大匹配的大小总是相等的。
+因此，我们可以使用最大流算法
+来计算最小点覆盖的大小。
 
-Let us consider the following graph
-with a maximum matching of size 3:
+让我们考虑以下图，
+其最大匹配大小为 3：
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
 \node[draw, circle] (1) at (2,4.5) {1};
@@ -1049,9 +1017,9 @@ with a maximum matching of size 3:
 \path[draw=red,thick,-,line width=2pt] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-Now Kőnig's theorem tells us that the size
-of a minimum node cover is also 3.
-Such a cover can be constructed as follows:
+现在柯尼格定理告诉我们最小点覆盖的大小
+也是 3。
+这样的覆盖可以如下构造：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
@@ -1073,21 +1041,19 @@ Such a cover can be constructed as follows:
 \end{tikzpicture}
 \end{center}
 
-\index{independent set}
-\index{maximum independent set}
+\index{独立集}
+\index{最大独立集}
 
-The nodes that do \emph{not}
-belong to a minimum node cover
-form a \key{maximum independent set}.
-This is the largest possible set of nodes
-such that no two nodes in the set
-are connected with an edge.
-Once again, finding a maximum independent
-set in a general graph is a NP-hard problem,
-but in a bipartite graph we can use
-Kőnig's theorem to solve the problem efficiently.
-In the example graph, the maximum independent
-set is as follows:
+\emph{不属于}最小点覆盖的节点
+构成一个\key{最大独立集}。
+这是最大的节点集合，
+使得集合中没有任何两个节点
+通过边相连。
+同样，在一般图中寻找最大独立集
+是一个 NP 困难问题，
+但在二分图中我们可以使用
+柯尼格定理来高效解决该问题。
+在示例图中，最大独立集如下：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
@@ -1109,22 +1075,21 @@ set is as follows:
 \end{tikzpicture}
 \end{center}
 
-\section{Path covers}
+\section{路径覆盖}
 
-\index{path cover}
+\index{路径覆盖}
 
-A \key{path cover} is a set of paths in a graph
-such that each node of the graph belongs to at least one path.
-It turns out that in directed, acyclic graphs,
-we can reduce the problem of finding a minimum
-path cover to the problem of finding a maximum
-flow in another graph.
+\key{路径覆盖}是图中的一组路径，
+使得图中的每个节点至少属于一条路径。
+事实证明，在有向无环图中，
+我们可以将寻找最小路径覆盖的问题
+归约为在另一个图中寻找最大流的问题。
 
-\subsubsection{Node-disjoint path cover}
+\subsubsection{点不相交路径覆盖}
 
-In a \key{node-disjoint path cover},
-each node belongs to exactly one path.
-As an example, consider the following graph:
+在\key{点不相交路径覆盖}中，
+每个节点恰好属于一条路径。
+作为示例，考虑以下图：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {1};
@@ -1144,10 +1109,9 @@ As an example, consider the following graph:
 \end{tikzpicture}
 \end{center}
 
-A minimum node-disjoint path cover
-of this graph
-consists of three paths.
-For example, we can choose the following paths:
+该图的一个最小点不相交路径覆盖
+由三条路径组成。
+例如，我们可以选择以下路径：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -1166,25 +1130,22 @@ For example, we can choose the following paths:
 \end{tikzpicture}
 \end{center}
 
-Note that one of the paths only contains node 2,
-so it is possible that a path does not contain any edges.
+注意其中一条路径只包含节点 2，
+因此一条路径可能不包含任何边。
 
-We can find a minimum node-disjoint path cover
-by constructing a \emph{matching graph} where each node
-of the original graph is represented by
-two nodes: a left node and a right node.
-There is an edge from a left node to a right node
-if there is such an edge in the original graph.
-In addition, the matching graph contains a source and a sink,
-and there are edges from the source to all
-left nodes and from all right nodes to the sink.
+我们可以通过构造一个\emph{匹配图}来寻找最小点不相交路径覆盖，
+其中原图的每个节点由
+两个节点表示：一个左节点和一个右节点。
+如果原图中存在这样的边，则从左节点到右节点
+有一条边。
+此外，匹配图包含一个源点和一个汇点，
+并且有从源点到所有左节点的边，
+以及从所有右节点到汇点的边。
 
-A maximum matching in the resulting graph corresponds
-to a minimum node-disjoint path cover in
-the original graph.
-For example, the following matching graph
-for the above graph contains
-a maximum matching of size 4:
+所得图中的最大匹配对应于
+原图中的最小点不相交路径覆盖。
+例如，上述图的以下匹配图
+包含大小为 4 的最大匹配：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -1238,21 +1199,20 @@ a maximum matching of size 4:
 \end{tikzpicture}
 \end{center}
 
-Each edge in the maximum matching of the matching graph corresponds
-to an edge in the minimum node-disjoint path cover
-of the original graph.
-Thus, the size of the minimum node-disjoint path cover is $n-c$,
-where $n$ is the number of nodes in the original graph
-and $c$ is the size of the maximum matching.
+匹配图中最大匹配的每条边对应于
+原图中最小点不相交路径覆盖中的一条边。
+因此，最小点不相交路径覆盖的大小为 $n-c$，
+其中 $n$ 是原图中的节点数，
+$c$ 是最大匹配的大小。
 
-\subsubsection{General path cover}
+\subsubsection{一般路径覆盖}
 
-A \key{general path cover} is a path cover
-where a node can belong to more than one path.
-A minimum general path cover may be smaller
-than a minimum node-disjoint path cover,
-because a node can be used multiple times in paths.
-Consider again the following graph:
+\key{一般路径覆盖}是一种
+节点可以属于多条路径的路径覆盖。
+最小一般路径覆盖可能比
+最小点不相交路径覆盖更小，
+因为节点可以在路径中被多次使用。
+再次考虑以下图：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {1};
@@ -1272,9 +1232,9 @@ Consider again the following graph:
 \end{tikzpicture}
 \end{center}
 
-The minimum general path cover of this graph
-consists of two paths.
-For example, the first path may be as follows:
+该图的最小一般路径覆盖
+由两条路径组成。
+例如，第一条路径可以如下：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {1};
@@ -1291,7 +1251,7 @@ For example, the first path may be as follows:
 \path[draw=red,thick,->,line width=2pt] (3) -- (4);
 \end{tikzpicture}
 \end{center}
-And the second path may be as follows:
+第二条路径可以如下：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {1};
@@ -1307,14 +1267,14 @@ And the second path may be as follows:
 \end{tikzpicture}
 \end{center}
 
-A minimum general path cover can be found
-almost like a minimum node-disjoint path cover.
-It suffices to add some new edges to the matching graph
-so that there is an edge $a \rightarrow b$
-always when there is a path from $a$ to $b$
-in the original graph (possibly through several edges).
+最小一般路径覆盖的寻找方法
+与最小点不相交路径覆盖几乎相同。
+只需在匹配图中添加一些新边，
+使得只要原图中存在从 $a$ 到 $b$ 的路径
+（可能经过多条边），
+就有一条边 $a \rightarrow b$。
 
-The matching graph for the above graph is as follows:
+上述图的匹配图如下：
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1a) at (0,6) {1};
@@ -1399,22 +1359,20 @@ The matching graph for the above graph is as follows:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Dilworth's theorem}
+\subsubsection{迪尔沃斯定理}
 
-\index{Dilworth's theorem}
-\index{antichain}
+\index{迪尔沃斯定理}
+\index{反链}
 
-An \key{antichain} is a set of nodes of a graph
-such that there is no path
-from any node to another node
-using the edges of the graph.
-\key{Dilworth's theorem} states that
-in a directed acyclic graph, the size of
-a minimum general path cover
-equals the size of a maximum antichain.
+\key{反链}是图中的一组节点，
+使得使用图中的边，
+无法从一个节点到达另一个节点。
+\key{迪尔沃斯定理}指出，
+在有向无环图中，最小一般路径覆盖的大小
+等于最大反链的大小。
 
-For example, nodes 3 and 7 form an antichain
-in the following graph:
+例如，节点 3 和 7 在以下图中
+构成一个反链：
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -1435,7 +1393,7 @@ in the following graph:
 \end{tikzpicture}
 \end{center}
 
-This is a maximum antichain, because it is not possible
-to construct any antichain that would contain three nodes.
-We have seen before that the size of a minimum
-general path cover of this graph consists of two paths.
+这是一个最大反链，因为不可能
+构造包含三个节点的反链。
+我们之前已经看到，该图的
+最小一般路径覆盖由两条路径组成。
